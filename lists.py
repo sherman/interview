@@ -6,7 +6,6 @@ item1 = ListItem()
 item2 = ListItem()
 item3 = ListItem()
 
-
 item1.next = item2
 item2.next = item3
 
@@ -34,7 +33,45 @@ def reverse(head):
 
 printList(reverse(item1))
 
+print "find n-th elt from the end of the list"
 
+item1 = ListItem()
+item2 = ListItem()
+item3 = ListItem()
+item4 = ListItem()
+item5 = ListItem()
+item6 = ListItem()
+
+
+item1.next = item2
+item2.next = item3
+item3.next = item4
+item4.next = item5
+item5.next = item6
+
+item1.val = 1
+item2.val = 2
+item3.val = 3
+item4.val = 4
+item5.val = 5
+item6.val = 6
+
+
+def findNthFromTheEnd(head, n):
+	curr = head
+	prev = None
+	cnt = 0
+
+	while curr != None:
+		if cnt % n == 0:
+			prev = curr
+
+		curr = curr.next
+		cnt = cnt + 1
+
+	return prev
+
+print findNthFromTheEnd(item1, 2).val
 
 	
 
