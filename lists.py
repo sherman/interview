@@ -73,5 +73,26 @@ def findNthFromTheEnd(head, n):
 
 print findNthFromTheEnd(item1, 2).val
 
+def findMiddleElt(head):
+	slow = head
+	fast = head
+
+	middle = None
+
+	if head.next == None:
+		return head
+
+	while slow != None:
+		fast = fast.next
+		if (fast != None and fast.next != None):
+			fast = fast.next
+		else:
+			return slow
+
+		slow = slow.next
+		
+
+print findMiddleElt(item1).val
+
 	
 
