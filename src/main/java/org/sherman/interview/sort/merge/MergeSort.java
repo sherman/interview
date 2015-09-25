@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * @author Denis Gabaydulin
@@ -16,25 +18,46 @@ public class MergeSort {
     private MergeSort() {
     }
 
-    public static long[] sortRecursive(@NotNull long[] data) {
+    public static Long[] sortRecursive(@NotNull Long[] data) {
         return _sortRecursive(data);
     }
 
-    public static long[] _sortRecursive(@NotNull long[] data) {
+    public static Long[] sortIterative(@NotNull Long[] data) {
+        if (data.length < 2) {
+            return data;
+        }
+
+        Queue<Long[]> result = new LinkedList<Long[]>();
+        for (Long elt : data) {
+            result.offer(new Long[]{elt});
+        }
+
+        while (result.size() > 1) {
+            result.offer(mergeSorted(result.poll(), result.poll()));
+        }
+
+        Long[] res = result.poll();
+
+        log.info("res {}", (Object) res);
+
+        return res;
+    }
+
+    public static Long[] _sortRecursive(@NotNull Long[] data) {
         if (data.length > 1) {
             int mid = data.length / 2;
 
-            long[] left = Arrays.copyOfRange(data, 0, mid);
-            long[] right = Arrays.copyOfRange(data, mid, data.length);
+            Long[] left = Arrays.copyOfRange(data, 0, mid);
+            Long[] right = Arrays.copyOfRange(data, mid, data.length);
 
             log.info("{} {} {}", mid, left, right);
 
-            long[] res = mergeSorted(
-                    sortRecursive(left),
-                    sortRecursive(right)
+            Long[] res = mergeSorted(
+                    _sortRecursive(left),
+                    _sortRecursive(right)
             );
 
-            log.info("res {}", res);
+            log.info("res {}", (Object) res);
 
             return res;
         }
@@ -42,10 +65,10 @@ public class MergeSort {
         return data;
     }
 
-    public static long[] mergeSorted(@NotNull long[] first, @NotNull long[] second) {
+    public static Long[] mergeSorted(@NotNull Long[] first, @NotNull Long[] second) {
         int i = 0, j = 0, resultSize = 0;
 
-        long[] result = new long[first.length + second.length];
+        Long[] result = new Long[first.length + second.length];
 
         while (i < first.length && j < second.length) {
             if (first[i] < second[j]) {

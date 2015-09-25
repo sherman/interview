@@ -19,16 +19,24 @@ public class MergeSortTest {
 
     @Test
     public void sortRecursive() {
-        long[] result = MergeSort.sortRecursive(new long[]{43, 1, 3, 44, 42});
-        log.info("{}", result);
+        Long[] result = MergeSort.sortRecursive(new Long[]{43L, 1L, 3L, 44L, 42L});
+        log.info("{}", (Object) result);
 
-        assertTrue(Arrays.equals(result, new long[]{1, 3, 42, 43, 44}));
+        assertTrue(Arrays.equals(result, new Long[]{1L, 3L, 42L, 43L, 44L}));
+    }
+
+    @Test
+    public void sortIterative() {
+        Long[] result = MergeSort.sortIterative(new Long[]{43L, 1L, 3L, 44L, 42L});
+        log.info("{}", (Object) result);
+
+        assertTrue(Arrays.equals(result, new Long[]{1L, 3L, 42L, 43L, 44L}));
     }
 
     @Test(dataProvider = "mergeSortedCases")
-    public void mergeSorted(@NotNull long[] first, @NotNull long[] second, @NotNull long[] expected) {
-        long[] result = MergeSort.mergeSorted(first, second);
-        log.info("{}", result);
+    public void mergeSorted(@NotNull Long[] first, @NotNull Long[] second, @NotNull Long[] expected) {
+        Long[] result = MergeSort.mergeSorted(first, second);
+        log.info("{}", (Object) result);
 
         assertTrue(Arrays.equals(result, expected));
     }
@@ -37,27 +45,27 @@ public class MergeSortTest {
     private static Object[][] mergeSortedCases() {
         return new Object[][]{
                 {
-                        new long[]{}, new long[]{}, new long[]{}
+                        new Long[]{}, new Long[]{}, new Long[]{}
                 },
 
                 {
-                        new long[]{1}, new long[]{}, new long[]{1}
+                        new Long[]{1L}, new Long[]{}, new Long[]{1L}
                 },
 
                 {
-                        new long[]{}, new long[]{1}, new long[]{1}
+                        new Long[]{}, new Long[]{1L}, new Long[]{1L}
                 },
 
                 {
-                        new long[]{1}, new long[]{1}, new long[]{1, 1}
+                        new Long[]{1L}, new Long[]{1L}, new Long[]{1L, 1L}
                 },
 
                 {
-                        new long[]{1, 2}, new long[]{1}, new long[]{1, 1, 2}
+                        new Long[]{1L, 2L}, new Long[]{1L}, new Long[]{1L, 1L, 2L}
                 },
 
                 {
-                        new long[]{41, 42}, new long[]{1, 2}, new long[]{1, 2, 41, 42}
+                        new Long[]{41L, 42L}, new Long[]{1L, 2L}, new Long[]{1L, 2L, 41L, 42L}
                 },
 
         };
