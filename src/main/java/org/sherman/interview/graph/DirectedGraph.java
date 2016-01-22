@@ -31,4 +31,15 @@ public class DirectedGraph {
                 .map(DirectedEdge::getTo)
                 .collect(toSet());
     }
+
+    @NotNull
+    public Set<DirectedEdge> getListOfEdgeNeighbours(@NotNull Vertex vertex) {
+        return edges.stream()
+                .filter(edge -> edge.getFrom().equals(vertex))
+                .collect(toSet());
+    }
+
+    public Set<Vertex> getVertices() {
+        return vertices;
+    }
 }
