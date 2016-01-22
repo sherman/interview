@@ -57,11 +57,11 @@ public class DirectedGraphAlgorithms {
         }
         shortPath.add(current);
 
-        if (shortPath.size() < 2 || !shortPath.get(shortPath.size() - 1).equals(from) || !shortPath.get(0).equals(to)) {
-            return null;
-        } else {
+        if (shortPath.size() >= 2 && current.equals(from) && shortPath.get(0).equals(to)) {
             Collections.reverse(shortPath);
             return shortPath;
+        } else {
+            return null;
         }
     }
 
