@@ -1,8 +1,13 @@
 package org.sherman.interview.graph;
 
+import com.beust.jcommander.internal.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
+
+import java.util.stream.Collectors;
+
+import static org.testng.Assert.assertEquals;
 
 /**
  * @author Denis Gabaydulin
@@ -24,6 +29,11 @@ public class DirectedGraphAlgorithmsTest {
         graph.addEdge(new DirectedEdge(new Vertex(4), new Vertex(5), 6));
         graph.addEdge(new DirectedEdge(new Vertex(5), new Vertex(6), 9));
 
-        log.info("Shortest path : {}", DirectedGraphAlgorithms.naiveDijkstra(graph, new Vertex(1), new Vertex(5)));
+        assertEquals(
+                DirectedGraphAlgorithms.naiveDijkstra(graph, new Vertex(1), new Vertex(5)).stream()
+                        .map(Vertex::getId)
+                        .collect(Collectors.toList()),
+                Lists.newArrayList(1, 3, 4, 5)
+        );
     }
 }
