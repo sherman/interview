@@ -31,7 +31,7 @@ public class CountingSort {
     private static final Logger log = LoggerFactory.getLogger(CountingSort.class);
 
 
-    public static long[] sort(@NotNull long[] elts, long min, long max) {
+    public static long[] sort(@NotNull long[] elts) {
         Map<Long, Integer> histogram = new HashMap<>();
 
         for (long elt : elts) {

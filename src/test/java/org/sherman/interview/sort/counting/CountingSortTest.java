@@ -28,7 +28,7 @@ import static org.testng.Assert.assertTrue;
 public class CountingSortTest {
     @Test
     public void sort() {
-        long[] result = CountingSort.sort(new long[]{43L, 1L, 3L, 3L, 44L, 42L}, 1, 43);
+        long[] result = CountingSort.sort(new long[]{43L, 1L, 3L, 3L, 44L, 42L});
 
         assertTrue(Arrays.equals(result, new long[]{1L, 3L, 3L, 42L, 43L, 44L}));
     }
