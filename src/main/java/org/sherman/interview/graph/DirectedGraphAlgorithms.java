@@ -1,6 +1,5 @@
 package org.sherman.interview.graph;
 
-import com.sun.javafx.geom.Edge;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,25 +24,43 @@ public class DirectedGraphAlgorithms {
         Map<Vertex, Integer> vertexDistances = vertices.stream()
                 .collect(Collectors.toMap(Function.identity(), vertex -> 0));
 
+        Set<Vertex> visited = new HashSet<>();
+        Queue<Vertex> unvisited = new LinkedList<>();
+
         Stack<DirectedEdge> shortPaths = new Stack<>();
 
-        vertices.stream().forEach(
-                v -> {
-                    Set<DirectedEdge> neighbours = graph.getListOfEdgeNeighbours(v);
-                    neighbours.stream().forEach(
-                            edge -> {
-                                int fromWeight = Math.max(0, vertexDistances.get(edge.getFrom()));
-                                int currentWeight = Math.max(0, vertexDistances.get(edge.getTo()));
-                                int toWeight = edge.getWeight();
+        unvisited.add(from);
 
-                                if (getDistance(fromWeight + toWeight, currentWeight) < currentWeight || currentWeight == 0) {
-                                    vertexDistances.put(edge.getTo(), fromWeight + toWeight);
-                                    shortPaths.add(edge);
-                                }
-                            }
-                    );
-                }
-        );
+        while (!unvisited.isEmpty()) {
+            Optional.of(unvisited.poll()).ifPresent(
+                    v -> {
+                        visited.add(v);
+
+                        graph.getListOfEdgeNeighbours(v).stream()
+                                .filter(edge -> !visited.contains(edge.getTo()))
+                                .forEach(
+                                        edge -> {
+                                            int fromWeight = Math.max(0, vertexDistances.get(edge.getFrom()));
+                                            int currentWeight = Math.max(0, vertexDistances.get(edge.getTo()));
+                                            int toWeight = edge.getWeight();
+
+                                            if (getDistance(fromWeight + toWeight, currentWeight) < currentWeight || currentWeight == 0) {
+                                                vertexDistances.put(edge.getTo(), fromWeight + toWeight);
+                                                shortPaths.add(edge);
+                                            }
+
+                                            unvisited.add(edge.getTo());
+
+                                            if (visited.contains(from) && visited.contains(to)) {
+                                                unvisited.clear();
+                                            }
+                                        }
+                                );
+                    }
+            );
+        }
+
+        shortPaths.forEach(e -> log.info("{}", e.toString()));
 
         List<Vertex> shortPath = new ArrayList<>();
 

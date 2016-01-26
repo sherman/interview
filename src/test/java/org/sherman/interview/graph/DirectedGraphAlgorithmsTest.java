@@ -35,5 +35,19 @@ public class DirectedGraphAlgorithmsTest {
                         .collect(Collectors.toList()),
                 Lists.newArrayList(1, 3, 4, 5)
         );
+
+        assertEquals(
+                DirectedGraphAlgorithms.naiveDijkstra(graph, new Vertex(2), new Vertex(3)).stream()
+                        .map(Vertex::getId)
+                        .collect(Collectors.toList()),
+                Lists.newArrayList(2, 3)
+        );
+
+        assertEquals(
+                DirectedGraphAlgorithms.naiveDijkstra(graph, new Vertex(1), new Vertex(4)).stream()
+                        .map(Vertex::getId)
+                        .collect(Collectors.toList()),
+                Lists.newArrayList(1, 3, 4)
+        );
     }
 }
