@@ -8,6 +8,9 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.util.Comparator.comparingInt;
+import static java.util.Optional.ofNullable;
+
 /**
  * @author Denis Gabaydulin
  * @since 18/01/2016
@@ -19,48 +22,42 @@ public class DirectedGraphAlgorithms {
     }
 
     public static List<Vertex> naiveDijkstra(@NotNull DirectedGraph graph, @NotNull Vertex from, @NotNull Vertex to) {
-        Set<Vertex> vertices = graph.getVertices();
-
-        Map<Vertex, Integer> vertexDistances = vertices.stream()
-                .collect(Collectors.toMap(Function.identity(), vertex -> 0));
+        Map<Vertex, Integer> vertexDistances = new HashMap<>();
 
         Set<Vertex> visited = new HashSet<>();
-        Queue<Vertex> unvisited = new LinkedList<>();
+        Set<Vertex> unvisited = new HashSet<>();
 
         Stack<DirectedEdge> shortPaths = new Stack<>();
 
         unvisited.add(from);
 
         while (!unvisited.isEmpty()) {
-            Optional.of(unvisited.poll()).ifPresent(
-                    v -> {
-                        visited.add(v);
+            Vertex min = getMinimum(vertexDistances, unvisited);
 
-                        graph.getListOfEdgeNeighbours(v).stream()
-                                .filter(edge -> !visited.contains(edge.getTo()))
-                                .forEach(
-                                        edge -> {
-                                            int fromWeight = Math.max(0, vertexDistances.get(edge.getFrom()));
-                                            int currentWeight = Math.max(0, vertexDistances.get(edge.getTo()));
-                                            int toWeight = edge.getWeight();
+            visited.add(min);
+            unvisited.remove(min);
 
-                                            if (getDistance(fromWeight + toWeight, currentWeight) < currentWeight || currentWeight == 0) {
-                                                vertexDistances.put(edge.getTo(), fromWeight + toWeight);
-                                                shortPaths.add(edge);
-                                            }
+            graph.getListOfEdgeNeighbours(min).stream()
+                    .filter(edge -> !visited.contains(edge.getTo()))
+                    .forEach(
+                            edge -> {
+                                if (
+                                        getShortestDistance(vertexDistances, edge.getTo()) >
+                                                getShortestDistance(vertexDistances, edge.getFrom()) + edge.getWeight()
+                                ) {
+                                    vertexDistances.put(edge.getTo(), getShortestDistance(vertexDistances, edge.getFrom()) + edge.getWeight());
+                                    unvisited.add(edge.getTo());
+                                    shortPaths.add(edge);
+                                }
+                            }
+                    );
 
-                                            unvisited.add(edge.getTo());
-
-                                            if (visited.contains(from) && visited.contains(to)) {
-                                                unvisited.clear();
-                                            }
-                                        }
-                                );
-                    }
-            );
+            if (visited.contains(to)) {
+                unvisited.clear();
+            }
         }
 
-        shortPaths.forEach(e -> log.info("{}", e.toString()));
+        shortPaths.forEach(e -> log.info("e {}", e.toString()));
 
         List<Vertex> shortPath = new ArrayList<>();
 
@@ -74,6 +71,8 @@ public class DirectedGraphAlgorithms {
         }
         shortPath.add(current);
 
+        log.info("================================");
+
         if (shortPath.size() >= 2 && current.equals(from) && shortPath.get(0).equals(to)) {
             Collections.reverse(shortPath);
             return shortPath;
@@ -82,11 +81,15 @@ public class DirectedGraphAlgorithms {
         }
     }
 
-    private static int getDistance(int newWeight, int currentWeight) {
-        if (currentWeight == 0) {
-            return newWeight;
-        }
+    private static Vertex getMinimum(Map<Vertex, Integer> vertexDistances, Set<Vertex> unvisited) {
+        return unvisited.stream()
+                .map(v -> new AbstractMap.SimpleEntry<>(v, getShortestDistance(vertexDistances, v)))
+                .min(comparingInt(AbstractMap.SimpleEntry::getValue))
+                .map(AbstractMap.SimpleEntry::getKey)
+                .get();
+    }
 
-        return Math.min(newWeight, currentWeight);
+    private static int getShortestDistance(Map<Vertex, Integer> vertexDistances, Vertex vertex) {
+        return ofNullable(vertexDistances.get(vertex)).orElse(Integer.MAX_VALUE);
     }
 }
