@@ -21,7 +21,9 @@ public class BracketCheckerTest {
                 {"{}", true},
                 {"{", false},
                 {"{}}", false},
-                {"{{{{{}}}}}", true}
+                {"{{{{{}}}}}", true},
+                {"({)}", false},
+                {"{()}", true}
         };
     }
 }
