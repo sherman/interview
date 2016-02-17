@@ -72,8 +72,8 @@ public class BracketChecker {
                 ).flatMap(identity())
                 .collect(
                         toMap(
-                                AbstractMap.SimpleImmutableEntry::getKey,
-                                AbstractMap.SimpleImmutableEntry::getValue
+                                Map.Entry::getKey,
+                                Map.Entry::getValue
                         )
                 );
 
