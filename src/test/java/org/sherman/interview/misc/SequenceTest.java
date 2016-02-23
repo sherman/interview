@@ -17,25 +17,6 @@ import static org.testng.Assert.assertEquals;
 public class SequenceTest {
     private static final Logger log = LoggerFactory.getLogger(SequenceTest.class);
 
-    /**
-     * public static void generate<T>(
-     * IList<T> input,
-     * IList<T> output,
-     * IList<IList<T>> combinations,
-     * int depth
-     * ) {
-     * if (depth == 0) {
-     * combinations.Add(new List<T>(output));
-     * } else {
-     * for (int i = 0; i < input.Count; i++) {
-     * output.Add(input[i]);
-     * generate(input, output, combinations, depth - 1);
-     * output.RemoveAt(output.Count - 1);
-     * }
-     * }
-     * }
-     */
-
     @Test
     public void getSums() {
         int[] values = new int[]{1, 2, 3, 5, 7, 9};
