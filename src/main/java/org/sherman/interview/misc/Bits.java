@@ -27,6 +27,17 @@ public class Bits {
         return count;
     }
 
+    public static int getCompliment(int value) {
+        int count = 0;
+        int original = value;
+        while (original != 0) {
+            count++;
+            original = original >> 1;
+        }
+
+        return ~value & ((1 << count) - 1);
+    }
+
     public static String decToBin(int decimal) {
         StringBuilder result = new StringBuilder();
 
