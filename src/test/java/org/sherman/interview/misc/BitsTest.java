@@ -19,7 +19,7 @@ public class BitsTest {
     }
 
     @Test
-    public void test() {
+    public void getCompliment() {
         assertEquals(Bits.getCompliment(100), 27);
         assertEquals(Bits.getCompliment(50), 13);
     }
