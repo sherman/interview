@@ -1,7 +1,7 @@
 package org.sherman.interview.sort.counting;
 
 /*
- * Copyright (C) 2015 by Denis M. Gabaydulin
+ * Copyright (C) 2015-2016 by Denis M. Gabaydulin
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -28,8 +28,8 @@ import static org.testng.Assert.assertTrue;
 public class CountingSortTest {
     @Test
     public void sort() {
-        long[] result = CountingSort.sort(new long[]{43L, 1L, 3L, 3L, 44L, 42L});
+        int[] result = CountingSort.sort(new int[]{90, 43, 1, 3, 3, 44, 42}, 91);
 
-        assertTrue(Arrays.equals(result, new long[]{1L, 3L, 3L, 42L, 43L, 44L}));
+        assertTrue(Arrays.equals(result, new int[]{1, 3, 3, 42, 43, 44, 90}));
     }
 }

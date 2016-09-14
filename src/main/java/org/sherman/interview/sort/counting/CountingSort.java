@@ -23,44 +23,45 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 public class CountingSort {
     private static final Logger log = LoggerFactory.getLogger(CountingSort.class);
 
 
-    public static long[] sort(@NotNull long[] elts) {
-        Map<Long, Integer> histogram = new HashMap<>();
+    public static int[] sort(@NotNull int[] elts, int max) {
+        Map<Integer, Integer> histogram = new HashMap<>();
 
-        for (long elt : elts) {
+        for (int elt : elts) {
             Integer counter = histogram.putIfAbsent(elt, 1);
             if (counter != null) {
                 histogram.put(elt, ++counter);
             }
         }
 
-        histogram
-                .forEach((k, v) -> log.info("{}: {}", k, v));
+        histogram.forEach((k, v) -> log.info("h: {}: {}", k, v));
 
-        int total = 0;
-        for (long elt : histogram.keySet()) {
-            int old = histogram.get(elt);
-            histogram.put(elt, total);
-            total += old;
+        int[] countArray = IntStream.range(0, max)
+                .map(index -> Optional.ofNullable(histogram.get(index)).orElse(0))
+                .toArray();
+
+        for (int i = 1; i < countArray.length; i++) {
+            countArray[i] = countArray[i - 1] + countArray[i];
         }
 
-        histogram
-                .forEach((k, v) -> log.info("{}: {}", k, v));
+        log.info("c: {}", countArray);
 
-        long[] result = new long[elts.length];
-        for (long elt : elts) {
-            result[histogram.get(elt)] = elt;
-            histogram.put(elt, histogram.get(elt) + 1);
+        int[] result = new int[elts.length];
+
+        for (int elt : elts) {
+            result[countArray[elt] - 1] = elt;
+            --countArray[elt];
         }
 
-        Arrays.stream(result).forEach(elt -> log.info("{}", elt));
+        Arrays.stream(result).forEach(elt -> log.info("r: {}", elt));
 
         return result;
     }
