@@ -23,6 +23,12 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 public class Lists {
     private static final Logger log = LoggerFactory.getLogger(Lists.class);
 
@@ -44,11 +50,54 @@ public class Lists {
         return prev;
     }
 
+    public static int[] getIntersectionOfSortedLists(@NotNull int[] arr1, @NotNull int[] arr2) {
+        Set<Integer> hash;
+
+        if (arr1.length < arr2.length) {
+            hash = Arrays.stream(arr1)
+                    .boxed()
+                    .collect(Collectors.toSet());
+
+            return getIntersection(hash, arr2);
+        } else {
+            hash = Arrays.stream(arr2)
+                    .boxed()
+                    .collect(Collectors.toSet());
+
+            return getIntersection(hash, arr1);
+        }
+    }
+
+    public static Integer[] getIntersectionOfSortedListsConstMemory(@NotNull int[] arr1, @NotNull int[] arr2) {
+        List<Integer> result = new ArrayList<>();
+
+        int i = 0, j = 0;
+        while (i < arr1.length && j < arr2.length) {
+            if (arr1[i] < arr2[j]) {
+                i++;
+            } else if (arr1[i] > arr2[j]) {
+                j++;
+            } else {
+                result.add(arr1[i]);
+                i++;
+                j++;
+            }
+        }
+
+        return result.toArray(new Integer[result.size()]);
+    }
+
     public static void print(@NotNull Item head) {
         Item tmp = head;
         while (tmp != null) {
             log.info("{}", tmp.id);
             tmp = tmp.next;
         }
+    }
+
+    private static int[] getIntersection(@NotNull Set<Integer> hash, @NotNull int[] arr) {
+        return Arrays.stream(arr)
+                .filter(hash::contains)
+                .toArray();
     }
 }

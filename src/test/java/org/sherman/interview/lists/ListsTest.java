@@ -21,6 +21,7 @@ package org.sherman.interview.lists;
 
 import org.testng.annotations.Test;
 
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 public class ListsTest {
@@ -47,4 +48,15 @@ public class ListsTest {
             tmp = tmp.next;
         }
     }
+
+    @Test
+    public void getIntersectionOfSortedLists() {
+        assertEquals(Lists.getIntersectionOfSortedLists(new int[]{1, 2, 3}, new int[]{2, 3}), new int[]{2, 3});
+    }
+
+    @Test
+    public void getIntersectionOfSortedListsConstMemory() {
+        assertEquals(Lists.getIntersectionOfSortedListsConstMemory(new int[]{1, 2, 3}, new int[]{2, 3}), new Integer[]{2, 3});
+    }
+
 }
