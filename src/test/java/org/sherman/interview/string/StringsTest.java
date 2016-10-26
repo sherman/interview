@@ -16,4 +16,12 @@ public class StringsTest {
         assertEquals(Strings.reverse("abc"), "cba");
         assertEquals(Strings.reverse("a"), "a");
     }
+
+    @Test
+    public void isPalindrome() {
+        assertEquals(Strings.isPalindrome("aba"), true);
+        assertEquals(Strings.isPalindrome("a"), true);
+        assertEquals(Strings.isPalindrome("abacddcaba"), true);
+        assertEquals(Strings.isPalindrome("abacdccaba"), false);
+    }
 }

@@ -21,4 +21,16 @@ public class Strings {
 
         return new String(chars);
     }
+
+    public static boolean isPalindrome(@NotNull String string) {
+        char[] chars = string.toCharArray();
+
+        for (int i = 0; i < chars.length / 2; i++) {
+            if (chars[i] != chars[chars.length - i - 1]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
