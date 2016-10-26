@@ -9,7 +9,6 @@ import static org.testng.Assert.assertEquals;
  * @since 26.10.16
  */
 public class StringsTest {
-
     @Test
     public void reverse() {
         assertEquals(Strings.reverse("abcd"), "dcba");
@@ -23,5 +22,21 @@ public class StringsTest {
         assertEquals(Strings.isPalindrome("a"), true);
         assertEquals(Strings.isPalindrome("abacddcaba"), true);
         assertEquals(Strings.isPalindrome("abacdccaba"), false);
+    }
+
+    @Test
+    public void isAnagramBySort() {
+        assertEquals(Strings.isAnagramBySort("ab", "ab"), true);
+        assertEquals(Strings.isAnagramBySort("ab", "ba"), true);
+        assertEquals(Strings.isAnagramBySort("abba", "acca"), false);
+        assertEquals(Strings.isAnagramBySort("ccccaaabbbb ", "bbbbccccaaa"), true);
+    }
+
+    @Test
+    public void isAnagramByHash() {
+        assertEquals(Strings.isAnagramByHash("abz", "abz"), true);
+        assertEquals(Strings.isAnagramByHash("ab", "ba"), true);
+        assertEquals(Strings.isAnagramByHash("abba", "acca"), false);
+        assertEquals(Strings.isAnagramByHash("ccccaaabbbb z", "bbbbccccaaaz"), true);
     }
 }
