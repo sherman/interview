@@ -20,6 +20,8 @@ package org.sherman.interview.tree;
 
 import org.testng.annotations.Test;
 
+import static org.testng.Assert.assertEquals;
+
 public class TreesTest {
     @Test
     public void traverse() {
@@ -43,5 +45,29 @@ public class TreesTest {
         right22.setRight(n1);
 
         Trees.traverse(root, "");
+    }
+
+    @Test
+    public void getHeight() {
+        TreeNode root = new TreeNode(1, null);
+        TreeNode left = new TreeNode(2, root);
+        TreeNode right = new TreeNode(3, root);
+        root.setLeft(left);
+        root.setRight(right);
+
+        TreeNode left11 = new TreeNode(4, left);
+        TreeNode right11 = new TreeNode(5, left);
+        left.setLeft(left11);
+        left.setRight(right11);
+
+        TreeNode left22 = new TreeNode(6, right);
+        TreeNode right22 = new TreeNode(7, right);
+        right.setLeft(left22);
+        right.setRight(right22);
+
+        TreeNode n1 = new TreeNode(8, right22);
+        right22.setRight(n1);
+
+        assertEquals(Trees.getHeight(root), 4);
     }
 }

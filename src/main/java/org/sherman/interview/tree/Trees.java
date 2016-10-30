@@ -19,13 +19,14 @@ package org.sherman.interview.tree;
  * limitations under the License.
  */
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Trees {
     private static final Logger log = LoggerFactory.getLogger(Trees.class);
 
-    public static void traverse(TreeNode node, String path) {
+    public static void traverse(@NotNull TreeNode node, String path) {
         path = path + "," + node.getId();
         if (node.getParent() != null) {
             log.info("{}", path);
@@ -39,6 +40,17 @@ public class Trees {
             if (node.getRight() != null) {
                 traverse(node.getRight(), path);
             }
+        }
+    }
+
+    public static int getHeight(TreeNode node) {
+        if (node == null) {
+            return 0;
+        } else {
+            int leftHeight = getHeight(node.getLeft());
+            int rightHeight = getHeight(node.getRight());
+
+            return 1 + Math.max(leftHeight, rightHeight);
         }
     }
 }
