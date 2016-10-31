@@ -4,6 +4,7 @@ import com.beust.jcommander.internal.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
+import org.testng.internal.junit.ArrayAsserts;
 
 import java.util.stream.Collectors;
 
@@ -49,5 +50,33 @@ public class DirectedGraphAlgorithmsTest {
                         .collect(Collectors.toList()),
                 Lists.newArrayList(1, 3, 4)
         );
+    }
+
+    @Test
+    public void bfs() {
+        DirectedGraph graph = new DirectedGraph();
+        graph.addEdge(new DirectedEdge(new Vertex(1), new Vertex(2), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(1), new Vertex(3), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(3), new Vertex(4), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(3), new Vertex(5), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(2), new Vertex(6), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(2), new Vertex(7), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(5), new Vertex(8), 1));
+
+        ArrayAsserts.assertArrayEquals(new int[]{1, 2, 3, 6, 7, 4, 5, 8}, DirectedGraphAlgorithms.bfs(graph, new Vertex(1)));
+    }
+
+    @Test
+    public void dfs() {
+        DirectedGraph graph = new DirectedGraph();
+        graph.addEdge(new DirectedEdge(new Vertex(1), new Vertex(2), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(1), new Vertex(3), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(3), new Vertex(4), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(3), new Vertex(5), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(2), new Vertex(6), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(2), new Vertex(7), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(5), new Vertex(8), 1));
+
+        ArrayAsserts.assertArrayEquals(new int[]{1, 2, 3, 4, 5, 8, 6, 7}, DirectedGraphAlgorithms.dfs(graph, new Vertex(1)));
     }
 }

@@ -1,11 +1,15 @@
 package org.sherman.interview.graph;
 
+import com.google.common.primitives.Ints;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparingInt;
@@ -44,7 +48,7 @@ public class DirectedGraphAlgorithms {
                                 if (
                                         getShortestDistance(vertexDistances, edge.getTo()) >
                                                 getShortestDistance(vertexDistances, edge.getFrom()) + edge.getWeight()
-                                ) {
+                                        ) {
                                     vertexDistances.put(edge.getTo(), getShortestDistance(vertexDistances, edge.getFrom()) + edge.getWeight());
                                     unvisited.add(edge.getTo());
                                     shortPaths.add(edge);
@@ -91,5 +95,42 @@ public class DirectedGraphAlgorithms {
 
     private static int getShortestDistance(Map<Vertex, Integer> vertexDistances, Vertex vertex) {
         return ofNullable(vertexDistances.get(vertex)).orElse(Integer.MAX_VALUE);
+    }
+
+    public static int[] bfs(@NotNull DirectedGraph graph, @NotNull Vertex start) {
+        Queue<Vertex> vertices = new LinkedList<>();
+        return graphTraverse(graph, start, vertices::poll, vertices::offer, vertices);
+    }
+
+    public static int[] dfs(@NotNull DirectedGraph graph, @NotNull Vertex start) {
+        Stack<Vertex> vertices = new Stack<>();
+        return graphTraverse(graph, start, vertices::pop, vertices::push, vertices);
+    }
+
+    private static int[] graphTraverse(
+            DirectedGraph graph,
+            Vertex start,
+            Supplier<Vertex> supplier,
+            Consumer<Vertex> consumer,
+            Collection<Vertex> collection
+    ) {
+        List<Integer> result = new ArrayList<>();
+        Set<Vertex> visited = new HashSet<>();
+
+        consumer.accept(start);
+        result.add(start.getId());
+
+        while (!collection.isEmpty()) {
+            Vertex newVertex = supplier.get();
+            graph.getListOfNeighbours(newVertex).stream()
+                    .filter(neighbour -> !visited.contains(neighbour))
+                    .forEach(neighbour -> {
+                        result.add(neighbour.getId());
+                        visited.add(neighbour);
+                        consumer.accept(neighbour);
+                    });
+        }
+
+        return Ints.toArray(result);
     }
 }
