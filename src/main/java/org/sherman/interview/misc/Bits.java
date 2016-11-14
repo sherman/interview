@@ -13,6 +13,14 @@ public class Bits {
     private Bits() {
     }
 
+    public static boolean isBitSet(int number, int n) {
+        return (number & (1 << n)) != 0;
+    }
+
+    public static int setBit(int number, int n) {
+        return number | (1 << n);
+    }
+
     public static int countNonZeroBits(int value) {
         if (value < 0) {
             throw new UnsupportedOperationException("Value must be positive!");
