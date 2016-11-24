@@ -3,9 +3,8 @@ package org.sherman.interview.misc;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.annotations.Test;
 
-import static org.testng.Assert.assertEquals;
+import java.util.Arrays;
 
 /**
  * @author Denis Gabaydulin
@@ -64,8 +63,48 @@ public class CompactArray {
         return data;
     }
 
-    @Test
-    public void test() {
-        assertEquals(CompactArray.compactArray(new int[]{1, 1, 1, 2, 2, 2, 3, 3}), new int[]{1, 3, 2, 3, 3, 2, -1, -1});
+    /**
+     * @param data contains integer list [a,a,a,b,c,c,c,c,d,d,d,...], every symbol occur at least twice
+     */
+    public static int[] compactArrayV2(@NotNull int[] data) {
+        // mark all duplicates as -1
+        int currentElt = 0;
+        for (int i = 0; i < data.length; i++) {
+            if (currentElt == 0 || currentElt != data[i]) {
+                currentElt = data[i];
+            } else {
+                data[i] = -1;
+            }
+        }
+
+        log.info("{}", data);
+
+        // compact array
+        int offset = 0;
+        int lastPosition = 0;
+        int sequenceCounter = 0;
+        currentElt = 0;
+        int prevElt = 0;
+        for (int i = 0; i < data.length; i++) {
+            if (data[i] == -1) {
+                sequenceCounter++;
+            } else {
+                prevElt = currentElt;
+                currentElt = data[i];
+
+                if (prevElt != 0) {
+                    log.info("{} {}", prevElt, sequenceCounter);
+                    data[2 * (offset - 1)] = prevElt;
+                    data[2 * (offset - 1) + 1] = sequenceCounter + 1;
+                }
+                sequenceCounter = 0;
+                offset += 1;
+            }
+        }
+
+        data[2 * (offset - 1)] = currentElt;
+        data[2 * (offset - 1) + 1] = sequenceCounter + 1;
+
+        return Arrays.copyOf(data, 2 * (offset));
     }
 }
