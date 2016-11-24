@@ -1,10 +1,13 @@
 package org.sherman.interview.misc;
 
+import com.google.common.primitives.Ints;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Denis Gabaydulin
@@ -19,6 +22,7 @@ public class CompactArray {
     /**
      * @param data contains integer list [a,a,a,b,c,c,c,c,d,d,d,...], every symbol occur at least twice
      */
+    @NotNull
     public static int[] compactArray(@NotNull int[] data) {
         int currentElt = 0;
         int sequenceCounter = 0;
@@ -66,6 +70,7 @@ public class CompactArray {
     /**
      * @param data contains integer list [a,a,a,b,c,c,c,c,d,d,d,...], every symbol occur at least twice
      */
+    @NotNull
     public static int[] compactArrayV2(@NotNull int[] data) {
         // mark all duplicates as -1
         int currentElt = 0;
@@ -106,5 +111,26 @@ public class CompactArray {
         data[2 * (offset - 1) + 1] = sequenceCounter + 1;
 
         return Arrays.copyOf(data, 2 * (offset));
+    }
+
+    @NotNull
+    public static int[] runLengthEncoding(@NotNull int[] data) {
+        List<Integer> result = new ArrayList<>();
+
+        int sequenceCounter = 1;
+        for (int i = 1; i < data.length; i++) {
+            if (data[i] != data[i - 1]) {
+                result.add(data[i - 1]);
+                result.add(sequenceCounter);
+                sequenceCounter = 1;
+            } else {
+                sequenceCounter++;
+            }
+        }
+
+        result.add(data[data.length - 1]);
+        result.add(sequenceCounter);
+
+        return Ints.toArray(result);
     }
 }
