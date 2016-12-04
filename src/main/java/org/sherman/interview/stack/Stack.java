@@ -1,5 +1,6 @@
 package org.sherman.interview.stack;
 
+import org.jetbrains.annotations.NotNull;
 import sun.plugin.dom.exception.InvalidStateException;
 
 /**
@@ -14,7 +15,7 @@ public class Stack<T> {
         elts = new Object[size];
     }
 
-    public void push(T elt) {
+    public void push(@NotNull T elt) {
         if (elts.length == size) {
             resize();
         }
@@ -22,6 +23,7 @@ public class Stack<T> {
         elts[size++] = elt;
     }
 
+    @NotNull
     public T pop() {
         if (size == 0) {
             throw new InvalidStateException("Stack is empty!");
@@ -30,7 +32,10 @@ public class Stack<T> {
     }
 
     public T peek() {
-        return null;
+        if (size == 0) {
+            return null;
+        }
+        return (T) elts[size - 1];
     }
 
     public boolean isEmpty() {
