@@ -53,4 +53,15 @@ public class Trees {
             return 1 + Math.max(leftHeight, rightHeight);
         }
     }
+
+    public static void swapTree(TreeNode node) {
+        if (node != null && node.hasChildren()) {
+            TreeNode temp = node.getLeft();
+            node.setLeft(node.getRight());
+            node.setRight(temp);
+
+            swapTree(node.getLeft());
+            swapTree(node.getRight());
+        }
+    }
 }

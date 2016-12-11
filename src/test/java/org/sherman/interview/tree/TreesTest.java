@@ -70,4 +70,34 @@ public class TreesTest {
 
         assertEquals(Trees.getHeight(root), 4);
     }
+
+    @Test
+    public void swapTree() {
+        TreeNode root = new TreeNode(1, null);
+        TreeNode left = new TreeNode(2, root);
+        TreeNode right = new TreeNode(3, root);
+        root.setLeft(left);
+        root.setRight(right);
+
+        TreeNode left11 = new TreeNode(4, left);
+        TreeNode right11 = new TreeNode(5, left);
+        left.setLeft(left11);
+        left.setRight(right11);
+
+        TreeNode left22 = new TreeNode(6, right);
+        TreeNode right22 = new TreeNode(7, right);
+        right.setLeft(left22);
+        right.setRight(right22);
+
+        Trees.swapTree(root);
+
+        assertEquals(root.getLeft(), right);
+        assertEquals(root.getRight(), left);
+
+        assertEquals(left.getLeft(), right11);
+        assertEquals(left.getRight(), left11);
+
+        assertEquals(right.getLeft(), right22);
+        assertEquals(right.getRight(), left22);
+    }
 }
