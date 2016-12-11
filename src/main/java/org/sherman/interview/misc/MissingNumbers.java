@@ -8,10 +8,10 @@ import org.slf4j.LoggerFactory;
  * @author Denis Gabaydulin
  * @since 06/12/2016
  */
-public class FindMissingPositiveNumber {
-    private static final Logger log = LoggerFactory.getLogger(FindMissingPositiveNumber.class);
+public class MissingNumbers {
+    private static final Logger log = LoggerFactory.getLogger(MissingNumbers.class);
 
-    private FindMissingPositiveNumber() {
+    private MissingNumbers() {
     }
 
     public static int findMissingPositiveNumber(@NotNull int[] numbers) {
