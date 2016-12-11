@@ -27,4 +27,11 @@ public class MissingNumbersTest {
         assertEquals(MissingNumbers.findMissingPositiveNumber(new int[]{2}), 1);
         assertEquals(MissingNumbers.findMissingPositiveNumber(new int[]{2, 1}), 3);
     }
+
+    @Test
+    public void findRemoved() {
+        assertEquals(MissingNumbers.findRemoved(new int[]{2}), 1);
+        assertEquals(MissingNumbers.findRemoved(new int[]{1, 3}), 2);
+        assertEquals(MissingNumbers.findRemoved(new int[]{1, 2, 3, 5}), 4);
+    }
 }

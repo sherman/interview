@@ -4,6 +4,10 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static java.util.Arrays.stream;
+import static java.util.stream.IntStream.range;
+
 /**
  * @author Denis Gabaydulin
  * @since 06/12/2016
@@ -74,5 +78,20 @@ public class MissingNumbers {
         }
 
         return numbers.length - negative + 1;
+    }
+
+    /**
+     * @param numbers is an array of consecutive positive integers, starting from one
+     */
+    public static int findRemoved(@NotNull int[] numbers) {
+        checkArgument(stream(numbers).allMatch(v -> v > 0), "Only positive numbers accepted!");
+
+        int sum = range(1, numbers.length + 2).sum();
+
+        for (int v : numbers) {
+            sum -= v;
+        }
+
+        return sum;
     }
 }
