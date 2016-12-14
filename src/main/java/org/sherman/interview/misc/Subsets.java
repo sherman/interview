@@ -5,7 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Denis Gabaydulin
@@ -15,6 +17,50 @@ public class Subsets {
     private static final Logger log = LoggerFactory.getLogger(Subsets.class);
 
     private Subsets() {
+    }
+
+    public static int getLongestConsecutive(@NotNull int[] nums) {
+        Map<Integer, Integer> m = new HashMap<>();
+
+        for (int i = 0; i < nums.length; i++) {
+            if (m.get(nums[i]) != null) {
+                continue;
+            }
+
+            int v = 1;
+            Integer v1 = m.get(nums[i] - 1);
+            Integer v2 = m.get(nums[i] + 1);
+
+            if (v2 != null) {
+                v = v + v2;
+            }
+
+            if (v1 != null) {
+                v = v + v1;
+            }
+
+            if (v2 != null) {
+                m.put(nums[i] + v2, v);
+            }
+
+            if (v1 != null) {
+                m.put(nums[i] - v1, v);
+            }
+
+            m.put(nums[i], v);
+        }
+
+        log.info("{}", m);
+
+        int max = 0;
+
+        for (int i = 0; i < nums.length; i++) {
+            if (max < m.get(nums[i])) {
+                max = m.get(nums[i]);
+            }
+        }
+
+        return max;
     }
 
     public static List<List<Integer>> getAllSubsetsOptimized(@NotNull List<Integer> data) {
