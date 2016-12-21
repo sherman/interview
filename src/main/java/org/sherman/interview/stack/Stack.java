@@ -1,7 +1,6 @@
 package org.sherman.interview.stack;
 
 import org.jetbrains.annotations.NotNull;
-import sun.plugin.dom.exception.InvalidStateException;
 
 /**
  * @author Denis Gabaydulin
@@ -26,7 +25,7 @@ public class Stack<T> {
     @NotNull
     public T pop() {
         if (size == 0) {
-            throw new InvalidStateException("Stack is empty!");
+            throw new IllegalStateException("Stack is empty!");
         }
         return (T) elts[--size];
     }
