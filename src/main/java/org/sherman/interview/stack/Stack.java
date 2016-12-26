@@ -1,6 +1,14 @@
 package org.sherman.interview.stack;
 
+import com.google.common.base.Joiner;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * @author Denis Gabaydulin
@@ -39,6 +47,17 @@ public class Stack<T> {
 
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    @Override
+    public String toString() {
+        return "[" + (size > 0 ? Joiner.on(";").join(getNonNullElts()) : "") + "]";
+    }
+
+    private List<Object> getNonNullElts() {
+        return Arrays.stream(elts)
+                .filter(Objects::nonNull)
+                .collect(toList());
     }
 
     private void resize() {
