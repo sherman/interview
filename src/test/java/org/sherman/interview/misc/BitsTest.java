@@ -40,4 +40,13 @@ public class BitsTest {
         assertEquals(Bits.setBit(1, 0), 1);
         assertEquals(Bits.setBit(36, 6), 100);
     }
+
+    @Test
+    public void isPalindrome() {
+        assertFalse(Bits.isPalindrome(8));
+        assertTrue(Bits.isPalindrome(3));
+        assertTrue(Bits.isPalindrome(65));
+        assertTrue(Bits.isPalindrome(0));
+        assertTrue(Bits.isPalindrome(1));
+    }
 }

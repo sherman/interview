@@ -2,6 +2,10 @@ package org.sherman.interview.misc;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.annotations.Test;
+
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 /**
  * @author sherman
@@ -58,5 +62,30 @@ public class Bits {
         } while (decimal != 0);
 
         return result.reverse().toString();
+    }
+
+    /**
+     * @return true in case of a value is palindrome in a binary representation
+     */
+    public static boolean isPalindrome(int value) {
+        int original = value;
+        int count = 0;
+        while (original != 0) {
+            count++;
+            original = original >> 1;
+        }
+        log.info("{} {}", count, decToBin(value));
+
+        for (int i = 0; i < count / 2; i++) {
+            boolean left = (value & (1 << i)) != 0;
+            boolean right = (value & (1 << (count - i - 1))) != 0;
+
+            if (left != right) {
+                return false;
+            }
+
+        }
+
+        return true;
     }
 }
