@@ -88,4 +88,38 @@ public class Bits {
 
         return true;
     }
+
+    /**
+     * Problem: Get maximum binary Gap.
+     * For example, 9's binary form is 1001, the gap is 2.
+     */
+    public static int getMaxGap(int value) {
+        int bits = 0;
+        int original = value;
+        while (value != 0) {
+            value = value >> 1;
+            bits++;
+        }
+
+        log.info("{}", bits);
+
+        int gap = 0;
+        int current = 0;
+        for (int i = 0; i < bits; i++) {
+            if ((original & (1 << i)) != 0) {
+                if (current > gap) {
+                    gap = current;
+                }
+                current = 0;
+            } else {
+                current++;
+            }
+        }
+
+        if (current > gap) {
+            gap = current;
+        }
+
+        return gap;
+    }
 }

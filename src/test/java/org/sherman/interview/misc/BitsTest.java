@@ -49,4 +49,10 @@ public class BitsTest {
         assertTrue(Bits.isPalindrome(0));
         assertTrue(Bits.isPalindrome(1));
     }
+
+    @Test
+    public void getMaxGap() {
+        assertEquals(Bits.getMaxGap(9), 2);
+        assertEquals(Bits.getMaxGap(272), 4);
+    }
 }
