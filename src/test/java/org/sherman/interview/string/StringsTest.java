@@ -39,4 +39,10 @@ public class StringsTest {
         assertEquals(Strings.isAnagramByHash("abba", "acca"), false);
         assertEquals(Strings.isAnagramByHash("ccccaaabbbb z", "bbbbccccaaaz"), true);
     }
+
+    @Test
+    public void getLongestPalindrome() {
+        assertEquals(Strings.getLongestPalindrome("abccccdd"), 7);
+        assertEquals(Strings.getLongestPalindrome("bb"), 2);
+    }
 }
