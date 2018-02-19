@@ -27,4 +27,13 @@ public class CompactArrayTest {
         assertEquals(CompactArray.runLengthEncoding(new int[]{1, 1, 2}), new int[]{1, 2, 2, 1});
         assertEquals(CompactArray.runLengthEncoding(new int[]{1, 2, 3}), new int[]{1, 1, 2, 1, 3, 1});
     }
+
+    @Test
+    public void compactArrayV3() {
+        assertEquals(CompactArray.compactArrayV3(new int[]{1, 1, 1, 2, 2, 2, 3, 3, 4, 4}), new int[]{1, 2, 3, 4});
+        assertEquals(CompactArray.compactArrayV3(new int[]{1}), new int[]{1});
+        assertEquals(CompactArray.compactArrayV3(new int[]{1, 1, 1}), new int[]{1});
+        assertEquals(CompactArray.compactArrayV3(new int[]{1, 1, 2}), new int[]{1, 2});
+        assertEquals(CompactArray.compactArrayV3(new int[]{1, 2, 3}), new int[]{1, 2, 3});
+    }
 }

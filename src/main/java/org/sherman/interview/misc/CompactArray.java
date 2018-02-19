@@ -133,4 +133,28 @@ public class CompactArray {
 
         return Ints.toArray(result);
     }
+
+    /**
+     * @param data is sorted
+     * @return
+     */
+    @NotNull
+    public static int[] compactArrayV3(@NotNull int[] data) {
+        if (data.length == 0) {
+            return data;
+        }
+
+        int current = data[0];
+        int count = 1;
+        for (int i = 1; i < data.length; i++) {
+            if (current != data[i]) {
+                current = data[i];
+                data[count++] = current;
+            }
+        }
+
+        int[] newElts = new int[count];
+        System.arraycopy(data, 0, newElts, 0, count);
+        return newElts;
+    }
 }
