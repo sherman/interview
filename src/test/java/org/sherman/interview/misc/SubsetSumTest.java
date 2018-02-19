@@ -18,6 +18,14 @@ public class SubsetSumTest {
     }
 
     @Test
+    public void getIndexOfSumInSortedArray() {
+        assertArrayEquals(SubsetSum.getIndexOfSumInSortedArray(new int[]{2, 5, 8, 7}, 12), new int[]{1, 3});
+        assertArrayEquals(SubsetSum.getIndexOfSumInSortedArray(new int[]{1, 1, 1, 1}, 12), new int[]{});
+        assertArrayEquals(SubsetSum.getIndexOfSumInSortedArray(new int[]{1, 1, 1, 11}, 12), new int[]{0, 3});
+        assertArrayEquals(SubsetSum.getIndexOfSumInSortedArray(new int[]{1, 2, 3, 4, 8}, 12), new int[]{3, 4});
+    }
+
+    @Test
     public void getShortestSubsetOfSum() {
         assertArrayEquals(SubsetSum.getShortestSubsetOfSum(new int[]{2, 4, 3, 1, 7, 5}, 7), new int[]{4});
         assertArrayEquals(SubsetSum.getShortestSubsetOfSum(new int[]{2, 4, 4, 1, 5, 5}, 7), new int[]{});

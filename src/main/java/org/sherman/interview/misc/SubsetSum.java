@@ -73,4 +73,21 @@ public class SubsetSum {
 
         return Ints.toArray(found);
     }
+
+    public static int[] getIndexOfSumInSortedArray(@NotNull int[] data, int sum) {
+        int i = 0;
+        int j = data.length - 1;
+        while (i < j) {
+            int candidate = data[i] + data[j];
+            if (candidate == sum) {
+                return new int[]{i, j};
+            } else if (candidate < sum) {
+                i++;
+            } else {
+                j--;
+            }
+        }
+
+        return new int[]{};
+    }
 }
