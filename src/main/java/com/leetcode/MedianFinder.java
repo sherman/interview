@@ -19,44 +19,63 @@ package com.leetcode;
  * limitations under the License.
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
+
+import static java.util.Comparator.reverseOrder;
 
 public class MedianFinder {
-    private List<Integer> values = new ArrayList<>();
-    private Double median = Double.NaN;
+    private static final Logger log = LoggerFactory.getLogger(MedianFinder.class);
+
+    private PriorityQueue<Integer> low = new PriorityQueue<>();
+    private PriorityQueue<Integer> high = new PriorityQueue<>(reverseOrder());
+    private int elements = 0;
 
     public MedianFinder() {
     }
 
     public void addNum(int num) {
-        values.add(num);
-        this.median = Double.NaN;
+        log.info("Start: {} H: {} L: {}, {}", num, high, low, elements);
+        
+        high.add(num);
+
+        if (elements % 2 == 0) {
+            // just add to high
+            if (low.isEmpty()) {
+                log.info("Add to high {}", num);
+                elements++;
+                return;
+            } else if (high.peek() > low.peek()) {
+                int highRoot = high.poll();
+                int lowRoot = low.poll();
+                high.add(lowRoot);
+                low.add(highRoot);
+                log.info("Rebalance: {} {}", highRoot, lowRoot);
+            }
+        } else {
+            log.info("To low: {} {}", high.peek(), low.peek());
+            low.add(high.poll());
+        }
+        elements++;
+
+        log.info("End: {} H: {} L: {}, {}", num, high, low, elements);
     }
 
     public double findMedian() {
-        if (median.equals(Double.NaN)) {
-            median = calculateMedian();
+        if (elements % 2 != 0) {
+            return (double) getPeek(high);
+        } else {
+            return (double) (getPeek(high) + getPeek(low)) / 2.0d;
         }
-
-        return median;
     }
 
-    /**
-     * Complexity: O(n * (n * (log n))
-     */
-    private double calculateMedian() {
-        if (values.size() == 1) {
-            return values.get(0);
-        }
-
-        Collections.sort(values);
-
-        if (values.size() % 2 == 0) {
-            return (values.get(values.size() / 2) + values.get(values.size() / 2 - 1)) / 2.0d;
+    private int getPeek(PriorityQueue queue) {
+        if (queue.peek() == null) {
+            return 0;
         } else {
-            return values.get(values.size() / 2);
+            return (int) queue.peek();
         }
     }
 }
