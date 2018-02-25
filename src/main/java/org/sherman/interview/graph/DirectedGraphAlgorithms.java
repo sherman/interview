@@ -7,10 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparingInt;
 import static java.util.Optional.ofNullable;
@@ -42,19 +39,19 @@ public class DirectedGraphAlgorithms {
             unvisited.remove(min);
 
             graph.getListOfEdgeNeighbours(min).stream()
-                    .filter(edge -> !visited.contains(edge.getTo()))
-                    .forEach(
-                            edge -> {
-                                if (
-                                        getShortestDistance(vertexDistances, edge.getTo()) >
-                                                getShortestDistance(vertexDistances, edge.getFrom()) + edge.getWeight()
-                                        ) {
-                                    vertexDistances.put(edge.getTo(), getShortestDistance(vertexDistances, edge.getFrom()) + edge.getWeight());
-                                    unvisited.add(edge.getTo());
-                                    shortPaths.add(edge);
-                                }
-                            }
-                    );
+                .filter(edge -> !visited.contains(edge.getTo()))
+                .forEach(
+                    edge -> {
+                        if (
+                            getShortestDistance(vertexDistances, edge.getTo()) >
+                                getShortestDistance(vertexDistances, edge.getFrom()) + edge.getWeight()
+                            ) {
+                            vertexDistances.put(edge.getTo(), getShortestDistance(vertexDistances, edge.getFrom()) + edge.getWeight());
+                            unvisited.add(edge.getTo());
+                            shortPaths.add(edge);
+                        }
+                    }
+                );
 
             if (visited.contains(to)) {
                 unvisited.clear();
@@ -87,10 +84,10 @@ public class DirectedGraphAlgorithms {
 
     private static Vertex getMinimum(Map<Vertex, Integer> vertexDistances, Set<Vertex> unvisited) {
         return unvisited.stream()
-                .map(v -> new AbstractMap.SimpleEntry<>(v, getShortestDistance(vertexDistances, v)))
-                .min(comparingInt(AbstractMap.SimpleEntry::getValue))
-                .map(AbstractMap.SimpleEntry::getKey)
-                .get();
+            .map(v -> new AbstractMap.SimpleEntry<>(v, getShortestDistance(vertexDistances, v)))
+            .min(comparingInt(AbstractMap.SimpleEntry::getValue))
+            .map(AbstractMap.SimpleEntry::getKey)
+            .get();
     }
 
     private static int getShortestDistance(Map<Vertex, Integer> vertexDistances, Vertex vertex) {
@@ -107,30 +104,79 @@ public class DirectedGraphAlgorithms {
         return graphTraverse(graph, start, vertices::pop, vertices::push, vertices);
     }
 
+    public static boolean hasCycle(@NotNull DirectedGraph graph, @NotNull Vertex start) {
+        Map<Vertex, Enum> states = new HashMap<>();
+
+        // at the beginning all vertices are white
+        graph.getVertices().forEach(
+            v -> states.put(v, Color.WHITE)
+        );
+
+        for (Vertex v : states.keySet()) {
+            log.info("V: {}", v);
+            if (dfs(graph, v, states)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static boolean dfs(DirectedGraph graph, Vertex v, Map<Vertex, Enum> states) {
+        log.info("Current: {}", v);
+        
+        // move to grey
+        states.put(v, Color.GREY);
+
+        Set<Vertex> neighbours = graph.getListOfNeighbours(v);
+
+        for (Vertex neighbour : neighbours) {
+            if (states.get(neighbour) != Color.BLACK) {
+                if (states.get(neighbour) == Color.GREY) {
+                    log.info("Cycle is found in v {}");
+                    return true;
+                }
+
+                if (dfs(graph, neighbour, states)) {
+                    return true;
+                }
+            } else {
+                log.info("V: {} is black", neighbour);
+            }
+        }
+
+        states.put(v, Color.BLACK);
+
+        return false;
+    }
+
     private static int[] graphTraverse(
-            DirectedGraph graph,
-            Vertex start,
-            Supplier<Vertex> supplier,
-            Consumer<Vertex> consumer,
-            Collection<Vertex> collection
+        DirectedGraph graph,
+        Vertex start,
+        Supplier<Vertex> supplier,
+        Consumer<Vertex> consumer,
+        Collection<Vertex> collection
     ) {
         List<Integer> result = new ArrayList<>();
         Set<Vertex> visited = new HashSet<>();
 
         consumer.accept(start);
-        result.add(start.getId());
 
         while (!collection.isEmpty()) {
             Vertex newVertex = supplier.get();
+            result.add(newVertex.getId());
             graph.getListOfNeighbours(newVertex).stream()
-                    .filter(neighbour -> !visited.contains(neighbour))
-                    .forEach(neighbour -> {
-                        result.add(neighbour.getId());
-                        visited.add(neighbour);
-                        consumer.accept(neighbour);
-                    });
+                .filter(neighbour -> !visited.contains(neighbour))
+                .forEach(consumer);
+            visited.add(newVertex);
         }
 
         return Ints.toArray(result);
+    }
+
+    private enum Color {
+        WHITE,
+        GREY,
+        BLACK
     }
 }
