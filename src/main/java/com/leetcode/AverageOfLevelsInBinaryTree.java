@@ -19,7 +19,6 @@ package com.leetcode;
  * limitations under the License.
  */
 
-import com.leetcode.LongestUnivaluePath.TreeNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

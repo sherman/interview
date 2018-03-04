@@ -26,40 +26,40 @@ import static org.testng.Assert.assertEquals;
 public class KthSmallestElementBSTTest {
     @Test
     public void case1() {
-        LongestUnivaluePath.TreeNode node = new LongestUnivaluePath.TreeNode(5);
-        node.left = new LongestUnivaluePath.TreeNode(2);
-        node.right = new LongestUnivaluePath.TreeNode(21);
+        TreeNode node = new TreeNode(5);
+        node.left = new TreeNode(2);
+        node.right = new TreeNode(21);
 
-        node.left.left = new LongestUnivaluePath.TreeNode(1);
-        node.left.right = new LongestUnivaluePath.TreeNode(3);
+        node.left.left = new TreeNode(1);
+        node.left.right = new TreeNode(3);
 
-        node.right.left = new LongestUnivaluePath.TreeNode(19);
-        node.right.right = new LongestUnivaluePath.TreeNode(25);
+        node.right.left = new TreeNode(19);
+        node.right.right = new TreeNode(25);
 
         assertEquals(KthSmallestElementBST.kthSmallest(node, 2), 2);
     }
 
     @Test
     public void case2() {
-        LongestUnivaluePath.TreeNode node = new LongestUnivaluePath.TreeNode(1);
+        TreeNode node = new TreeNode(1);
 
         assertEquals(KthSmallestElementBST.kthSmallest(node, 1), 1);
     }
 
     @Test
     public void case3() {
-        LongestUnivaluePath.TreeNode node = new LongestUnivaluePath.TreeNode(1);
-        node.right = new LongestUnivaluePath.TreeNode(2);
+        TreeNode node = new TreeNode(1);
+        node.right = new TreeNode(2);
 
         assertEquals(KthSmallestElementBST.kthSmallest(node, 2), 2);
     }
 
     @Test
     public void case4() {
-        LongestUnivaluePath.TreeNode node = new LongestUnivaluePath.TreeNode(3);
-        node.left = new LongestUnivaluePath.TreeNode(1);
-        node.right = new LongestUnivaluePath.TreeNode(4);
-        node.left.right = new LongestUnivaluePath.TreeNode(2);
+        TreeNode node = new TreeNode(3);
+        node.left = new TreeNode(1);
+        node.right = new TreeNode(4);
+        node.left.right = new TreeNode(2);
 
         assertEquals(KthSmallestElementBST.kthSmallest(node, 2), 2);
     }

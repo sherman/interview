@@ -19,31 +19,22 @@ package com.leetcode;
  * limitations under the License.
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.google.common.base.MoreObjects;
 
-public class LongestUnivaluePath {
-    private static final Logger log = LoggerFactory.getLogger(LongestUnivaluePath.class);
+public class TreeNode {
+    int val;
 
-    public static int longestUnivaluePath(TreeNode node) {
-        if (node == null) {
-            return 0;
-        }
+    TreeNode left;
+    TreeNode right;
 
-        int max = longestUnivaluePath(node.left, node.val)
-            + longestUnivaluePath(node.right, node.val);
-
-        int maxLeft = longestUnivaluePath(node.left);
-        int maxRight = longestUnivaluePath(node.right);
-
-        return Math.max(Math.max(max, maxLeft), maxRight);
+    public TreeNode(int x) {
+        val = x;
     }
 
-    private static int longestUnivaluePath(TreeNode node, int value) {
-        if (node == null || node.val != value) {
-            return 0;
-        }
-
-        return Math.max(longestUnivaluePath(node.left, value), longestUnivaluePath(node.right, value)) + 1;
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+            .add("val", val)
+            .toString();
     }
 }

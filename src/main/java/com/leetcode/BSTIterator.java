@@ -19,8 +19,6 @@ package com.leetcode;
  * limitations under the License.
  */
 
-import com.leetcode.LongestUnivaluePath.TreeNode;
-
 import java.util.Stack;
 
 public class BSTIterator {

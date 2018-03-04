@@ -20,7 +20,6 @@ package com.leetcode;
  */
 
 import com.google.common.collect.ImmutableList;
-import com.leetcode.LongestUnivaluePath.TreeNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
