@@ -41,6 +41,11 @@ public class TreeNode {
         this.parent = parent;
     }
 
+    public TreeNode(int id) {
+            this.id = id;
+            this.parent = null;
+        }
+
     public int getId() {
         return id;
     }
