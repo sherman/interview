@@ -83,6 +83,7 @@ public class Subsets {
             }
 
             allSubsets.add(subset);
+            log.info("===");
         }
 
         return allSubsets;
