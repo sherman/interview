@@ -45,4 +45,10 @@ public class StringsTest {
         assertEquals(Strings.getLongestPalindrome("abccccdd"), 7);
         assertEquals(Strings.getLongestPalindrome("bb"), 2);
     }
+
+    @Test
+    public void getLongestPalindromeV2() {
+        assertEquals(Strings.getLongestPalindromeV2("abccccdd"), "ccdbdcc");
+        assertEquals(Strings.getLongestPalindromeV2("bb"), "bb");
+    }
 }

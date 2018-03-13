@@ -8,8 +8,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.BiFunction;
-import java.util.function.BinaryOperator;
 
 /**
  * @author Denis Gabaydulin
@@ -112,5 +110,43 @@ public class Strings {
             );
 
         return length + (mid.isPresent() ? 1 : 0);
+    }
+
+    public static String getLongestPalindromeV2(String s) {
+        Map<Character, Integer> stat = new HashMap<>();
+
+        char[] chars = s.toCharArray();
+
+        for (int i = 0; i < chars.length; i++) {
+            Integer cnt = stat.get(chars[i]);
+            if (cnt == null) {
+                cnt = 1;
+            } else {
+                cnt++;
+            }
+
+            stat.put(chars[i], cnt);
+        }
+
+        Character middle = null;
+        StringBuilder result1 = new StringBuilder();
+        StringBuilder result2 = new StringBuilder();
+        for (Character c : stat.keySet()) {
+            int cnt = stat.get(c);
+            if (cnt >= 2) {
+                for (int i = 0; i < cnt / 2; i++) {
+                    result1.append(c);
+                    result2.append(c);
+                }
+
+                if (cnt % 2 == 1) {
+                    middle = c;
+                }
+            } else {
+                middle = c;
+            }
+        }
+
+        return result1.toString() + (middle != null ? middle : "") + result2.reverse().toString();
     }
 }
