@@ -35,6 +35,5 @@ public class WordSearchTest {
         assertTrue(WordSearch.exist(new char[][]{{'A', 'B'}}, "BA"));
         assertTrue(WordSearch.exist(new char[][]{{'C', 'A', 'A'}, {'A', 'A', 'A'}, {'B', 'C', 'D'}}, "AAB"));
         assertTrue(WordSearch.exist(new char[][]{{'A', 'B', 'C', 'E'}, {'S', 'F', 'E', 'S'}, {'A', 'D', 'E', 'E'}}, "ABCESEEEFS"));
-
     }
 }
