@@ -1,4 +1,4 @@
-package org.sherman.interview.misc;
+package com.leetcode;
 
 /*
  * Copyright (C) 2018 by Denis M. Gabaydulin
