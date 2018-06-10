@@ -111,4 +111,19 @@ public class DirectedGraphAlgorithmsTest {
 
         assertTrue(DirectedGraphAlgorithms.hasCycle(graph, new Vertex(1)));
     }
+
+    @Test
+    public void hasCycle2() {
+        DirectedGraph graph = new DirectedGraph();
+        graph.addEdge(new DirectedEdge(new Vertex(1), new Vertex(2), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(1), new Vertex(3), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(3), new Vertex(4), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(3), new Vertex(5), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(2), new Vertex(6), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(2), new Vertex(7), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(5), new Vertex(8), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(8), new Vertex(3), 1));
+
+        assertTrue(DirectedGraphAlgorithms.hasCycle(graph, new Vertex(1)));
+    }
 }

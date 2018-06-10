@@ -133,7 +133,7 @@ public class DirectedGraphAlgorithms {
         for (Vertex neighbour : neighbours) {
             if (states.get(neighbour) != Color.BLACK) {
                 if (states.get(neighbour) == Color.GREY) {
-                    log.info("Cycle is found in v {}");
+                    log.info("Cycle is found in v {}", neighbour);
                     return true;
                 }
 
