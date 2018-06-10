@@ -104,7 +104,7 @@ public class DirectedGraphAlgorithms {
         return graphTraverse(graph, start, vertices::pop, vertices::push, vertices);
     }
 
-    public static boolean hasCycle(@NotNull DirectedGraph graph, @NotNull Vertex start) {
+    public static boolean hasCycle(@NotNull DirectedGraph graph) {
         Map<Vertex, Enum> states = new HashMap<>();
 
         // at the beginning all vertices are white
@@ -122,9 +122,63 @@ public class DirectedGraphAlgorithms {
         return false;
     }
 
+    public static Stack<Vertex> topologicalSort(@NotNull DirectedGraph graph) {
+        Map<Vertex, Enum> states = new HashMap<>();
+
+        // at the beginning all vertices are white
+        graph.getVertices().forEach(
+            v -> states.put(v, Color.WHITE)
+        );
+
+        Stack<Vertex> ordering = new Stack<>();
+
+        for (Vertex v : states.keySet()) {
+            log.info("V: {}", v);
+
+            if (states.get(v) == Color.WHITE) {
+                if (dfs(graph, v, states, ordering)) {
+                    throw new IllegalArgumentException("Not a directed acyclic graph!");
+                }
+            }
+        }
+
+        return ordering;
+    }
+
+    private static boolean dfs(DirectedGraph graph, Vertex v, Map<Vertex, Enum> states, Stack<Vertex> ordering) {
+        log.info("Current: {}", v);
+
+        states.put(v, Color.GREY);
+
+        Set<Vertex> neighbours = graph.getListOfNeighbours(v);
+
+        for (Vertex neighbour : neighbours) {
+            if (states.get(neighbour) != Color.BLACK) {
+                if (states.get(neighbour) == Color.GREY) {
+                    log.info("Cycle is found in v {}", neighbour);
+                    return true;
+                }
+
+                if (dfs(graph, neighbour, states, ordering)) {
+                    return true;
+                }
+            } else {
+                log.info("Vertex {} has been already visited", neighbour);
+            }
+        }
+
+        states.put(v, Color.BLACK);
+
+        ordering.push(v);
+
+        log.info("Vertex {} has been added ", v);
+
+        return false;
+    }
+
     private static boolean dfs(DirectedGraph graph, Vertex v, Map<Vertex, Enum> states) {
         log.info("Current: {}", v);
-        
+
         // move to grey
         states.put(v, Color.GREY);
 

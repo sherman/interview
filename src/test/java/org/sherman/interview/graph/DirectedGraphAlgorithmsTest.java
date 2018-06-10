@@ -1,16 +1,17 @@
 package org.sherman.interview.graph;
 
 import com.beust.jcommander.internal.Lists;
+import com.google.common.collect.ImmutableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 import org.testng.internal.junit.ArrayAsserts;
 
+import java.util.Stack;
 import java.util.stream.Collectors;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import static com.google.common.collect.Lists.*;
+import static org.testng.Assert.*;
 
 /**
  * @author Denis Gabaydulin
@@ -94,7 +95,7 @@ public class DirectedGraphAlgorithmsTest {
         graph.addEdge(new DirectedEdge(new Vertex(5), new Vertex(8), 1));
         graph.addEdge(new DirectedEdge(new Vertex(4), new Vertex(5), 1));
 
-        assertFalse(DirectedGraphAlgorithms.hasCycle(graph, new Vertex(1)));
+        assertFalse(DirectedGraphAlgorithms.hasCycle(graph));
     }
 
     @Test
@@ -109,7 +110,7 @@ public class DirectedGraphAlgorithmsTest {
         graph.addEdge(new DirectedEdge(new Vertex(5), new Vertex(8), 1));
         graph.addEdge(new DirectedEdge(new Vertex(5), new Vertex(1), 1));
 
-        assertTrue(DirectedGraphAlgorithms.hasCycle(graph, new Vertex(1)));
+        assertTrue(DirectedGraphAlgorithms.hasCycle(graph));
     }
 
     @Test
@@ -124,6 +125,39 @@ public class DirectedGraphAlgorithmsTest {
         graph.addEdge(new DirectedEdge(new Vertex(5), new Vertex(8), 1));
         graph.addEdge(new DirectedEdge(new Vertex(8), new Vertex(3), 1));
 
-        assertTrue(DirectedGraphAlgorithms.hasCycle(graph, new Vertex(1)));
+        assertTrue(DirectedGraphAlgorithms.hasCycle(graph));
+    }
+
+    @Test
+    public void topologicalSort() {
+        DirectedGraph graph = new DirectedGraph();
+        graph.addEdge(new DirectedEdge(new Vertex(5), new Vertex(11), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(7), new Vertex(11), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(7), new Vertex(8), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(3), new Vertex(8), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(3), new Vertex(10), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(8), new Vertex(9), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(11), new Vertex(2), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(11), new Vertex(9), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(11), new Vertex(10), 1));
+
+        Stack<Vertex> ordering = DirectedGraphAlgorithms.topologicalSort(graph);
+
+        assertEquals(reverse(ordering.stream().map(Vertex::getId).collect(Collectors.toList())), ImmutableList.of(7, 5, 11, 3, 10, 8, 9, 2));
+    }
+
+    @Test
+    public void topologicalSort2() {
+        DirectedGraph graph = new DirectedGraph();
+        graph.addEdge(new DirectedEdge(new Vertex(5), new Vertex(2), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(5), new Vertex(0), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(4), new Vertex(0), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(4), new Vertex(1), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(2), new Vertex(3), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(3), new Vertex(1), 1));
+
+        Stack<Vertex> ordering = DirectedGraphAlgorithms.topologicalSort(graph);
+
+        assertEquals(reverse(ordering.stream().map(Vertex::getId).collect(Collectors.toList())), ImmutableList.of(5, 4, 0, 2, 3, 1));
     }
 }
