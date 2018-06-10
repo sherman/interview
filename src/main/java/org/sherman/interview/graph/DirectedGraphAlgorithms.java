@@ -1,11 +1,13 @@
 package org.sherman.interview.graph;
 
 import com.google.common.primitives.Ints;
+import joptsimple.internal.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -124,6 +126,7 @@ public class DirectedGraphAlgorithms {
 
     public static Stack<Vertex> topologicalSort(@NotNull DirectedGraph graph) {
         Map<Vertex, Enum> states = new HashMap<>();
+        Map<Vertex, AtomicInteger> children = new HashMap<>();
 
         // at the beginning all vertices are white
         graph.getVertices().forEach(
@@ -133,10 +136,10 @@ public class DirectedGraphAlgorithms {
         Stack<Vertex> ordering = new Stack<>();
 
         for (Vertex v : states.keySet()) {
-            log.info("V: {}", v);
+            log.info("Next vertex: {}", v);
 
             if (states.get(v) == Color.WHITE) {
-                if (dfs(graph, v, states, ordering)) {
+                if (dfs(graph, v, states, ordering, 0)) {
                     throw new IllegalArgumentException("Not a directed acyclic graph!");
                 }
             }
@@ -145,8 +148,8 @@ public class DirectedGraphAlgorithms {
         return ordering;
     }
 
-    private static boolean dfs(DirectedGraph graph, Vertex v, Map<Vertex, Enum> states, Stack<Vertex> ordering) {
-        log.info("Current: {}", v);
+    private static boolean dfs(DirectedGraph graph, Vertex v, Map<Vertex, Enum> states, Stack<Vertex> ordering, int level) {
+        log.info("{}Current: {}", Strings.repeat(' ', level * 2), v);
 
         states.put(v, Color.GREY);
 
@@ -155,15 +158,15 @@ public class DirectedGraphAlgorithms {
         for (Vertex neighbour : neighbours) {
             if (states.get(neighbour) != Color.BLACK) {
                 if (states.get(neighbour) == Color.GREY) {
-                    log.info("Cycle is found in v {}", neighbour);
+                    log.info("{}Cycle is found in v {}", Strings.repeat(' ', level * 2), neighbour);
                     return true;
                 }
 
-                if (dfs(graph, neighbour, states, ordering)) {
+                if (dfs(graph, neighbour, states, ordering, level + 1)) {
                     return true;
                 }
             } else {
-                log.info("Vertex {} has been already visited", neighbour);
+                log.info("{}Vertex {} has been already visited", Strings.repeat(' ', level * 2), neighbour);
             }
         }
 
@@ -171,7 +174,7 @@ public class DirectedGraphAlgorithms {
 
         ordering.push(v);
 
-        log.info("Vertex {} has been added ", v);
+        log.info("{}Vertex {} has been added", Strings.repeat(' ', level * 2), v);
 
         return false;
     }
