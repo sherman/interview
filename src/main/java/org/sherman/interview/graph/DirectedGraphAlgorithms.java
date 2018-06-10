@@ -126,7 +126,6 @@ public class DirectedGraphAlgorithms {
 
     public static Stack<Vertex> topologicalSort(@NotNull DirectedGraph graph) {
         Map<Vertex, Enum> states = new HashMap<>();
-        Map<Vertex, AtomicInteger> children = new HashMap<>();
 
         // at the beginning all vertices are white
         graph.getVertices().forEach(
@@ -146,6 +145,51 @@ public class DirectedGraphAlgorithms {
         }
 
         return ordering;
+    }
+
+    public static Map<Vertex, Integer> getCountAllVertices(@NotNull DirectedGraph graph) {
+        Map<Vertex, Integer> counts = new HashMap<>();
+        Set<Vertex> visited = new HashSet<>();
+
+        // at the beginning all vertices counts are -1
+        graph.getVertices().forEach(
+            v -> counts.put(v, -1)
+        );
+
+        for (Vertex vertex : counts.keySet()) {
+            if (!visited.contains(vertex)) {
+                int count = dfs(graph, vertex, counts, visited);
+                counts.put(vertex, count);
+            }
+        }
+
+        return counts;
+    }
+
+    private static int dfs(DirectedGraph graph, Vertex v, Map<Vertex, Integer> counts, Set<Vertex> visited) {
+        log.info("Current: {}", v);
+
+        visited.add(v);
+
+        Set<Vertex> neighbours = graph.getListOfNeighbours(v);
+
+        if (neighbours.isEmpty()) {
+            counts.put(v, 0);
+            return 0;
+        } else {
+            int sum = 0;
+            for (Vertex neighbour : neighbours) {
+                if (!visited.contains(neighbour)) {
+                    sum += dfs(graph, neighbour, counts, visited);
+                } else {
+                    sum += counts.get(neighbour);
+                }
+            }
+
+            visited.remove(v);
+
+            return neighbours.size() + sum;
+        }
     }
 
     private static boolean dfs(DirectedGraph graph, Vertex v, Map<Vertex, Enum> states, Stack<Vertex> ordering, int level) {

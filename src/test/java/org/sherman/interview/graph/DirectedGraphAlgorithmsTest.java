@@ -2,15 +2,17 @@ package org.sherman.interview.graph;
 
 import com.beust.jcommander.internal.Lists;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 import org.testng.internal.junit.ArrayAsserts;
 
+import java.util.Map;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
-import static com.google.common.collect.Lists.*;
+import static com.google.common.collect.Lists.reverse;
 import static org.testng.Assert.*;
 
 /**
@@ -159,5 +161,36 @@ public class DirectedGraphAlgorithmsTest {
         Stack<Vertex> ordering = DirectedGraphAlgorithms.topologicalSort(graph);
 
         assertEquals(reverse(ordering.stream().map(Vertex::getId).collect(Collectors.toList())), ImmutableList.of(5, 4, 0, 2, 3, 1));
+    }
+
+    @Test
+    public void getCountAllVertices() {
+        DirectedGraph graph = new DirectedGraph();
+        graph.addEdge(new DirectedEdge(new Vertex(5), new Vertex(11), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(7), new Vertex(11), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(7), new Vertex(8), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(3), new Vertex(8), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(3), new Vertex(10), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(8), new Vertex(9), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(11), new Vertex(2), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(11), new Vertex(9), 1));
+        graph.addEdge(new DirectedEdge(new Vertex(11), new Vertex(10), 1));
+
+        Map<Vertex, Integer> count = DirectedGraphAlgorithms.getCountAllVertices(graph);
+        log.info("{}", count);
+
+        assertEquals(
+            count,
+            new ImmutableMap.Builder<>()
+                .put(new Vertex(5), 4)
+                .put(new Vertex(3), 3)
+                .put(new Vertex(7), 6)
+                .put(new Vertex(8), 1)
+                .put(new Vertex(9), 0)
+                .put(new Vertex(11), 3)
+                .put(new Vertex(10), 0)
+                .put(new Vertex(2), 0)
+                .build()
+        );
     }
 }
