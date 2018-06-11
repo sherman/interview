@@ -62,6 +62,12 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>ru.odnoklassniki</groupId>
+            <artifactId>one-nio</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+
     </dependencies>
 
     <build>
