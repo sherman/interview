@@ -20,6 +20,10 @@ package com.leetcode;
  */
 
 public class PowerOfTwo {
+    public static boolean isPowerOfTwoOptimized(int n) {
+        return n > 0 && (n & (n - 1)) == 0;
+    }
+
     public static boolean isPowerOfTwo(int n) {
         if (n <= 0) {
             return false;

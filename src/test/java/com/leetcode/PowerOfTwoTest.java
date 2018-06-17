@@ -36,4 +36,16 @@ public class PowerOfTwoTest {
         assertFalse(PowerOfTwo.isPowerOfTwo(-15));
         assertFalse(PowerOfTwo.isPowerOfTwo(-16));
     }
+
+    @Test
+    public void isPowerOfTwoOptimized() {
+        assertFalse(PowerOfTwo.isPowerOfTwoOptimized(0));
+        assertTrue(PowerOfTwo.isPowerOfTwoOptimized(1));
+        assertTrue(PowerOfTwo.isPowerOfTwoOptimized(2));
+        assertTrue(PowerOfTwo.isPowerOfTwoOptimized(4));
+        assertFalse(PowerOfTwo.isPowerOfTwoOptimized(15));
+        assertTrue(PowerOfTwo.isPowerOfTwoOptimized(16));
+        assertFalse(PowerOfTwo.isPowerOfTwoOptimized(-15));
+        assertFalse(PowerOfTwo.isPowerOfTwoOptimized(-16));
+    }
 }
