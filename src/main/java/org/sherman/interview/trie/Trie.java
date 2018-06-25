@@ -77,7 +77,7 @@ public class Trie {
             return children.containsKey(chr);
         }
 
-        @Test
+        @Override
         public String toString() {
             return children.toString() + ":" + terminal;
         }
