@@ -1,13 +1,11 @@
 package org.sherman.interview.string;
 
+import org.apache.commons.math3.util.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author Denis Gabaydulin
@@ -148,5 +146,46 @@ public class Strings {
         }
 
         return result1.toString() + (middle != null ? middle : "") + result2.reverse().toString();
+    }
+
+    public static boolean areStringEquals(String one, String two, int swaps) {
+        if (one == null || two == null) {
+            return false;
+        }
+
+        if (one.length() != two.length()) {
+            return false;
+        }
+
+        int expectedSwaps = 2 * swaps;
+        char[] chars1 = one.toCharArray();
+        char[] chars2 = two.toCharArray();
+
+        Map<Pair<Character, Character>, Integer> swapInfo = new HashMap<>();
+
+        for (int i = 0; i < chars1.length; i++) {
+            if (chars1[i] != chars2[i]) {
+                Pair<Character, Character> swap = new Pair<>(chars1[i], chars2[i]);
+                Integer counter = swapInfo.get(swap);
+                counter = counter == null ? 1 : counter + 1;
+                swapInfo.put(swap, counter);
+                expectedSwaps--;
+            }
+        }
+
+        if (expectedSwaps != 0) {
+            return false;
+        }
+
+        for (Pair<Character, Character> swap : swapInfo.keySet()) {
+            Integer counter1 = swapInfo.get(swap);
+            Integer counter2 = swapInfo.get(new Pair<>(swap.getValue(), swap.getKey()));
+
+            if (!Objects.equals(counter1, counter2)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

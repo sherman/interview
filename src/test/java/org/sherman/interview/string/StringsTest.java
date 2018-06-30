@@ -3,6 +3,8 @@ package org.sherman.interview.string;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 /**
  * @author Denis Gabaydulin
@@ -50,5 +52,14 @@ public class StringsTest {
     public void getLongestPalindromeV2() {
         assertEquals(Strings.getLongestPalindromeV2("abccccdd"), "ccdbdcc");
         assertEquals(Strings.getLongestPalindromeV2("bb"), "bb");
+    }
+
+    @Test
+    public void areStringsEquals() {
+        assertTrue(Strings.areStringEquals("aacc", "ccaa", 2));
+        assertFalse(Strings.areStringEquals("aacc", "ccaa", 1));
+        assertFalse(Strings.areStringEquals("aacc", "ccaa", 3));
+        assertTrue(Strings.areStringEquals("abcd", "acbd", 1));
+        assertFalse(Strings.areStringEquals("dbca", "acbd", 1));
     }
 }
