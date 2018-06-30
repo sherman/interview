@@ -31,17 +31,28 @@ public class HttpServerExample extends HttpServer {
         return Response.ok("Response");
     }
 
-    @Path("/sleep")
-    public Response sleep() throws InterruptedException {
+    @Path("/blockedWorker")
+    public Response blockedWorker() throws InterruptedException {
         asyncExecute(
             () -> {
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(10000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         );
+
+        return Response.ok("Response");
+    }
+
+    @Path("/blocked")
+    public Response blocked() throws InterruptedException {
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         return Response.ok("Response");
     }

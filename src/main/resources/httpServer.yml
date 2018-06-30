@@ -1,5 +1,5 @@
 keepAlive: 120s
-maxWorkers: 1000
+maxWorkers: 256
 queueTime: 50ms
 
 acceptors:
