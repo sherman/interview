@@ -1,0 +1,8 @@
+keepAlive: 120s
+maxWorkers: 1000
+queueTime: 50ms
+
+acceptors:
+  - port: 8000
+    backlog: 8096
+    deferAccept: true

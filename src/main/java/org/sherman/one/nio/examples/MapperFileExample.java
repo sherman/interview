@@ -1,4 +1,4 @@
-package org.sherman.one.nio;
+package org.sherman.one.nio.examples;
 
 import com.google.common.primitives.Ints;
 import one.nio.mem.MappedFile;
