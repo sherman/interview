@@ -1,11 +1,13 @@
 package org.sherman.interview.string;
 
+import com.google.common.collect.ImmutableList;
 import org.apache.commons.math3.util.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Denis Gabaydulin
@@ -187,5 +189,39 @@ public class Strings {
         }
 
         return true;
+    }
+
+    public static List<List<String>> groupShiftedStrings(String[] strings) {
+        Map<Pair<Integer, List<Integer>>, List<String>> index = new HashMap<>();
+
+        for (String string : strings) {
+            log.info("{}", string);
+
+            int length = string.length();
+            List<Integer> intervalKey = new ArrayList<>();
+            char[] chars = string.toCharArray();
+
+            for (int i = 1; i < string.length(); i++) {
+                if (chars[i - 1] <= chars[i]) {
+                    intervalKey.add(Math.abs(chars[i - 1] - chars[i]));
+                } else {
+                    intervalKey.add('z' - chars[i - 1] + 'a' - chars[i] + 1);
+                }
+            }
+
+            Pair<Integer, List<Integer>> key = new Pair<>(length, intervalKey);
+            List<String> values = index.get(key);
+            if (values == null) {
+                index.put(key, new ArrayList<>());
+                values = index.get(key);
+            }
+            values.add(string);
+
+            log.info("{}", intervalKey);
+        }
+
+        log.info("{}", index);
+
+        return new ArrayList<>(index.values());
     }
 }
