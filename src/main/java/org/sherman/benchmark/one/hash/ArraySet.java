@@ -5,16 +5,17 @@ import one.nio.util.JavaInternals;
 import sun.misc.Unsafe;
 
 public class ArraySet {
-    protected static final Unsafe unsafe = JavaInternals.unsafe;
-    protected static final long sizeOffset = JavaInternals.fieldOffset(ArraySet.class, "size");
-    protected static final long base = JavaInternals.getUnsafe().arrayBaseOffset(long[].class);
+    private static final Unsafe unsafe = JavaInternals.unsafe;
+    private static final long sizeOffset = JavaInternals.fieldOffset(ArraySet.class, "size");
+    private static final long base = JavaInternals.getUnsafe().arrayBaseOffset(long[].class);
 
     public static final long EMPTY = 0;
 
-    protected volatile int size;
-    protected int capacity;
-    protected int maxSteps;
-    protected long keys;
+    private volatile int size;
+    private int capacity;
+    private int maxSteps;
+
+    private final int shift;
 
     private final long[] elts;
 
@@ -25,6 +26,10 @@ public class ArraySet {
         this.capacity = capacity;
         this.maxSteps = (int) Math.sqrt(capacity);
         this.elts = new long[capacity];
+
+        int scale = unsafe.arrayIndexScale(long[].class);
+        shift = 31 - Integer.numberOfLeadingZeros(scale);
+
     }
 
     public final int size() {
@@ -60,7 +65,7 @@ public class ArraySet {
         do {
             long cur = keyAt(index);
             if (cur == EMPTY) {
-                if (!unsafe.compareAndSwapLong(elts, (long) base + ((index) * 8), cur, key)) {
+                if (!unsafe.compareAndSwapLong(elts, byteOffset(index), cur, key)) {
                     continue;
                 }
                 incrementSize();
@@ -79,14 +84,6 @@ public class ArraySet {
         return elts[index];
     }
 
-    public final void setKeyAt(int index, long value) {
-        unsafe.putOrderedLong(null, keys + (long) index * 8, value);
-    }
-
-    public void clear() {
-        unsafe.setMemory(keys, (long) capacity * 8, (byte) 0);
-    }
-
     protected void incrementSize() {
         for (;;) {
             int current = size;
@@ -98,5 +95,9 @@ public class ArraySet {
 
     protected static int hash(long key) {
         return ((int) key ^ (int) (key >>> 21) ^ (int) (key >>> 42)) & 0x7fffffff;
+    }
+
+    private long byteOffset(int i) {
+        return ((long) i << shift) + base;
     }
 }
