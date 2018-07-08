@@ -7,7 +7,7 @@ import sun.misc.Unsafe;
 public class ArraySet {
     protected static final Unsafe unsafe = JavaInternals.unsafe;
     protected static final long sizeOffset = JavaInternals.fieldOffset(ArraySet.class, "size");
-    protected static final long eltsOffset = JavaInternals.fieldOffset(ArraySet.class, "elts");
+    protected static final long base = JavaInternals.getUnsafe().arrayBaseOffset(long[].class);
 
     public static final long EMPTY = 0;
 
@@ -60,7 +60,7 @@ public class ArraySet {
         do {
             long cur = keyAt(index);
             if (cur == EMPTY) {
-                if (!unsafe.compareAndSwapLong(elts, (long) (2 + index) * 8, cur, key)) {
+                if (!unsafe.compareAndSwapLong(elts, (long) base + ((index) * 8), cur, key)) {
                     continue;
                 }
                 incrementSize();
