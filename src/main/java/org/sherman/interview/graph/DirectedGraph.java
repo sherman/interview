@@ -11,6 +11,8 @@ import static java.util.stream.Collectors.toSet;
  * @since 18/01/2016
  */
 public class DirectedGraph {
+    private static final int DEFAULT_WEIGHT = 42;
+
     private Set<Vertex> vertices = new HashSet<>();
     private Set<DirectedEdge> edges = new HashSet<>();
 
@@ -41,5 +43,9 @@ public class DirectedGraph {
 
     public Set<Vertex> getVertices() {
         return vertices;
+    }
+
+    public void addEdge(@NotNull Vertex from, @NotNull Vertex to) {
+        addEdge(new DirectedEdge(from, to, DEFAULT_WEIGHT));
     }
 }

@@ -193,4 +193,39 @@ public class DirectedGraphAlgorithmsTest {
                 .build()
         );
     }
+
+    @Test
+    public void getNumberOfRoutes() {
+        DirectedGraph g = new DirectedGraph();
+        g.addEdge(new Vertex(1), new Vertex(2));
+        g.addEdge(new Vertex(1), new Vertex(3));
+        g.addEdge(new Vertex(2), new Vertex(4));
+        g.addEdge(new Vertex(2), new Vertex(5));
+        g.addEdge(new Vertex(3), new Vertex(6));
+        g.addEdge(new Vertex(3), new Vertex(7));
+        g.addEdge(new Vertex(4), new Vertex(8));
+        g.addEdge(new Vertex(5), new Vertex(8));
+        g.addEdge(new Vertex(6), new Vertex(8));
+        g.addEdge(new Vertex(7), new Vertex(8));
+        assertEquals(DirectedGraphAlgorithms.getNumberOfRoutes(g, new Vertex(1), new Vertex(8)), 4);
+
+        g = new DirectedGraph();
+        g.addEdge(new Vertex(1), new Vertex(2));
+        g.addEdge(new Vertex(1), new Vertex(3));
+        g.addEdge(new Vertex(2), new Vertex(3));
+        g.addEdge(new Vertex(2), new Vertex(4));
+        g.addEdge(new Vertex(3), new Vertex(4));
+        assertEquals(DirectedGraphAlgorithms.getNumberOfRoutes(g, new Vertex(1), new Vertex(4)), 3);
+
+        g = new DirectedGraph();
+        g.addEdge(new Vertex(1), new Vertex(2));
+        g.addEdge(new Vertex(2), new Vertex(3));
+        g.addEdge(new Vertex(3), new Vertex(4));
+        g.addEdge(new Vertex(4), new Vertex(5));
+        g.addEdge(new Vertex(3), new Vertex(6));
+        g.addEdge(new Vertex(5), new Vertex(7));
+        g.addEdge(new Vertex(6), new Vertex(7));
+        g.addEdge(new Vertex(4), new Vertex(7));
+        assertEquals(DirectedGraphAlgorithms.getNumberOfRoutes(g, new Vertex(1), new Vertex(7)), 3);
+    }
 }

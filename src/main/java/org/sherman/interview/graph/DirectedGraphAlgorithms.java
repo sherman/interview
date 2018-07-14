@@ -105,6 +105,30 @@ public class DirectedGraphAlgorithms {
         return graphTraverse(graph, start, vertices::pop, vertices::push, vertices);
     }
 
+    public static int getNumberOfRoutes(@NotNull DirectedGraph graph, @NotNull Vertex from, @NotNull Vertex to) {
+        return getNumberOfRoutesInternal(graph, to, from);
+    }
+
+    private static int getNumberOfRoutesInternal(
+        DirectedGraph graph,
+        Vertex target,
+        Vertex current
+    ) {
+        log.info("{}", current);
+
+        if (current.equals(target)) {
+            return 1;
+        }
+
+        int sum = 0;
+
+        for (Vertex v : graph.getListOfNeighbours(current)) {
+            sum += getNumberOfRoutesInternal(graph, target, v);
+        }
+
+        return sum;
+    }
+
     public static boolean hasCycle(@NotNull DirectedGraph graph) {
         Map<Vertex, Enum> states = new HashMap<>();
 
