@@ -17,8 +17,13 @@ public class UnDirectedGraph {
     private final Map<Vertex, Set<Vertex>> graph = new HashMap<>();
 
     public void addEdge(@NotNull Vertex from, @NotNull Vertex to) {
+        addEdgeInternal(from, to);
+        addEdgeInternal(to, from);
+    }
+
+    private void addEdgeInternal(Vertex from, Vertex to) {
         Set<Vertex> vertices = Optional.ofNullable(graph.get(from))
-                .orElse(new HashSet<>());
+            .orElse(new HashSet<>());
 
         vertices.add(to);
 

@@ -19,6 +19,22 @@ public class UnDirectedGraphAlgorithms {
     private UnDirectedGraphAlgorithms() {
     }
 
+    public static int getNumberOfRoutes(@NotNull UnDirectedGraph graph, @NotNull Vertex from, @NotNull Vertex to) {
+        return getNumberOfRoutes(graph, to);
+    }
+
+    private static int getNumberOfRoutes(@NotNull UnDirectedGraph graph, @NotNull Vertex vertex) {
+        /*if (vertex == )
+
+        Set<Vertex> vertices = graph.getListOfNeighbours(vertex);
+        if (vertices.isEmpty()) {
+            return 0;
+        } else {
+
+        }*/
+        return 0;
+    }
+
     public static int getConnectedComponents(@NotNull UnDirectedGraph g) {
         Set<Vertex> visited = new HashSet<>();
         Set<Vertex> vertexes = g.getAllVertices();
