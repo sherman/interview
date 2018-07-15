@@ -17,34 +17,12 @@ public class RangeSumQuery {
         this.nums = nums;
 
         for (int i = 0; i < nums.length; i++) {
+            int sum = 0;
             for (int j = i; j < nums.length; j++) {
-                log.info("{} {}", i, j);
-                int sum = getSum(i, j);
-                log.info("{}", sum);
+                sum += nums[j];
+                cache.put(new Pair<>(i, j), sum);
             }
         }
-    }
-
-    private int getSum(int from, int to) {
-        Pair<Integer, Integer> key = new Pair<>(from, to);
-
-        if (cache.containsKey(key)) {
-            return cache.get(key);
-        }
-
-        if (to == from) {
-            cache.put(key, nums[to]);
-            return nums[to];
-        }
-
-        if (to - from == 1) {
-            cache.put(key, nums[from] + nums[to]);
-            return nums[from] + nums[to];
-        }
-
-        int sum = getSum(from, to - 1) + getSum(to, to);
-        cache.put(key, sum);
-        return sum;
     }
 
     public int sumRange(int from, int to) {
