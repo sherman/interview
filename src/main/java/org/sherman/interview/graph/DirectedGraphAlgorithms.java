@@ -129,6 +129,38 @@ public class DirectedGraphAlgorithms {
         return sum;
     }
 
+    public static int getNUmberOfRoutesDp(DirectedGraph g, Vertex from, Vertex to) {
+        Map<Vertex, Integer> cache = new HashMap<>();
+        return getNumberOfRoutesInternalDp(g, from, to, cache);
+    }
+
+    private static int getNumberOfRoutesInternalDp(
+            DirectedGraph graph,
+            Vertex target,
+            Vertex current,
+            Map<Vertex, Integer> cache
+        ) {
+            log.info("{}", current);
+
+            if (cache.containsKey(current)) {
+                return cache.get(current);
+            }
+
+            if (current.equals(target)) {
+                return 1;
+            }
+
+            int sum = 0;
+
+            for (Vertex v : graph.getListOfNeighbours(current)) {
+                sum += getNumberOfRoutesInternalDp(graph, target, v, cache);
+            }
+
+            cache.put(current, sum);
+
+            return sum;
+        }
+
     public static boolean hasCycle(@NotNull DirectedGraph graph) {
         Map<Vertex, Enum> states = new HashMap<>();
 
