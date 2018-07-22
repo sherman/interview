@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 import org.testng.internal.junit.ArrayAsserts;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.stream.Collectors;
@@ -266,6 +267,34 @@ public class DirectedGraphAlgorithmsTest {
                 .put(new Vertex(6), 3)
                 .put(new Vertex(7), 2)
                 .put(new Vertex(8), 1)
+                .build()
+        );
+    }
+
+    @Test
+    public void topologicalSortByTotalWeight() {
+        DirectedGraph g = new DirectedGraph();
+        g.addEdge(new DirectedEdge(new Vertex(1), new Vertex(2), 1));
+        g.addEdge(new DirectedEdge(new Vertex(1), new Vertex(3), 1));
+        g.addEdge(new DirectedEdge(new Vertex(3), new Vertex(4), 1));
+        g.addEdge(new DirectedEdge(new Vertex(5), new Vertex(6), 1));
+        g.addEdge(new DirectedEdge(new Vertex(6), new Vertex(7), 1));
+        g.addEdge(new DirectedEdge(new Vertex(7), new Vertex(8), 1));
+        g.addEdge(new DirectedEdge(new Vertex(9), new Vertex(8), 1));
+
+        List<WeightVertex> weightVertices = DirectedGraphAlgorithms.topologicalSortByTotalWeight(g);
+        assertEquals(
+            weightVertices,
+            new ImmutableList.Builder<>()
+                .add(new WeightVertex(new Vertex(1), 3))
+                .add(new WeightVertex(new Vertex(5), 3))
+                .add(new WeightVertex(new Vertex(6), 3))
+                .add(new WeightVertex(new Vertex(3), 2))
+                .add(new WeightVertex(new Vertex(7), 2))
+                .add(new WeightVertex(new Vertex(4), 1))
+                .add(new WeightVertex(new Vertex(2), 1))
+                .add(new WeightVertex(new Vertex(9), 1))
+                .add(new WeightVertex(new Vertex(8), 1))
                 .build()
         );
     }

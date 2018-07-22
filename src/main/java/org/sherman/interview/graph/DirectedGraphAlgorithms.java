@@ -135,31 +135,31 @@ public class DirectedGraphAlgorithms {
     }
 
     private static int getNumberOfRoutesInternalDp(
-            DirectedGraph graph,
-            Vertex target,
-            Vertex current,
-            Map<Vertex, Integer> cache
-        ) {
-            log.info("{}", current);
+        DirectedGraph graph,
+        Vertex target,
+        Vertex current,
+        Map<Vertex, Integer> cache
+    ) {
+        log.info("{}", current);
 
-            if (cache.containsKey(current)) {
-                return cache.get(current);
-            }
-
-            if (current.equals(target)) {
-                return 1;
-            }
-
-            int sum = 0;
-
-            for (Vertex v : graph.getListOfNeighbours(current)) {
-                sum += getNumberOfRoutesInternalDp(graph, target, v, cache);
-            }
-
-            cache.put(current, sum);
-
-            return sum;
+        if (cache.containsKey(current)) {
+            return cache.get(current);
         }
+
+        if (current.equals(target)) {
+            return 1;
+        }
+
+        int sum = 0;
+
+        for (Vertex v : graph.getListOfNeighbours(current)) {
+            sum += getNumberOfRoutesInternalDp(graph, target, v, cache);
+        }
+
+        cache.put(current, sum);
+
+        return sum;
+    }
 
     public static boolean hasCycle(@NotNull DirectedGraph graph) {
         Map<Vertex, Enum> states = new HashMap<>();
@@ -230,6 +230,52 @@ public class DirectedGraphAlgorithms {
         }
 
         return weights;
+    }
+
+    public static List<WeightVertex> topologicalSortByTotalWeight(@NotNull DirectedGraph graph) {
+        List<WeightVertex> result = new ArrayList<>();
+
+        Map<Vertex, Integer> weights = getTotalWeightsAllVertices(graph);
+        Map<Vertex, Integer> inDegrees = new HashMap<>(graph.getInDegrees());
+
+        Map<Vertex, Enum> states = new HashMap<>();
+
+        // at the beginning all vertices are white
+        graph.getVertices().forEach(
+            v -> states.put(v, Color.WHITE)
+        );
+
+        PriorityQueue<WeightVertex> queue = new PriorityQueue<>(
+            Comparator.comparing(WeightVertex::getTotalWeight)
+                .reversed()
+        );
+
+        // add roots
+        inDegrees.entrySet().stream()
+            .filter(e -> e.getValue() == 0)
+            .map(e -> new WeightVertex(e.getKey(), weights.get(e.getKey())))
+            .forEach(queue::offer);
+
+        while (!queue.isEmpty()) {
+            WeightVertex vertex = queue.poll();
+            if (states.get(vertex.getVertex()) != Color.BLACK) {
+                result.add(vertex);
+                states.put(vertex.getVertex(), Color.BLACK);
+            }
+
+            for (Vertex neighbour : graph.getListOfNeighbours(vertex.getVertex())) {
+                int inDegree = inDegrees.get(neighbour);
+                if (states.get(neighbour) != Color.BLACK) {
+                    if (inDegree - 1 == 0) {
+                        queue.offer(new WeightVertex(neighbour, weights.get(neighbour)));
+                    }
+                }
+                
+                inDegrees.put(neighbour, --inDegree);
+            }
+        }
+
+        return result;
     }
 
     private static int getTotalWeight(DirectedGraph graph, Vertex vertex, Map<Vertex, Integer> weights) {

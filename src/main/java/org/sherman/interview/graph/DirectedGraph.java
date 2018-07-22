@@ -1,8 +1,11 @@
 package org.sherman.interview.graph;
 
+import com.google.common.collect.ImmutableMap;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toSet;
 
@@ -62,6 +65,18 @@ public class DirectedGraph {
     }
 
     public Map<Vertex, Integer> getInDegrees() {
-        return inDegrees;
+        return new ImmutableMap.Builder<Vertex, Integer>()
+            .putAll(inDegrees)
+            .putAll(
+                getVertices().stream()
+                    .filter(v -> !inDegrees.containsKey(v))
+                    .collect(
+                        Collectors.toMap(
+                            Function.identity(),
+                            vertex -> 0
+                        )
+                    )
+            )
+            .build();
     }
 }
