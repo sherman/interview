@@ -16,6 +16,7 @@ public class DirectedGraph {
     private Set<Vertex> vertices = new HashSet<>();
     private Set<DirectedEdge> edges = new HashSet<>();
     private Map<Vertex, Integer> weights = new HashMap<>();
+    private Map<Vertex, Integer> inDegrees = new HashMap<>();
 
     public void addEdge(@NotNull DirectedEdge edge) {
         if (edges.contains(edge)) {
@@ -26,6 +27,7 @@ public class DirectedGraph {
         vertices.add(edge.getFrom());
         vertices.add(edge.getTo());
         weights.put(edge.getTo(), edge.getWeight());
+        inDegrees.put(edge.getTo(), getInDegree(edge.getTo()) + 1);
     }
 
     @NotNull
@@ -53,5 +55,13 @@ public class DirectedGraph {
 
     public Integer getWeight(@NotNull Vertex vertex) {
         return Optional.ofNullable(weights.get(vertex)).orElse(0);
+    }
+
+    public Integer getInDegree(@NotNull Vertex vertex) {
+        return Optional.ofNullable(inDegrees.get(vertex)).orElse(0);
+    }
+
+    public Map<Vertex, Integer> getInDegrees() {
+        return inDegrees;
     }
 }
