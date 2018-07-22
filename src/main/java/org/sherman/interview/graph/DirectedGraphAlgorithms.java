@@ -129,7 +129,7 @@ public class DirectedGraphAlgorithms {
         return sum;
     }
 
-    public static int getNUmberOfRoutesDp(DirectedGraph g, Vertex from, Vertex to) {
+    public static int getNumberOfRoutesDp(DirectedGraph g, Vertex from, Vertex to) {
         Map<Vertex, Integer> cache = new HashMap<>();
         return getNumberOfRoutesInternalDp(g, from, to, cache);
     }
@@ -219,6 +219,38 @@ public class DirectedGraphAlgorithms {
         }
 
         return counts;
+    }
+
+    public static Map<Vertex, Integer> getTotalWeightsAllVertices(@NotNull DirectedGraph graph) {
+        Map<Vertex, Integer> weights = new HashMap<>();
+
+        for (Vertex vertex : graph.getVertices()) {
+            int weight = getTotalWeight(graph, vertex, weights);
+            weights.put(vertex, weight);
+        }
+
+        return weights;
+    }
+
+    private static int getTotalWeight(DirectedGraph graph, Vertex vertex, Map<Vertex, Integer> weights) {
+        if (weights.containsKey(vertex)) {
+            return weights.get(vertex);
+        }
+
+        if (graph.getListOfNeighbours(vertex).isEmpty()) {
+            weights.put(vertex, graph.getWeight(vertex));
+            return graph.getWeight(vertex);
+        }
+
+        int weight = 0;
+
+        for (Vertex neighbour : graph.getListOfNeighbours(vertex)) {
+            weight += getTotalWeight(graph, neighbour, weights);
+        }
+
+        weight += graph.getWeight(vertex);
+
+        return weight;
     }
 
     private static int dfs(DirectedGraph graph, Vertex v, Map<Vertex, Integer> counts, Set<Vertex> visited) {

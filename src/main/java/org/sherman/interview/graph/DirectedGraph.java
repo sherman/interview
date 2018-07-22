@@ -15,6 +15,7 @@ public class DirectedGraph {
 
     private Set<Vertex> vertices = new HashSet<>();
     private Set<DirectedEdge> edges = new HashSet<>();
+    private Map<Vertex, Integer> weights = new HashMap<>();
 
     public void addEdge(@NotNull DirectedEdge edge) {
         if (edges.contains(edge)) {
@@ -24,21 +25,22 @@ public class DirectedGraph {
         edges.add(edge);
         vertices.add(edge.getFrom());
         vertices.add(edge.getTo());
+        weights.put(edge.getTo(), edge.getWeight());
     }
 
     @NotNull
     public Set<Vertex> getListOfNeighbours(@NotNull Vertex vertex) {
         return edges.stream()
-                .filter(edge -> edge.getFrom().equals(vertex))
-                .map(DirectedEdge::getTo)
-                .collect(toSet());
+            .filter(edge -> edge.getFrom().equals(vertex))
+            .map(DirectedEdge::getTo)
+            .collect(toSet());
     }
 
     @NotNull
     public Set<DirectedEdge> getListOfEdgeNeighbours(@NotNull Vertex vertex) {
         return edges.stream()
-                .filter(edge -> edge.getFrom().equals(vertex))
-                .collect(toSet());
+            .filter(edge -> edge.getFrom().equals(vertex))
+            .collect(toSet());
     }
 
     public Set<Vertex> getVertices() {
@@ -47,5 +49,9 @@ public class DirectedGraph {
 
     public void addEdge(@NotNull Vertex from, @NotNull Vertex to) {
         addEdge(new DirectedEdge(from, to, DEFAULT_WEIGHT));
+    }
+
+    public Integer getWeight(@NotNull Vertex vertex) {
+        return Optional.ofNullable(weights.get(vertex)).orElse(0);
     }
 }

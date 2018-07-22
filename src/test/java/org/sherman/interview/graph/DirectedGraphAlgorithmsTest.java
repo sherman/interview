@@ -230,7 +230,7 @@ public class DirectedGraphAlgorithmsTest {
     }
 
     @Test
-    public void getNUmberOfRoutesDp() {
+    public void getNumberOfRoutesDp() {
         DirectedGraph g = new DirectedGraph();
         g.addEdge(new Vertex(2), new Vertex(1));
         g.addEdge(new Vertex(3), new Vertex(1));
@@ -242,6 +242,31 @@ public class DirectedGraphAlgorithmsTest {
         g.addEdge(new Vertex(8), new Vertex(5));
         g.addEdge(new Vertex(8), new Vertex(6));
         g.addEdge(new Vertex(8), new Vertex(7));
-        assertEquals(DirectedGraphAlgorithms.getNUmberOfRoutesDp(g, new Vertex(1), new Vertex(8)), 4);
+        assertEquals(DirectedGraphAlgorithms.getNumberOfRoutesDp(g, new Vertex(1), new Vertex(8)), 4);
+    }
+
+    @Test
+    public void getTotalWeightsAllVertices() {
+        DirectedGraph g = new DirectedGraph();
+        g.addEdge(new DirectedEdge(new Vertex(1), new Vertex(2), 1));
+        g.addEdge(new DirectedEdge(new Vertex(1), new Vertex(3), 1));
+        g.addEdge(new DirectedEdge(new Vertex(3), new Vertex(4), 1));
+        g.addEdge(new DirectedEdge(new Vertex(5), new Vertex(6), 1));
+        g.addEdge(new DirectedEdge(new Vertex(6), new Vertex(7), 1));
+        g.addEdge(new DirectedEdge(new Vertex(7), new Vertex(8), 1));
+
+        assertEquals(
+            DirectedGraphAlgorithms.getTotalWeightsAllVertices(g),
+            new ImmutableMap.Builder<>()
+                .put(new Vertex(1), 3)
+                .put(new Vertex(2), 1)
+                .put(new Vertex(3), 2)
+                .put(new Vertex(4), 1)
+                .put(new Vertex(5), 3)
+                .put(new Vertex(6), 3)
+                .put(new Vertex(7), 2)
+                .put(new Vertex(8), 1)
+                .build()
+        );
     }
 }
