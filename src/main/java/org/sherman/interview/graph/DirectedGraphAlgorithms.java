@@ -225,7 +225,8 @@ public class DirectedGraphAlgorithms {
         Map<Vertex, Integer> weights = new HashMap<>();
 
         for (Vertex vertex : graph.getVertices()) {
-            int weight = getTotalWeight(graph, vertex, weights);
+            Set<Vertex> visited = new HashSet<>();
+            int weight = getTotalWeight(graph, vertex, visited);
             weights.put(vertex, weight);
         }
 
@@ -278,20 +279,19 @@ public class DirectedGraphAlgorithms {
         return result;
     }
 
-    private static int getTotalWeight(DirectedGraph graph, Vertex vertex, Map<Vertex, Integer> weights) {
-        if (weights.containsKey(vertex)) {
-            return weights.get(vertex);
-        }
+    private static int getTotalWeight(DirectedGraph graph, Vertex vertex, Set<Vertex> visited) {
+        visited.add(vertex);
 
         if (graph.getListOfNeighbours(vertex).isEmpty()) {
-            weights.put(vertex, graph.getWeight(vertex));
             return graph.getWeight(vertex);
         }
 
         int weight = 0;
 
         for (Vertex neighbour : graph.getListOfNeighbours(vertex)) {
-            weight += getTotalWeight(graph, neighbour, weights);
+            if (!visited.contains(neighbour)) {
+                weight += getTotalWeight(graph, neighbour, visited);
+            }
         }
 
         weight += graph.getWeight(vertex);

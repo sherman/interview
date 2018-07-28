@@ -297,5 +297,32 @@ public class DirectedGraphAlgorithmsTest {
                 .add(new WeightVertex(new Vertex(8), 1))
                 .build()
         );
+
+        g = new DirectedGraph();
+        g.addEdge(new DirectedEdge(new Vertex(1), new Vertex(2), 10));
+        g.addEdge(new DirectedEdge(new Vertex(1), new Vertex(3), 1));
+        g.addEdge(new DirectedEdge(new Vertex(3), new Vertex(4), 2));
+        g.addEdge(new DirectedEdge(new Vertex(3), new Vertex(5), 1));
+        g.addEdge(new DirectedEdge(new Vertex(4), new Vertex(7), 2));
+        g.addEdge(new DirectedEdge(new Vertex(5), new Vertex(6), 1));
+        g.addEdge(new DirectedEdge(new Vertex(7), new Vertex(8), 1));
+        g.addEdge(new DirectedEdge(new Vertex(6), new Vertex(8), 1));
+        g.addEdge(new DirectedEdge(new Vertex(6), new Vertex(9), 1));
+
+        weightVertices = DirectedGraphAlgorithms.topologicalSortByTotalWeight(g);
+        assertEquals(
+            weightVertices,
+            new ImmutableList.Builder<>()
+                .add(new WeightVertex(new Vertex(1), 19))
+                .add(new WeightVertex(new Vertex(2), 10))
+                .add(new WeightVertex(new Vertex(3), 9))
+                .add(new WeightVertex(new Vertex(4), 5))
+                .add(new WeightVertex(new Vertex(5), 4))
+                .add(new WeightVertex(new Vertex(7), 3))
+                .add(new WeightVertex(new Vertex(6), 3))
+                .add(new WeightVertex(new Vertex(8), 1))
+                .add(new WeightVertex(new Vertex(9), 1))
+                .build()
+        );
     }
 }
