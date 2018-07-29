@@ -19,9 +19,14 @@ package com.leetcode;
  * limitations under the License.
  */
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Arrays;
 
 public class MinimumSizeSubarraySum {
+    private static final Logger log = LoggerFactory.getLogger(MinimumSizeSubarraySum.class);
+
     /**
      * Given an array of n positive integers and a positive integer s, find the minimal length of any subarray of which the sum ≥ s.
      * If there isn't one, return 0 instead.
@@ -40,5 +45,25 @@ public class MinimumSizeSubarraySum {
         }
 
         return 0;
+    }
+
+    public static int minSubArrayLenV2(int s, int[] nums) {
+        int i = 0;
+        int j = 0;
+
+        int current = 0;
+        int result = Integer.MAX_VALUE;
+
+        while (i < nums.length && j < nums.length) {
+            current += nums[i];
+            while (current >= s) {
+                result = Math.min(result, i + 1 - j);
+                current -= nums[j++];
+                log.info("{}, {}, {}, {}", i, j, current, result);
+            }
+            i++;
+        }
+
+        return result == Integer.MAX_VALUE ? 0 : result;
     }
 }
