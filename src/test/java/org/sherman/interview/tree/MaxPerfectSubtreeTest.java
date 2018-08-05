@@ -88,4 +88,36 @@ public class MaxPerfectSubtreeTest {
 
         assertEquals(MaxPerfectSubtree.getMaxPerfectSubtreeLength(root), 3);
     }
+
+    @Test
+    public void getMaxPerfectSubtreeLength5() {
+        TreeNode root = new TreeNode(1, null);
+        TreeNode a1 = new TreeNode(2, root);
+        TreeNode a2 = new TreeNode(3, root);
+        root.setLeft(a1);
+        root.setRight(a2);
+
+        TreeNode a4 = new TreeNode(4, a1);
+        a1.setRight(a4);
+
+        TreeNode a5 = new TreeNode(5, a2);
+        TreeNode a9 = new TreeNode(9, a2);
+        a2.setLeft(a5);
+        a2.setRight(a9);
+
+        TreeNode a10 = new TreeNode(10, a9);
+        TreeNode a11 = new TreeNode(11, a9);
+        a9.setLeft(a10);
+        a9.setRight(a11);
+
+        TreeNode a6 = new TreeNode(6, a4);
+        a4.setRight(a6);
+
+        TreeNode a7 = new TreeNode(7, a5);
+        TreeNode a8 = new TreeNode(8, a5);
+        a5.setLeft(a7);
+        a5.setRight(a8);
+
+        assertEquals(MaxPerfectSubtree.getMaxPerfectSubtreeLength(root), 7);
+    }
 }
