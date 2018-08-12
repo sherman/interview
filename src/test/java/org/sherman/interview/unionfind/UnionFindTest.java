@@ -27,21 +27,41 @@ import static org.testng.Assert.assertTrue;
 public class UnionFindTest {
     @Test
     public void quickFind() {
-        QuickFind quickFind = new QuickFind(10);
-        assertFalse(quickFind.isConnected(1, 2));
-        quickFind.union(1, 2);
-        assertTrue(quickFind.isConnected(1, 2));
-        quickFind.union(5, 7);
-        assertTrue(quickFind.isConnected(5, 7));
-        quickFind.union(7, 8);
-        assertTrue(quickFind.isConnected(5, 7));
-        assertTrue(quickFind.isConnected(7, 8));
-        assertTrue(quickFind.isConnected(1, 2));
-        quickFind.union(7, 1);
-        assertTrue(quickFind.isConnected(5, 7));
-        assertTrue(quickFind.isConnected(7, 8));
-        assertTrue(quickFind.isConnected(1, 2));
-        assertTrue(quickFind.isConnected(1, 7));
-        assertTrue(quickFind.isConnected(7, 1));
+        UnionFind unionFind = new QuickFind(10);
+        assertFalse(unionFind.isConnected(1, 2));
+        unionFind.union(1, 2);
+        assertTrue(unionFind.isConnected(1, 2));
+        unionFind.union(5, 7);
+        assertTrue(unionFind.isConnected(5, 7));
+        unionFind.union(7, 8);
+        assertTrue(unionFind.isConnected(5, 7));
+        assertTrue(unionFind.isConnected(7, 8));
+        assertTrue(unionFind.isConnected(1, 2));
+        unionFind.union(7, 1);
+        assertTrue(unionFind.isConnected(5, 7));
+        assertTrue(unionFind.isConnected(7, 8));
+        assertTrue(unionFind.isConnected(1, 2));
+        assertTrue(unionFind.isConnected(1, 7));
+        assertTrue(unionFind.isConnected(7, 1));
+    }
+
+    @Test
+    public void quickUnion() {
+        UnionFind unionFind = new QuickUnion(10);
+        assertFalse(unionFind.isConnected(1, 2));
+        unionFind.union(1, 2);
+        assertTrue(unionFind.isConnected(1, 2));
+        unionFind.union(5, 7);
+        assertTrue(unionFind.isConnected(5, 7));
+        unionFind.union(7, 8);
+        assertTrue(unionFind.isConnected(5, 7));
+        assertTrue(unionFind.isConnected(7, 8));
+        assertTrue(unionFind.isConnected(1, 2));
+        unionFind.union(7, 1);
+        assertTrue(unionFind.isConnected(5, 7));
+        assertTrue(unionFind.isConnected(7, 8));
+        assertTrue(unionFind.isConnected(1, 2));
+        assertTrue(unionFind.isConnected(1, 7));
+        assertTrue(unionFind.isConnected(7, 1));
     }
 }
