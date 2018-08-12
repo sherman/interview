@@ -64,4 +64,24 @@ public class UnionFindTest {
         assertTrue(unionFind.isConnected(1, 7));
         assertTrue(unionFind.isConnected(7, 1));
     }
+
+    @Test
+    public void weightedUnionFind() {
+        UnionFind unionFind = new WeightedUnionFind(10);
+        assertFalse(unionFind.isConnected(1, 2));
+        unionFind.union(1, 2);
+        assertTrue(unionFind.isConnected(1, 2));
+        unionFind.union(5, 7);
+        assertTrue(unionFind.isConnected(5, 7));
+        unionFind.union(7, 8);
+        assertTrue(unionFind.isConnected(5, 7));
+        assertTrue(unionFind.isConnected(7, 8));
+        assertTrue(unionFind.isConnected(1, 2));
+        unionFind.union(7, 1);
+        assertTrue(unionFind.isConnected(5, 7));
+        assertTrue(unionFind.isConnected(7, 8));
+        assertTrue(unionFind.isConnected(1, 2));
+        assertTrue(unionFind.isConnected(1, 7));
+        assertTrue(unionFind.isConnected(7, 1));
+    }
 }

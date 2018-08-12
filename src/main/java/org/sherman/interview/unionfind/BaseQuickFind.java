@@ -22,7 +22,7 @@ package org.sherman.interview.unionfind;
 import com.google.common.base.Preconditions;
 
 public abstract class BaseQuickFind implements UnionFind {
-    protected int[] ids;
+    protected final int[] ids;
 
     public BaseQuickFind(int n) {
         this.ids = new int[n];
