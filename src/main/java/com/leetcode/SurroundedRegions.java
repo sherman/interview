@@ -64,6 +64,8 @@ public class SurroundedRegions {
             }
         }
 
+        log.info("{}", isTarget);
+
         Map<Integer, Set<Integer>> groups = unionFind.getConnectedComponents(grid.length, grid[0].length);
 
         log.info("{}", groups);
