@@ -28,6 +28,59 @@ import java.util.Stack;
 public class LCA {
     private static final Logger log = LoggerFactory.getLogger(LCA.class);
 
+    public static TreeNode getLCA(@NotNull TreeNode a, @NotNull TreeNode b) {
+        TreeNode l = a;
+        TreeNode r = b;
+
+        int aDepth = depth(a);
+        int bDepth = depth(b);
+
+        if (aDepth < bDepth) {
+            int diff = bDepth - aDepth;
+
+            while (diff > 0 && b != null) {
+                b = b.getParent();
+                diff--;
+            }
+        }
+
+        if (aDepth > bDepth) {
+            int diff = aDepth - bDepth;
+
+            while (diff > 0 && a != null) {
+                a = a.getParent();
+                diff--;
+            }
+        }
+
+        log.info("{}" , a);
+        log.info("{}" , b);
+
+        while (a != null && b != null) {
+            if (a.equals(b)) {
+                if (a.equals(l) || b.equals(r)) {
+                    return a.getParent();
+                } else {
+                    return a;
+                }
+            } else {
+                a = a.getParent();
+                b = b.getParent();
+            }
+        }
+
+        return null;
+    }
+
+    private static int depth(TreeNode node) {
+        int depth = 0;
+        while (node.getParent() != null) {
+            depth++;
+            node = node.getParent();
+        }
+        return depth;
+    }
+
     public static TreeNode getLCA(@NotNull TreeNode root, @NotNull TreeNode a, @NotNull TreeNode b) {
         Stack<TreeNode> aPath = new Stack<>();
         Stack<TreeNode> bPath = new Stack<>();
