@@ -2,7 +2,6 @@ package org.sherman.one.nio.examples;
 
 import one.nio.config.ConfigParser;
 import one.nio.http.*;
-import one.nio.net.Session;
 import one.nio.net.Socket;
 import one.nio.server.RejectedSessionException;
 import org.slf4j.Logger;
@@ -27,7 +26,7 @@ public class ReliableHttpServer extends HttpServer {
 
     public ReliableHttpServer(HttpServerConfig config) throws IOException {
         super(config);
-        this.config  = config;
+        this.config = config;
     }
 
     public static void main(String[] args) throws IOException {
@@ -40,6 +39,7 @@ public class ReliableHttpServer extends HttpServer {
 
     /**
      * Reject a new request in case of all workers are busy.
+     *
      * @return
      */
     @Path("/simple")
