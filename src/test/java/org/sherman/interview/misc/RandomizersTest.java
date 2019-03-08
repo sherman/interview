@@ -1,10 +1,12 @@
 package org.sherman.interview.misc;
 
+import com.google.common.collect.ImmutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -63,5 +65,31 @@ public class RandomizersTest {
         }
 
         log.info("{}", probes);
+    }
+
+    @Test
+    public void weightedRandomGenerator() {
+        Randomizers.WeightedRandomIterator iter = new Randomizers.WeightedRandomIterator(
+            ImmutableMap.of(
+                10, 1,
+                22,2,
+                33,3
+            )
+        );
+
+        Map<Integer, Integer> distribution = new HashMap<>();
+        distribution.put(1, 0);
+        distribution.put(2, 0);
+        distribution.put(3, 0);
+
+        Iterator<Integer> iterable = iter.iterator();
+
+        for (int i = 0; i < 1024; i++) {
+            int v = iterable.next();
+            //log.info("{}", v);
+            distribution.put(v, distribution.get(v) + 1);
+        }
+
+        log.info("{}", distribution);
     }
 }
