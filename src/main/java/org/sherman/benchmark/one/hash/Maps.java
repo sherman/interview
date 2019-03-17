@@ -24,17 +24,21 @@ public class Maps {
     private LongHashSet oneHashSet;
     private ConcurrentHashMap<Long, Boolean> concurrentHashMap;
     private ArraySet arraySet;
+    private ArraySetNoThread arraySetNoThread;
 
     @Setup(Level.Trial)
     public void generateData(Context context) {
         oneHashSet = new LongHashSet((int) (context.size * 1.2));
         concurrentHashMap = new ConcurrentHashMap<>(context.size);
         arraySet = new ArraySet((int) (context.size * 1.2));
+        arraySetNoThread = new ArraySetNoThread((int) (context.size * 1.2));
 
         for (Long elt : context.generated) {
             oneHashSet.putKey(elt);
             concurrentHashMap.put(elt, Boolean.TRUE);
             arraySet.putKey(elt);
+            arraySetNoThread.putKey(elt);
+            //log.info("{}", arraySetNoThread.size());
         }
 
         if (context.generated.size() <= 1000) {
@@ -62,6 +66,12 @@ public class Maps {
     @Benchmark
     public void getArraySet(Blackhole blackhole, Context context) {
         int index = arraySet.getKey(context.iter2.next());
+        blackhole.consume(index != -1);
+    }
+
+    @Benchmark
+    public void getArraySetNoThread(Blackhole blackhole, Context context) {
+        int index = arraySetNoThread.getKey(context.iter2.next());
         blackhole.consume(index != -1);
     }
 
