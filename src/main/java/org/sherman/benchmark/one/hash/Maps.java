@@ -25,19 +25,22 @@ public class Maps {
     private ConcurrentHashMap<Long, Boolean> concurrentHashMap;
     private ArraySet arraySet;
     private ArraySetNoThread arraySetNoThread;
+    private ArraySetHeapNoThread arraySetHeapNoThread;
 
     @Setup(Level.Trial)
     public void generateData(Context context) {
         oneHashSet = new LongHashSet((int) (context.size * 1.2));
-        concurrentHashMap = new ConcurrentHashMap<>(context.size);
+        concurrentHashMap = new ConcurrentHashMap<>(context.size * 2);
         arraySet = new ArraySet((int) (context.size * 1.2));
-        arraySetNoThread = new ArraySetNoThread((int) (context.size * 1.2));
+        arraySetNoThread = new ArraySetNoThread((int) (context.size * 2));
+        arraySetHeapNoThread = new ArraySetHeapNoThread((int) (context.size * 2));
 
         for (Long elt : context.generated) {
             oneHashSet.putKey(elt);
             concurrentHashMap.put(elt, Boolean.TRUE);
             arraySet.putKey(elt);
             arraySetNoThread.putKey(elt);
+            arraySetHeapNoThread.putKey(elt);
             //log.info("{}", arraySetNoThread.size());
         }
 
@@ -51,7 +54,7 @@ public class Maps {
         blackhole.consume(context.iter2.next());
     }
 
-    @Benchmark
+    //@Benchmark
     public void getOneHashSet(Blackhole blackhole, Context context) {
         int index = oneHashSet.getKey(context.iter2.next());
         blackhole.consume(index != -1);
@@ -63,7 +66,7 @@ public class Maps {
         blackhole.consume(res);
     }
 
-    @Benchmark
+    //@Benchmark
     public void getArraySet(Blackhole blackhole, Context context) {
         int index = arraySet.getKey(context.iter2.next());
         blackhole.consume(index != -1);
@@ -72,6 +75,12 @@ public class Maps {
     @Benchmark
     public void getArraySetNoThread(Blackhole blackhole, Context context) {
         int index = arraySetNoThread.getKey(context.iter2.next());
+        blackhole.consume(index != -1);
+    }
+
+    @Benchmark
+    public void getArraySetHeapNoThread(Blackhole blackhole, Context context) {
+        int index = arraySetHeapNoThread.getKey(context.iter2.next());
         blackhole.consume(index != -1);
     }
 

@@ -1,6 +1,6 @@
 package org.sherman.interview.misc;
 
-import org.sherman.benchmark.one.hash.ArraySet;
+import org.sherman.benchmark.one.hash.ArraySetHeapNoThread;
 import org.sherman.benchmark.one.hash.ArraySetNoThread;
 import org.sherman.benchmark.one.hash.Generators;
 import org.slf4j.Logger;
@@ -9,12 +9,12 @@ import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 
-public class ArraySetNoThreadTest {
-    private static final Logger log = LoggerFactory.getLogger(ArraySetNoThreadTest.class);
+public class ArraySetHeapNoThreadTest {
+    private static final Logger log = LoggerFactory.getLogger(ArraySetHeapNoThreadTest.class);
 
     @Test
     public void putKey() {
-        ArraySetNoThread set = new ArraySetNoThread(32);
+        ArraySetHeapNoThread set = new ArraySetHeapNoThread(32);
         set.putKey(42);
         set.putKey(43);
 
@@ -25,7 +25,7 @@ public class ArraySetNoThreadTest {
 
     @Test
     public void putMoreKeys() {
-        ArraySetNoThread set = new ArraySetNoThread(2048);
+        ArraySetHeapNoThread set = new ArraySetHeapNoThread(2048);
         for (long elt : Generators.generate(1024)) {
             set.putKey(elt);
         }

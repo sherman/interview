@@ -4,36 +4,24 @@ import one.nio.mem.OutOfMemoryException;
 import one.nio.util.JavaInternals;
 import sun.misc.Unsafe;
 
-public class ArraySetNoThread {
-    private static final int MAGIC = 0x9E3779B9;
-    private static final Unsafe unsafe = JavaInternals.unsafe;
-    private static final long sizeOffset = JavaInternals.fieldOffset(ArraySetNoThread.class, "size");
-    private static final long base = JavaInternals.getUnsafe().arrayBaseOffset(long[].class);
-
+public class ArraySetHeapNoThread {
     public static final long EMPTY = 0;
 
     private int size;
     private int capacity;
     private int maxSteps;
 
-    private final int shift;
-    private static final int P = 10;
-
     private final long[] elts;
 
     private int probes;
 
-    public ArraySetNoThread(int capacity) {
+    public ArraySetHeapNoThread(int capacity) {
         if (capacity <= 0) {
             throw new IllegalArgumentException("Capacity must be positive");
         }
         this.capacity = capacity;
         this.maxSteps = capacity;
         this.elts = new long[capacity];
-
-        int scale = unsafe.arrayIndexScale(long[].class);
-        shift = 31 - Integer.numberOfLeadingZeros(scale);
-
     }
 
     public final int size() {
@@ -74,7 +62,7 @@ public class ArraySetNoThread {
             probes++;
             long cur = keyAt(index);
             if (cur == EMPTY) {
-                unsafe.putLong(elts, byteOffset(index), key);
+                elts[index] = key;
                 incrementSize();
                 return index;
             } else if (cur == key) {
@@ -92,16 +80,11 @@ public class ArraySetNoThread {
     }
 
     protected void incrementSize() {
-        int current = size;
-        unsafe.putInt(this, sizeOffset, current + 1);
+        size++;
     }
 
     protected static int hash(long key) {
         //return (((int) key ^ (int)(key >>> 32)) * MAGIC) >>> 32 - P;
         return ((int) key ^ (int) (key >>> 21) ^ (int) (key >>> 42)) & 0x7fffffff;
-    }
-
-    private long byteOffset(int i) {
-        return ((long) i << shift) + base;
     }
 }
