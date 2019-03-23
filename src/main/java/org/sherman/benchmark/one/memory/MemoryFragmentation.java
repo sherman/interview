@@ -29,7 +29,6 @@ public class MemoryFragmentation {
 
     private final Map<Long, Value> data = new HashMap<>();
     private final LongObjectHashMap<Value> data2 = new LongObjectHashMap<>(100000);
-    private final SharedMemoryLongMap data3 = new SharedMemoryLongMap();
 
     @Setup(Level.Trial)
     public void init(Context context) {
