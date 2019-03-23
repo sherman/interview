@@ -36,24 +36,34 @@ public class MemoryFragmentation {
 
     @Benchmark
     public void hashMap(Blackhole blackhole, Context context) {
-        Value v = context.iter.next();
-        data.put(v.v1, v);
-        Value v1 = data.get(context.iter.next().v1);
-        if (v.v4) {
-            data.remove(context.iter.next().v1);
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < context.size; j++) {
+                Value v = context.iter.next();
+                data.put(v.v1, v);
+                Value v1 = data.get(context.iter.next().v1);
+                if (v.v4) {
+                    data.remove(context.iter.next().v1);
+                }
+                blackhole.consume(v.v4 && v1.v4);
+            }
+            System.gc();
         }
-        blackhole.consume(v.v4 && v1.v4);
     }
 
     @Benchmark
     public void sharedMemoryMap(Blackhole blackhole, Context context) {
-        Value v = context.iter.next();
-        data2.put(v.v1, v);
-        Value v1 = data2.get(context.iter.next().v1);
-        if (v.v4) {
-            data2.remove(context.iter.next().v1);
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < context.size; j++) {
+                Value v = context.iter.next();
+                data2.put(v.v1, v);
+                Value v1 = data2.get(context.iter.next().v1);
+                if (v.v4) {
+                    data2.remove(context.iter.next().v1);
+                }
+                blackhole.consume(v.v4 && v1.v4);
+            }
+            System.gc();
         }
-        blackhole.consume(v.v4 && v1.v4);
     }
 
     @State(Scope.Thread)
