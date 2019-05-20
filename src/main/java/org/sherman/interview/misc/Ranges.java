@@ -106,10 +106,6 @@ public class Ranges {
             this.close = close;
         }
 
-        boolean isOverlap(Range range) {
-            return (this.open >= range.open && this.close <= range.open) || (this.open >= range.close && this.close <= range.close);
-        }
-
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
