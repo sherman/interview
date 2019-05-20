@@ -54,6 +54,24 @@ public class Ranges {
                     new Range(3, 1)
                 ),
                 0
+            },
+
+            {
+                ImmutableList.of(
+                    new Range(1, 3),
+                    new Range(3, 1),
+                    new Range(2, 3)
+                ),
+                2
+            },
+
+            {
+                ImmutableList.of(
+                    new Range(1, 3),
+                    new Range(3, 1),
+                    new Range(0, 1)
+                ),
+                2
             }
         };
     }
