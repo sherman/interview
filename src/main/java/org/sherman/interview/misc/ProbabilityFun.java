@@ -66,11 +66,10 @@ public class ProbabilityFun {
             if (color1 != color2 || color1 != Color.BLUE) {
                 stat.putIfAbsent(false, 0);
                 stat.put(false, stat.get(false) + 1);
-                continue;
+            } else {
+                stat.putIfAbsent(true, 0);
+                stat.put(true, stat.get(true) + 1);
             }
-
-            stat.putIfAbsent(true, 0);
-            stat.put(true, stat.get(true) + 1);
         }
 
         log.info("{}", stat);
