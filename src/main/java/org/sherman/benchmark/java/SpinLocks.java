@@ -12,7 +12,6 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.infra.Blackhole;
-import org.sherman.benchmark.one.hash.Maps;
 import org.sherman.interview.java.SimpleLock;
 import org.sherman.interview.java.TestAndSetLock;
 import org.sherman.interview.java.TestAndTestAndSetLock;
@@ -36,7 +35,6 @@ public class SpinLocks {
         } finally {
             testAndSetLock.unlock();
         }
-
     }
 
     @Benchmark
