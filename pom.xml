@@ -22,7 +22,7 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>13.0</version>
+            <version>19.0.0</version>
         </dependency>
 
         <dependency>
@@ -46,26 +46,26 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>19.0</version>
+            <version>28.2-jre</version>
         </dependency>
 
         <dependency>
             <groupId>org.openjdk.jmh</groupId>
             <artifactId>jmh-core</artifactId>
-            <version>1.17.3</version>
+            <version>1.23</version>
         </dependency>
 
         <dependency>
             <groupId>org.openjdk.jmh</groupId>
             <artifactId>jmh-generator-annprocess</artifactId>
-            <version>1.17.3</version>
+            <version>1.23</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>ru.odnoklassniki</groupId>
             <artifactId>one-nio</artifactId>
-            <version>1.0.2</version>
+            <version>1.2.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.sun</groupId>
@@ -81,17 +81,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
-                <!--<configuration>
-                    <source>${compiler.version}</source>
-                    <target>${compiler.version}</target>
-                </configuration>-->
                 <configuration>
                     <release>11</release>
-                    <compilerArgs>
-                        <arg>--enable-preview</arg>
-                    </compilerArgs>
-                    <!--<forceJavacCompilerUse>true</forceJavacCompilerUse>-->
-                    <!--<parameters>true</parameters>-->
                 </configuration>
             </plugin>
 
