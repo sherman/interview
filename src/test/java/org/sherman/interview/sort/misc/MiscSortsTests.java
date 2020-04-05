@@ -2,7 +2,6 @@ package org.sherman.interview.sort.misc;
 
 import org.testng.annotations.Test;
 
-import static org.sherman.interview.sort.misc.MiscSorts.generate;
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -12,10 +11,10 @@ import static org.testng.Assert.assertTrue;
 public class MiscSortsTests {
     @Test
     public void sort() {
-        MiscSorts.User[] users = MiscSorts.sort(generate(5, 1));
+        MiscSorts.User[] users = MiscSorts.sort(MiscSorts.generate(5, 1));
         assertSorted(users);
 
-        users = MiscSorts.sort(generate(100, 10));
+        users = MiscSorts.sort(MiscSorts.generate(100, 10));
         assertSorted(users);
     }
 
