@@ -1,4 +1,4 @@
-package org.sherman.benchmark.java;
+package org.sherman.interview.java;
 
 import java.nio.ByteBuffer;
 
