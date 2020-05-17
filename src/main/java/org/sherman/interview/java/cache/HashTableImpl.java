@@ -2,6 +2,7 @@ package org.sherman.interview.java.cache;
 
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
+import java.util.function.Function;
 
 import com.google.common.base.Preconditions;
 import jdk.incubator.foreign.MemoryAddress;
@@ -21,7 +22,10 @@ public class HashTableImpl implements HashTable<Long, Long> {
     private final VarHandle keyHandle;
     private final VarHandle valueHandle;
 
-    protected HashTableImpl(int size) {
+    private final Function<Object, Integer> func;
+
+    protected HashTableImpl(int size, Function<Object, Integer> func) {
+        this.func = func;
         int keySize = 64;
         int valueSize = 64;
         Preconditions.checkArgument(valueSize == Utils.nextPowerOfTwo(valueSize), "Element size must be power of two!");
@@ -52,7 +56,7 @@ public class HashTableImpl implements HashTable<Long, Long> {
         Preconditions.checkArgument(key != null, "Key must no be null!");
         Preconditions.checkArgument(key != NO_KEY, "Key " + NO_KEY + " is not supported!");
 
-        int slot = (maxSize - 1) & Utils.hash(key);
+        int slot = (maxSize - 1) & func.apply(key);
         long keyElement = NO_KEY;
         while (slot < maxSize) {
             keyElement = (long) keyHandle.get(base, slot);
@@ -72,7 +76,7 @@ public class HashTableImpl implements HashTable<Long, Long> {
 
     @Override
     public Long get(Long key) {
-        int slot = (maxSize - 1) & Utils.hash(key);
+        int slot = (maxSize - 1) & func.apply(key);
         long keyElement = NO_KEY;
         while (slot < maxSize) {
             keyElement = (long) keyHandle.get(base, slot);
@@ -87,7 +91,7 @@ public class HashTableImpl implements HashTable<Long, Long> {
 
     @Override
     public Long remove(Long key) {
-        int slot = (maxSize - 1) & Utils.hash(key);
+        int slot = (maxSize - 1) & func.apply(key);
         long keyElement = NO_KEY;
         while (slot < maxSize) {
             keyElement = (long) keyHandle.get(base, slot);

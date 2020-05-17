@@ -5,21 +5,25 @@ import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.util.function.Function;
+
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 
 public class LongLongHashTableTest {
     private static final Logger logger = LoggerFactory.getLogger(LongLongHashTableTest.class);
 
+    private final Function<Object, Integer> func = Utils::hash;
+
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void storeZeroKey() {
-        HashTable<Long, Long> hashTable = new HashTableImpl(4);
+        HashTable<Long, Long> hashTable = new HashTableImpl(4, func);
         hashTable.put(0L, 32L);
     }
 
     @Test
     public void singleEntry() {
-        HashTable<Long, Long> hashTable = new HashTableImpl(1);
+        HashTable<Long, Long> hashTable = new HashTableImpl(1, func);
         hashTable.put(1L, 32L);
         Assert.assertEquals(hashTable.get(1L), Long.valueOf(32));
         Assert.assertNull(hashTable.get(42L));
@@ -28,7 +32,7 @@ public class LongLongHashTableTest {
 
     @Test
     public void multipleEntries() {
-        HashTable<Long, Long> hashTable = new HashTableImpl(4);
+        HashTable<Long, Long> hashTable = new HashTableImpl(4, func);
         hashTable.put(1L, 32L);
         hashTable.put(2L, 33L);
         hashTable.put(42L, 34L);
@@ -40,7 +44,7 @@ public class LongLongHashTableTest {
 
     @Test
     public void update() {
-        HashTable<Long, Long> hashTable = new HashTableImpl(1);
+        HashTable<Long, Long> hashTable = new HashTableImpl(1, func);
         hashTable.put(1L, 32L);
         Assert.assertEquals(hashTable.get(1L), Long.valueOf(32));
         hashTable.put(1L, 33L);
@@ -50,7 +54,7 @@ public class LongLongHashTableTest {
 
     @Test
     public void notEnoughSpace() {
-        HashTable<Long, Long> hashTable = new HashTableImpl(1);
+        HashTable<Long, Long> hashTable = new HashTableImpl(1, func);
         hashTable.put(1L, 32L);
         Assert.assertEquals(hashTable.get(1L), Long.valueOf(32));
         try {
@@ -65,7 +69,7 @@ public class LongLongHashTableTest {
 
     @Test
     public void remove() {
-        HashTable<Long, Long> hashTable = new HashTableImpl(10);
+        HashTable<Long, Long> hashTable = new HashTableImpl(10, func);
         hashTable.put(1L, 32L);
         Assert.assertEquals(hashTable.get(1L), Long.valueOf(32));
         Assert.assertEquals(hashTable.remove(1L), Long.valueOf(32));
