@@ -9,11 +9,16 @@ import jdk.incubator.foreign.MemoryAddress;
 import jdk.incubator.foreign.MemoryLayout;
 import jdk.incubator.foreign.MemorySegment;
 import jdk.incubator.foreign.SequenceLayout;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HashTableImpl implements HashTable<Long, Long> {
+    private static final Logger logger = LoggerFactory.getLogger(HashTableImpl.class);
+
     private static final String KEY_ID = "key";
     private static final String VALUE_ID = "value";
     private static final long NO_KEY = 0;
+    private static final long DELETED_KEY = -1;
 
     private final MemorySegment cacheMemory;
     private final int maxSize;
@@ -60,13 +65,13 @@ public class HashTableImpl implements HashTable<Long, Long> {
         long keyElement = NO_KEY;
         while (slot < maxSize) {
             keyElement = (long) keyHandle.get(base, slot);
-            if (keyElement == NO_KEY || keyElement == key) {
+            if (keyElement == NO_KEY || keyElement == DELETED_KEY || keyElement == key) {
                 break;
             }
             slot++;
         }
 
-        if (keyElement != NO_KEY && keyElement != key) {
+        if (keyElement != NO_KEY && keyElement != DELETED_KEY && keyElement != key) {
             throw new IllegalStateException("Not enough space!");
         }
 
@@ -76,10 +81,17 @@ public class HashTableImpl implements HashTable<Long, Long> {
 
     @Override
     public Long get(Long key) {
+        logger.debug("============== [{}]", key);
         int slot = (maxSize - 1) & func.apply(key);
         long keyElement = NO_KEY;
         while (slot < maxSize) {
             keyElement = (long) keyHandle.get(base, slot);
+            logger.debug("Key: [{}]", keyElement);
+
+            if (keyElement == NO_KEY) {
+                return null;
+            }
+
             if (keyElement == key) {
                 return (long) valueHandle.get(base, slot);
             }
@@ -97,7 +109,7 @@ public class HashTableImpl implements HashTable<Long, Long> {
             keyElement = (long) keyHandle.get(base, slot);
             if (keyElement == key) {
                 long value = (long) valueHandle.get(base, slot);
-                keyHandle.set(base, slot, NO_KEY);
+                keyHandle.set(base, slot, DELETED_KEY);
                 return value;
 
             }
