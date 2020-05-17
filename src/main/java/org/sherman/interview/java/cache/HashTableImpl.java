@@ -60,6 +60,7 @@ public class HashTableImpl implements HashTable<Long, Long> {
     public void put(Long key, Long value) {
         Preconditions.checkArgument(key != null, "Key must no be null!");
         Preconditions.checkArgument(key != NO_KEY, "Key " + NO_KEY + " is not supported!");
+        Preconditions.checkArgument(key != DELETED_KEY, "Key " + DELETED_KEY + " is not supported!");
 
         int slot = (maxSize - 1) & func.apply(key);
         long keyElement = NO_KEY;
