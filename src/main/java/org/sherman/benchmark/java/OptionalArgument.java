@@ -29,25 +29,25 @@ public class OptionalArgument {
     @Benchmark
     public void testIntegerArg(Blackhole blackhole) {
         int value = random.nextInt(2);
-        blackhole.consume(value == 0 ? null : arguments.nullableSimple(value));
+        blackhole.consume(value == 0 ? arguments.nullableSimple(null) : arguments.nullableSimple(value));
     }
 
     @Benchmark
     public void testIntegerOptional(Blackhole blackhole) {
         int value = random.nextInt(2);
-        blackhole.consume(value == 0 ? Optional.empty() : arguments.optionalSimple(Optional.of(value)));
+        blackhole.consume(value == 0 ? arguments.optionalSimple(Optional.empty()) : arguments.optionalSimple(Optional.of(value)));
     }
 
     @Benchmark
     public void testComplexArg(Blackhole blackhole) {
         int value = random.nextInt(2);
-        blackhole.consume(value == 0 ? null : arguments.nullableComplex(CONSTANT));
+        blackhole.consume(value == 0 ? arguments.nullableComplex(null) : arguments.nullableComplex(CONSTANT));
     }
 
     @Benchmark
     public void testComplexOptional(Blackhole blackhole) {
         int value = random.nextInt(2);
-        blackhole.consume(value == 0 ? Optional.empty() : arguments.optionalComplex(Optional.of(CONSTANT)));
+        blackhole.consume(value == 0 ? arguments.optionalComplex(Optional.empty()) : arguments.optionalComplex(Optional.of(CONSTANT)));
     }
 
     private static class Arguments {
