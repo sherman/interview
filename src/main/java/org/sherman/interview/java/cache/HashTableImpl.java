@@ -9,6 +9,7 @@ import jdk.incubator.foreign.MemoryAddress;
 import jdk.incubator.foreign.MemoryLayout;
 import jdk.incubator.foreign.MemorySegment;
 import jdk.incubator.foreign.SequenceLayout;
+import org.apache.commons.math3.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,17 +63,24 @@ public class HashTableImpl implements HashTable<Long, Long> {
         Preconditions.checkArgument(key != NO_KEY, "Key " + NO_KEY + " is not supported!");
         Preconditions.checkArgument(key != DELETED_KEY, "Key " + DELETED_KEY + " is not supported!");
 
-        int slot = (maxSize - 1) & func.apply(key);
-        long keyElement = NO_KEY;
-        while (slot < maxSize) {
-            keyElement = (long) keyHandle.get(base, slot);
-            if (keyElement == NO_KEY || keyElement == DELETED_KEY || keyElement == key) {
-                break;
-            }
-            slot++;
+        int start = (maxSize - 1) & func.apply(key);
+
+        Pair<Integer, Long> slotAndKey = findSlot(key, start, maxSize);
+        int slot = slotAndKey.getKey();
+        long keyElement = slotAndKey.getValue();
+
+        boolean notFound = keyElement != NO_KEY && keyElement != DELETED_KEY && keyElement != key;
+
+        if (notFound) {
+            // lets try to find slot at the beginning
+            slotAndKey = findSlot(key, 0, slot);
+            slot = slotAndKey.getKey();
+            keyElement = slotAndKey.getValue();
         }
 
-        if (keyElement != NO_KEY && keyElement != DELETED_KEY && keyElement != key) {
+        notFound = keyElement != NO_KEY && keyElement != DELETED_KEY && keyElement != key;
+
+        if (notFound) {
             throw new IllegalStateException("Not enough space!");
         }
 
@@ -80,12 +88,36 @@ public class HashTableImpl implements HashTable<Long, Long> {
         valueHandle.set(base, slot, value);
     }
 
+    private Pair<Integer, Long> findSlot(Long key, int start, int max) {
+        int slot = start;
+        long keyElement = NO_KEY;
+        while (slot < max) {
+            keyElement = (long) keyHandle.get(base, slot);
+            if (keyElement == NO_KEY || keyElement == DELETED_KEY || keyElement == key) {
+                break;
+            }
+            slot++;
+        }
+
+        return new Pair<>(slot, keyElement);
+    }
+
     @Override
     public Long get(Long key) {
         logger.debug("============== [{}]", key);
         int slot = (maxSize - 1) & func.apply(key);
+        Long value = findValue(key, slot, maxSize);
+        if (value == null) {
+            return findValue(key, 0, slot);
+        } else {
+            return value;
+        }
+    }
+
+    private Long findValue(Long key, int start, int max) {
+        int slot = start;
         long keyElement = NO_KEY;
-        while (slot < maxSize) {
+        while (slot < max) {
             keyElement = (long) keyHandle.get(base, slot);
             logger.debug("Key: [{}]", keyElement);
 
@@ -105,8 +137,18 @@ public class HashTableImpl implements HashTable<Long, Long> {
     @Override
     public Long remove(Long key) {
         int slot = (maxSize - 1) & func.apply(key);
+        Long value = removeValue(key, slot, maxSize);
+        if (value == null) {
+            return removeValue(key, 0, slot);
+        } else {
+            return value;
+        }
+    }
+
+    private Long removeValue(Long key, int start, int max) {
         long keyElement = NO_KEY;
-        while (slot < maxSize) {
+        int slot = start;
+        while (slot < max) {
             keyElement = (long) keyHandle.get(base, slot);
             if (keyElement == key) {
                 long value = (long) valueHandle.get(base, slot);

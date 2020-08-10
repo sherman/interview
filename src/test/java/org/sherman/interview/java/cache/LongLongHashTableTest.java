@@ -44,6 +44,20 @@ public class LongLongHashTableTest {
     }
 
     @Test
+    public void insertAtBeginning() {
+        HashTable<Long, Long> hashTable = new HashTableImpl(4, noHash);
+        hashTable.put(3L, 3L);
+        hashTable.put(2L, 2L);
+        hashTable.put(4L, 4L);
+        hashTable.put(1L, 1L);
+        Assert.assertEquals(hashTable.get(1L), Long.valueOf(1));
+        Assert.assertEquals(hashTable.get(2L), Long.valueOf(2));
+        Assert.assertEquals(hashTable.get(3L), Long.valueOf(3));
+        Assert.assertEquals(hashTable.get(4L), Long.valueOf(4));
+        hashTable.close();
+    }
+
+    @Test
     public void update() {
         HashTable<Long, Long> hashTable = new HashTableImpl(1, func);
         hashTable.put(1L, 32L);
@@ -102,6 +116,22 @@ public class LongLongHashTableTest {
         Assert.assertNull(hashTable.get(2L));
         Assert.assertEquals(hashTable.get(1L), Long.valueOf(32));
         Assert.assertEquals(hashTable.get(3L), Long.valueOf(34));
+        hashTable.close();
+    }
+
+    @Test
+    public void removeAtBeginning() {
+        HashTable<Long, Long> hashTable = new HashTableImpl(4, noHash);
+        hashTable.put(3L, 3L);
+        hashTable.put(2L, 2L);
+        hashTable.put(4L, 4L);
+        hashTable.put(1L, 1L);
+        Assert.assertEquals(hashTable.get(1L), Long.valueOf(1));
+        Assert.assertEquals(hashTable.get(2L), Long.valueOf(2));
+        Assert.assertEquals(hashTable.get(3L), Long.valueOf(3));
+        Assert.assertEquals(hashTable.get(4L), Long.valueOf(4));
+        hashTable.remove(1L);
+        Assert.assertNull(hashTable.get(1L));
         hashTable.close();
     }
 }
