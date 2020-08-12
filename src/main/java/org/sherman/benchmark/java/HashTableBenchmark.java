@@ -33,6 +33,7 @@ public class HashTableBenchmark {
     private static final Function<Object, Integer> func = Utils::hash;
     private final HashTable<Long, Long> hashTable = new HashTableImpl(SIZE, func);
     private final HashTableLongLong hashTableNoAlloc = new HashTableLongLong(SIZE, func);
+    private final HashTableLongLong hashTableFilledNoAlloc = new HashTableLongLong(SIZE, func);
     private final Map<Long, Long> baseLine = new HashMap<>();
     private final long[] values = new long[SIZE];
     private final Random random = new Random();
@@ -45,6 +46,8 @@ public class HashTableBenchmark {
             if (values[i] == 0) {
                 values[i] = 1;
             }
+
+            hashTableFilledNoAlloc.put(i + 1, values[i]);
         }
     }
 
@@ -63,4 +66,8 @@ public class HashTableBenchmark {
         hashTableNoAlloc.put(values[random.nextInt(SIZE)], VALUE);
     }
 
+    @Benchmark
+    public void getNoAlloc(Blackhole blackhole) {
+        blackhole.consume(hashTableFilledNoAlloc.get(random.nextInt(SIZE)));
+    }
 }

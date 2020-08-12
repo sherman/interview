@@ -9,7 +9,7 @@ import jdk.incubator.foreign.MemoryAddress;
 import jdk.incubator.foreign.MemoryLayout;
 import jdk.incubator.foreign.MemorySegment;
 import jdk.incubator.foreign.SequenceLayout;
-import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.math3.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +65,7 @@ public class HashTableImpl implements HashTable<Long, Long> {
 
         int start = (maxSize - 1) & func.apply(key);
 
-        ImmutablePair<Integer, Long> slotAndKey = findSlot(key, start, maxSize);
+        Pair<Integer, Long> slotAndKey = findSlot(key, start, maxSize);
         int slot = slotAndKey.getKey();
         long keyElement = slotAndKey.getValue();
 
@@ -88,7 +88,7 @@ public class HashTableImpl implements HashTable<Long, Long> {
         valueHandle.set(base, slot, value);
     }
 
-    private ImmutablePair<Integer, Long> findSlot(Long key, int start, int max) {
+    private Pair<Integer, Long> findSlot(Long key, int start, int max) {
         int slot = start;
         long keyElement = NO_KEY;
         while (slot < max) {
@@ -99,7 +99,7 @@ public class HashTableImpl implements HashTable<Long, Long> {
             slot++;
         }
 
-        return new ImmutablePair<>(slot, keyElement);
+        return new Pair<>(slot, keyElement);
     }
 
     @Override
