@@ -32,8 +32,8 @@ public class HashTableBenchmark {
     private static final int SIZE = 1024;
     private static final Function<Object, Integer> func = Utils::hash;
     private final HashTable<Long, Long> hashTable = new HashTableImpl(SIZE, func);
-    private final HashTableLongLong hashTableNoAlloc = new HashTableLongLong(SIZE, func);
-    private final HashTableLongLong hashTableFilledNoAlloc = new HashTableLongLong(SIZE, func);
+    private final HashTableLongLong hashTableNoAlloc = new HashTableLongLong(SIZE);
+    private final HashTableLongLong hashTableFilledNoAlloc = new HashTableLongLong(SIZE);
     private final Map<Long, Long> baseLine = new HashMap<>();
     private final long[] values = new long[SIZE];
     private final Random random = new Random();

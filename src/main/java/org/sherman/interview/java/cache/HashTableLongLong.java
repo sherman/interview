@@ -2,7 +2,6 @@ package org.sherman.interview.java.cache;
 
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
-import java.util.function.Function;
 
 import com.google.common.base.Preconditions;
 import jdk.incubator.foreign.MemoryAddress;
@@ -27,11 +26,13 @@ public class HashTableLongLong {
 
     private final VarHandle keyHandle;
     private final VarHandle valueHandle;
+    private final boolean noHash;
 
-    private final Function<Object, Integer> func;
+    public HashTableLongLong(int size) {
+        this(size, false);
+    }
 
-    public HashTableLongLong(int size, Function<Object, Integer> func) {
-        this.func = func;
+    public HashTableLongLong(int size, boolean noHash) {
         int keySize = 64;
         int valueSize = 64;
         Preconditions.checkArgument(valueSize == Utils.nextPowerOfTwo(valueSize), "Element size must be power of two!");
@@ -55,13 +56,14 @@ public class HashTableLongLong {
         keyHandle = hashMapLayout.varHandle(long.class, MemoryLayout.PathElement.sequenceElement(), MemoryLayout.PathElement.groupElement(KEY_ID));
         valueHandle = hashMapLayout.varHandle(long.class, MemoryLayout.PathElement.sequenceElement(), MemoryLayout.PathElement.groupElement(VALUE_ID));
 
+        this.noHash = noHash;
     }
 
     public void put(long key, long value) {
         Preconditions.checkArgument(key != NO_KEY, "Key " + NO_KEY + " is not supported!");
         Preconditions.checkArgument(key != DELETED_KEY, "Key " + DELETED_KEY + " is not supported!");
 
-        int start = (maxSize - 1) & hashLong(key);
+        int start = (maxSize - 1) & (noHash ? noHash() : hashLong(key));
 
         int slot = start;
         long keyElement = NO_KEY;
@@ -101,7 +103,7 @@ public class HashTableLongLong {
 
     public long get(long key) {
         //logger.debug("============== [{}]", key);
-        int slot = (maxSize - 1) & hashLong(key);
+        int slot = (maxSize - 1) & (noHash ? noHash() : hashLong(key));
         long value = findValue(key, slot, maxSize);
         if (value == NO_VALUE) {
             return findValue(key, 0, slot);
@@ -131,7 +133,7 @@ public class HashTableLongLong {
     }
 
     public long remove(long key) {
-        int slot = (maxSize - 1) & hashLong(key);
+        int slot = (maxSize - 1) & (noHash ? noHash() : hashLong(key));
         long value = removeValue(key, slot, maxSize);
         if (value == NO_VALUE) {
             return removeValue(key, 0, slot);
@@ -159,6 +161,10 @@ public class HashTableLongLong {
 
     public void close() {
         cacheMemory.close();
+    }
+
+    private static int noHash() {
+        return 1;
     }
 
     private static int hashLong(long key) {
