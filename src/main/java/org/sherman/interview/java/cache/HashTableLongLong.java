@@ -9,7 +9,6 @@ import jdk.incubator.foreign.MemoryAddress;
 import jdk.incubator.foreign.MemoryLayout;
 import jdk.incubator.foreign.MemorySegment;
 import jdk.incubator.foreign.SequenceLayout;
-import org.apache.commons.math3.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,20 +97,6 @@ public class HashTableLongLong {
 
         keyHandle.set(base, slot, key);
         valueHandle.set(base, slot, value);
-    }
-
-    private Pair<Integer, Long> findSlot(long key, int start, int max) {
-        int slot = start;
-        long keyElement = NO_KEY;
-        while (slot < max) {
-            keyElement = (long) keyHandle.get(base, slot);
-            if (keyElement == NO_KEY || keyElement == DELETED_KEY || keyElement == key) {
-                break;
-            }
-            slot++;
-        }
-
-        return new Pair<>(slot, keyElement);
     }
 
     public long get(long key) {
