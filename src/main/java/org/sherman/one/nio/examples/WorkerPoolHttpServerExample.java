@@ -1,20 +1,20 @@
 package org.sherman.one.nio.examples;
 
-import one.nio.config.ConfigParser;
-import one.nio.http.*;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+
+import one.nio.config.ConfigParser;
+import one.nio.http.HttpServer;
+import one.nio.http.HttpServerConfig;
+import one.nio.http.HttpSession;
+import one.nio.http.Request;
+import one.nio.http.Response;
 
 public class WorkerPoolHttpServerExample extends HttpServer {
-    private final ExecutorService executorService = Executors.newFixedThreadPool(256);
-
     public WorkerPoolHttpServerExample(HttpServerConfig config) throws IOException {
         super(config);
     }
@@ -29,14 +29,14 @@ public class WorkerPoolHttpServerExample extends HttpServer {
 
     @Override
     public void handleRequest(Request request, HttpSession session) {
-        executorService.submit(
-            () -> {
-                try {
-                    session.sendResponse(Response.ok("Simple"));
-                } catch (IOException e) {
-                    e.printStackTrace();
+        asyncExecute(
+                () -> {
+                    try {
+                        session.sendResponse(Response.ok("Simple"));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
         );
     }
 
