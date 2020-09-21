@@ -4,58 +4,27 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class LicenceReformat {
-    // 2-4A0r7-4k - 4
-    // 2-5g-3-J / 3
-    //  5 /3 =2
-    // 2-4A0r71-4k = 9
-    // 9 /4 = 2
     public String licenseKeyFormatting(String data, int k) {
-        int lettersLength = data.replaceAll("[-]", "").length();
-        int groups = lettersLength / k;
-        int firstGroupSize = lettersLength - (groups * k);
-        int currentGroup = 0;
         StringBuilder result = new StringBuilder();
         char[] chars = data.toCharArray();
-        int lastIndex = 0;
+        int currentGroup = 0;
 
-        if (lettersLength == k) {
-            firstGroupSize = k;
-        }
-
-        if (firstGroupSize > 0) {
-            for (int i = 0; i < chars.length; i++) {
-                if (chars[i] == '-') {
-                    continue;
-                }
-
-                if (firstGroupSize > 0) {
-                    result.append(chars[i]);
-                    firstGroupSize--;
-                } else {
-                    result.append('-');
-                    lastIndex = i;
-                    break;
-                }
+        for (int i = data.length() - 1; i >= 0; i--) {
+            if (chars[i] == '-') {
+                continue;
             }
-        }
 
-        if (lastIndex < chars.length - 1 && lettersLength != k) {
-            for (int i = lastIndex; i < chars.length; i++) {
-                if (chars[i] == '-') {
-                    continue;
-                }
-
-                if (currentGroup == k) {
-                    result.append('-');
-                    currentGroup = 0;
-                }
-
-                currentGroup++;
-                result.append(chars[i]);
+            if (currentGroup == k) {
+                result.append('-');
+                currentGroup = 0;
             }
+
+            currentGroup++;
+            result.append(chars[i]);
         }
 
         return result
+                .reverse()
                 .toString()
                 .toUpperCase();
     }
