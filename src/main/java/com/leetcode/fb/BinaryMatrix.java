@@ -1,4 +1,4 @@
-package com.leetcode.amazon;
+package com.leetcode.fb;
 
 import java.util.List;
 
