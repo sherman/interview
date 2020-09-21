@@ -79,12 +79,19 @@ public class BinaryMatrix {
     }
 
     @Test
-    public void test() {
-        Assert.assertEquals(findLeftmostOne(new int[]{0, 0, 0, 0}), Integer.MAX_VALUE);
-        Assert.assertEquals(findLeftmostOne(new int[]{0, 1, 0, 0}), 1);
-        Assert.assertEquals(findLeftmostOne(new int[]{0, 0, 1, 0}), 2);
-        Assert.assertEquals(findLeftmostOne(new int[]{0, 0}), Integer.MAX_VALUE);
-        Assert.assertEquals(findLeftmostOne(new int[]{0, 1}), 1);
+    public static void test() {
+        BinaryMatrix m = new BinaryMatrix(
+                new int[][]{
+                        new int[]{0, 1},
+                        new int[]{0, 0}
+                }
+        );
+
+        Assert.assertEquals(m.findLeftmostOne(new int[]{0, 0, 0, 0}), Integer.MAX_VALUE);
+        Assert.assertEquals(m.findLeftmostOne(new int[]{0, 1, 0, 0}), 1);
+        Assert.assertEquals(m.findLeftmostOne(new int[]{0, 0, 1, 0}), 2);
+        Assert.assertEquals(m.findLeftmostOne(new int[]{0, 0}), Integer.MAX_VALUE);
+        Assert.assertEquals(m.findLeftmostOne(new int[]{0, 1}), 1);
     }
 
     @Test
