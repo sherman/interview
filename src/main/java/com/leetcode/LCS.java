@@ -19,16 +19,13 @@ package com.leetcode;
  * limitations under the License.
  */
 
+import java.util.Stack;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Stack;
-
 public class LCS {
     private static final Logger log = LoggerFactory.getLogger(LCS.class);
-
-    private TreeNode node;
-    private boolean found = false;
 
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
         Stack<TreeNode> path1 = getPath(root, p);
