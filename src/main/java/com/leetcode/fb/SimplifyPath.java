@@ -15,7 +15,6 @@ public class SimplifyPath {
         // 2). According to ../ remove part using stack
         Deque<String> deque = new ArrayDeque<>();
 
-
         // 3). Filter useful actual with stack
         String[] parts = path.split("[/]");
         for (String part : parts) {
