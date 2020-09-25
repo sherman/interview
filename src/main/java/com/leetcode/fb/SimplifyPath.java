@@ -1,7 +1,6 @@
 package com.leetcode.fb;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.Stack;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -13,7 +12,7 @@ public class SimplifyPath {
 
 
         // 2). According to ../ remove part using stack
-        Deque<String> deque = new ArrayDeque<>();
+        Stack<String> stack = new Stack<>();
 
         // 3). Filter useful actual with stack
         String[] parts = path.split("[/]");
@@ -23,21 +22,19 @@ public class SimplifyPath {
             }
 
             if (part.equals("..")) {
-                if (!deque.isEmpty()) {
-                    deque.pop();
+                if (!stack.isEmpty()) {
+                    stack.pop();
                 }
             } else {
-                deque.push(part);
+                stack.push(part);
             }
         }
 
         StringBuilder builder = new StringBuilder();
-        while (!deque.isEmpty()) {
-            String part = deque.pollLast();
+        for (String part : stack) {
             builder.append('/');
             builder.append(part);
         }
-
 
         String res = builder
                 .toString();
