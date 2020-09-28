@@ -36,22 +36,26 @@ public class TwoSumII {
      * </p>
      */
     public static int[] twoSum(int[] numbers, int target) {
-        return twoSum(numbers, target, 0, numbers.length - 1);
-    }
+        // 1). Init two pointers l = 0; r = numbers.length = -1;
+        // 2). if numbers[l] + numbers[r] == sum, return asnwer
+        // 3) if (l + r) < sum  l++
+        // 4) if (l + r) > sum  r--
 
-    private static int[] twoSum(int[] numbers, int target, int left, int right) {
-        log.info("{} {}", left, right);
+        int l = 0;
+        int r = numbers.length - 1;
+        while (l < r) {
+            int lNum = numbers[l];
+            int rNum = numbers[r];
 
-        if (left < 0 || right >= numbers.length || left > right) {
-            return new int[]{};
+            if (lNum + rNum == target) {
+                return new int[]{l + 1, r + 1};
+            } else if (lNum + rNum > target) {
+                r--;
+            } else {
+                l++;
+            }
         }
 
-        if (numbers[left] + numbers[right] == target) {
-            return new int[]{left, right};
-        } else if (numbers[left] + numbers[right] > target) {
-            return twoSum(numbers, target, left, right - 1);
-        } else {
-            return twoSum(numbers, target, left - 1, right);
-        }
+        return new int[]{}; // unreachable
     }
 }

@@ -26,8 +26,8 @@ import static org.testng.internal.junit.ArrayAsserts.assertArrayEquals;
 public class TwoSumIITest {
     @Test
     public void twoSum() {
-        assertArrayEquals(TwoSumII.twoSum(new int[]{2, 7, 11, 15}, 9), new int[]{0, 1});
+        assertArrayEquals(TwoSumII.twoSum(new int[]{2, 7, 11, 15}, 9), new int[]{1, 2});
         assertArrayEquals(TwoSumII.twoSum(new int[]{1, 2, 3, 15}, 9), new int[]{});
-        assertArrayEquals(TwoSumII.twoSum(new int[]{1, 3, 5, 15}, 6), new int[]{0, 2});
+        assertArrayEquals(TwoSumII.twoSum(new int[]{1, 3, 5, 15}, 6), new int[]{1, 3});
     }
 }
