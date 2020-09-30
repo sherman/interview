@@ -1,4 +1,5 @@
 #include <jni.h>
+#include <stdint.h>
 
 JNIEXPORT jint JNICALL
 Java_org_sherman_interview_NativeFunctions_add(JNIEnv* env, jclass cls, jint a, jint b) {
@@ -15,11 +16,11 @@ Java_org_sherman_interview_NativeFunctions_fibonacci(JNIEnv* env, jclass cls, ji
         return 1;
     }
 
-    long a = 0;
-    long b = 1;
+    jlong a = 0;
+    jlong b = 1;
 
-    for (int i = 2; i <= n; i++) {
-        long next = a + b;
+    for (jint i = 2; i <= n; i++) {
+        jlong next = a + b;
         a = b;
         b = next;
     }
