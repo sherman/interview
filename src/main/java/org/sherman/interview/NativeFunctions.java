@@ -7,4 +7,6 @@ public class NativeFunctions {
         }
     }
     public static native int add(int a, int b);
+
+    public static native long fibonacci(int n);
 }

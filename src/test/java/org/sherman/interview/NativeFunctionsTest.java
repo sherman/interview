@@ -8,4 +8,9 @@ public class NativeFunctionsTest {
     public void add() {
         Assert.assertEquals(NativeFunctions.add(1, 2), 3);
     }
+
+    @Test
+    public void fibonacci() {
+        Assert.assertEquals(NativeFunctions.fibonacci(10), 55);
+    }
 }

@@ -1,10 +1,10 @@
 package org.sherman.interview.misc;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Denis Gabaydulin
@@ -52,9 +52,9 @@ public class Fibonacci {
         return result;
     }
 
-    public static int getFibIterative(int x) {
-        int a = 0;
-        int b = 1;
+    public static long getFibIterative(int x) {
+        long a = 0;
+        long b = 1;
 
         if (x == 0) {
             return a;
@@ -65,7 +65,7 @@ public class Fibonacci {
         }
 
         for (int i = 2; i <= x; i++) {
-            int next = a + b;
+            long next = a + b;
             a = b;
             b = next;
         }
