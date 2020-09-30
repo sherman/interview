@@ -1,5 +1,6 @@
 package org.sherman.interview.misc;
 
+import com.google.common.primitives.Ints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
@@ -54,5 +55,17 @@ public class BitsTest {
     public void getMaxGap() {
         assertEquals(Bits.getMaxGap(9), 2);
         assertEquals(Bits.getMaxGap(272), 4);
+    }
+
+    @Test
+    public void toByteArray() {
+        assertEquals(Ints.toByteArray(11), new byte[]{0, 0, 0, 11});
+        assertEquals(Ints.toByteArray(1011), new byte[]{0, 0, 3, -13});
+        /**
+         * 00000000.00000000.00000000 + 00000000.00000000.00000011.11110011 = 00000000.00000000.00000000.(00000000)
+         * 00000000.00000000 + 00000000.00000000.00000011.11110011 = 00000000.00000000.00000000.(00000000)
+         * 00000000 + 00000000.00000000.00000011.11110011 = 00000000.00000000.00000000.(00000011)  (3)
+         * 00000000.00000000.00000011.(11110011) (243-256) (-13)
+         */
     }
 }
