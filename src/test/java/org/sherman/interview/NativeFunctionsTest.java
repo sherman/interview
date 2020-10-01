@@ -13,4 +13,9 @@ public class NativeFunctionsTest {
     public void fibonacci() {
         Assert.assertEquals(NativeFunctions.fibonacci(10), 55);
     }
+
+    @Test
+    public void fibonacciFast() {
+        Assert.assertEquals(NativeFunctions.fibonacciFast(10), 55);
+    }
 }

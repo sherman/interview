@@ -68,6 +68,11 @@ public class NativeFunctionsBenchmark {
         blackhole.consume(Fibonacci.getFibIterative(10000));
     }
 
+    @Benchmark
+    public void nativeFibonacciBigFast(Blackhole blackhole) {
+        blackhole.consume(NativeFunctions.fibonacciFast(10000));
+    }
+
     private static int add(int a, int b) {
         return a + b;
     }
