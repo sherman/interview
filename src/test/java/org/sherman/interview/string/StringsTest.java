@@ -67,22 +67,31 @@ public class StringsTest {
     @Test
     public void groupShiftedStrings() {
         assertEquals(
-            Strings.groupShiftedStrings(new String[]{"abc", "bcd", "acef", "xyz", "az", "ba", "a", "z"}),
-            ImmutableList.of(
-                ImmutableList.of("abc","bcd","xyz"),
-                ImmutableList.of("az","ba"),
-                ImmutableList.of("acef"),
-                ImmutableList.of("a", "z")
-            )
+                Strings.groupShiftedStrings(new String[]{"abc", "bcd", "acef", "xyz", "az", "ba", "a", "z"}),
+                ImmutableList.of(
+                        ImmutableList.of("abc", "bcd", "xyz"),
+                        ImmutableList.of("az", "ba"),
+                        ImmutableList.of("acef"),
+                        ImmutableList.of("a", "z")
+                )
         );
 
         assertEquals(
-            Strings.groupShiftedStrings(new String[]{"acd", "dfg", "wyz", "yab", "mop", "bdfh", "a", "x", "moqs"}),
-            ImmutableList.of(
-                ImmutableList.of("bdfh", "moqs"),
-                ImmutableList.of("a", "x"),
-                ImmutableList.of("acd","dfg","wyz", "yab", "mop")
-            )
+                Strings.groupShiftedStrings(new String[]{"acd", "dfg", "wyz", "yab", "mop", "bdfh", "a", "x", "moqs"}),
+                ImmutableList.of(
+                        ImmutableList.of("bdfh", "moqs"),
+                        ImmutableList.of("a", "x"),
+                        ImmutableList.of("acd", "dfg", "wyz", "yab", "mop")
+                )
         );
+    }
+
+    @Test
+    public void getSubstring() {
+        assertEquals(Strings.getSubstring("abcde", "cde"), "cde");
+        assertEquals(Strings.getSubstring("abcde", "dec"), "cde");
+        assertEquals(Strings.getSubstring("a", "bb"), null);
+        assertEquals(Strings.getSubstring("abcde", "acd"), null);
+        assertEquals(Strings.getSubstring("abcde", null), null);
     }
 }

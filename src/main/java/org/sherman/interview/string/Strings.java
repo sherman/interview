@@ -224,4 +224,57 @@ public class Strings {
 
         return new ArrayList<>(index.values());
     }
+
+    public static String getSubstring(String src, String search) {
+        if (src == null || search == null) {
+            return null;
+        }
+
+        if (src.length() < search.length()) {
+            return null;
+        }
+
+        char[] srcSymbols = src.toCharArray();
+        char[] searchSymbols = search.toCharArray();
+
+        Map<Character, Integer> index = toMap(searchSymbols, 0, searchSymbols.length);
+
+        for (int i = 0; i < srcSymbols.length; i++) {
+            if (i + searchSymbols.length > srcSymbols.length) {
+                break;
+            }
+
+            Map<Character, Integer> window = toMap(srcSymbols, i, searchSymbols.length);
+
+            for (Character c : index.keySet()) {
+                if (window.containsKey(c)) {
+                    int num = window.get(c);
+                    if (num == 1){
+                        window.remove(c);
+                    } else {
+                        window.put(c, num - 1);
+                    }
+                } else {
+                    break;
+                }
+            }
+
+            if (window.isEmpty()) {
+                char[] res = new char[searchSymbols.length];
+                System.arraycopy(srcSymbols, i, res, 0, searchSymbols.length);
+                return new String(res);
+            }
+        }
+
+        return null;
+    }
+
+    private static Map<Character, Integer> toMap(char[] symbols, int from, int length) {
+        Map<Character, Integer> data = new HashMap<>();
+        for (int i = from; i < from + length; i++) {
+            int num = data.getOrDefault(symbols[i], 0);
+            data.put(symbols[i], num + 1);
+        }
+        return data;
+    }
 }
