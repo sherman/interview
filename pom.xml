@@ -101,7 +101,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.2-SNAPSHOT</version>
                 <configuration>
-                    <release>${compiler.version}</release>
+                    <release>14</release>
                     <compilerArgs>
                         <arg>--enable-preview</arg>
                         <arg>--add-modules=jdk.incubator.foreign</arg>
