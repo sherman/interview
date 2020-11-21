@@ -42,7 +42,7 @@ public class HashTableBenchmark {
         }
     }
 
-    @Benchmark
+    //@Benchmark
     public void putBaseLine(Blackhole blackhole) {
         baseLine.put(values[random.nextInt(SIZE)], VALUE);
     }
@@ -57,7 +57,7 @@ public class HashTableBenchmark {
         hashTableNoAlloc.put(values[random.nextInt(SIZE)], VALUE);
     }
 
-    @Benchmark
+    //@Benchmark
     public void getNoAlloc(Blackhole blackhole) {
         blackhole.consume(hashTableFilledNoAlloc.get(random.nextInt(SIZE)));
     }
