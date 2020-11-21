@@ -9,7 +9,7 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <compiler.version>14</compiler.version>
+        <compiler.version>15</compiler.version>
     </properties>
 
     <pluginRepositories>
