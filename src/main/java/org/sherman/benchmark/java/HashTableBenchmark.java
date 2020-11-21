@@ -1,26 +1,17 @@
 package org.sherman.benchmark.java;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
-
-import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.BenchmarkMode;
-import org.openjdk.jmh.annotations.Fork;
-import org.openjdk.jmh.annotations.Measurement;
-import org.openjdk.jmh.annotations.Mode;
-import org.openjdk.jmh.annotations.OutputTimeUnit;
-import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.Setup;
-import org.openjdk.jmh.annotations.State;
-import org.openjdk.jmh.annotations.Warmup;
+import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 import org.sherman.interview.java.cache.HashTable;
 import org.sherman.interview.java.cache.HashTableImpl;
 import org.sherman.interview.java.cache.HashTableLongLong;
 import org.sherman.interview.java.cache.Utils;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 @Fork(2)
 @Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
@@ -51,7 +42,7 @@ public class HashTableBenchmark {
         }
     }
 
-    //@Benchmark
+    @Benchmark
     public void putBaseLine(Blackhole blackhole) {
         baseLine.put(values[random.nextInt(SIZE)], VALUE);
     }
