@@ -20,9 +20,7 @@ package org.sherman.benchmark.java;
  */
 
 
-import jdk.incubator.foreign.MemoryAddress;
-import jdk.incubator.foreign.MemoryLayout;
-import jdk.incubator.foreign.MemorySegment;
+import jdk.incubator.foreign.*;
 import one.nio.util.JavaInternals;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
@@ -46,7 +44,7 @@ public class ForeignMemoryBenchmark {
     private final long[] data = new long[SIZE];
 
     private final Unsafe unsafe = JavaInternals.getUnsafe();
-    private long unsafeAddress = unsafe.allocateMemory(SIZE * 8);
+    private final long unsafeAddress = unsafe.allocateMemory(SIZE * 8);
 
     private final MemorySegment memorySegment = MemorySegment.allocateNative(SIZE * 8);
     private final MemoryAddress foreignMemoryAddress = memorySegment.baseAddress();
@@ -69,19 +67,19 @@ public class ForeignMemoryBenchmark {
 
     @Benchmark
     public void putLongUnsafe(Blackhole blackhole) {
-        int index = ThreadLocalRandom.current().nextInt(SIZE);
-        unsafe.putLong(unsafeAddress + index * 8, 1);
+        long index = ThreadLocalRandom.current().nextInt(SIZE);
+        unsafe.putLong(unsafeAddress + index * 8, 1L);
     }
 
     @Benchmark
     public void putLongForeignMethodHandle(Blackhole blackhole) throws Throwable {
-        int index = ThreadLocalRandom.current().nextInt(SIZE);
-        methodHandle.invoke(foreignMemoryAddress, index, 1);
+        long index = ThreadLocalRandom.current().nextInt(SIZE);
+        methodHandle.invokeExact(foreignMemoryAddress, index, 1L);
     }
 
     @Benchmark
     public void putLongForeignVarHandle(Blackhole blackhole) throws Throwable {
-        int index = ThreadLocalRandom.current().nextInt(SIZE);
-        varHandle.set(foreignMemoryAddress, index, 1);
+        long index = ThreadLocalRandom.current().nextInt(SIZE);
+        varHandle.set(foreignMemoryAddress, index, 1L);
     }
 }
