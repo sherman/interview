@@ -51,12 +51,13 @@ public class ForeignMemoryBenchmark {
     private final MemorySegment memorySegment = MemorySegment.allocateNative(SIZE * 8);
     private final MemoryAddress foreignMemoryAddress = memorySegment.baseAddress();
     private final MemoryLayout layout = MemoryLayout.ofSequence(SIZE, MemoryLayout.ofValueBits(64, ByteOrder.nativeOrder()));
-    private final MethodHandle handle = layout.varHandle(long.class, MemoryLayout.PathElement.sequenceElement()).toMethodHandle(VarHandle.AccessMode.SET);
+    private final VarHandle varHandle = layout.varHandle(long.class, MemoryLayout.PathElement.sequenceElement());
+    private final MethodHandle methodHandle = varHandle.toMethodHandle(VarHandle.AccessMode.SET);
 
     @Setup
     public void generate() {
         for (int i = 0; i < SIZE; i++) {
-            data[i] = '1';
+            data[i] = 1L;
         }
     }
 
@@ -69,12 +70,18 @@ public class ForeignMemoryBenchmark {
     @Benchmark
     public void putLongUnsafe(Blackhole blackhole) {
         int index = ThreadLocalRandom.current().nextInt(SIZE);
-        unsafe.putLong(unsafeAddress + index * 8, data[index]);
+        unsafe.putLong(unsafeAddress + index * 8, 1);
     }
 
     @Benchmark
-    public void putLongForeign(Blackhole blackhole) throws Throwable {
+    public void putLongForeignMethodHandle(Blackhole blackhole) throws Throwable {
         int index = ThreadLocalRandom.current().nextInt(SIZE);
-        handle.invoke(foreignMemoryAddress, index, data[index]);
+        methodHandle.invoke(foreignMemoryAddress, index, 1);
+    }
+
+    @Benchmark
+    public void putLongForeignVarHandle(Blackhole blackhole) throws Throwable {
+        int index = ThreadLocalRandom.current().nextInt(SIZE);
+        varHandle.set(foreignMemoryAddress, index, 1);
     }
 }
