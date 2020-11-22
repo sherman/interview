@@ -28,9 +28,10 @@ import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 import sun.misc.Unsafe;
 
+import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 @Fork(2)
@@ -43,15 +44,14 @@ public class ForeignMemoryBenchmark {
     private static final int SIZE = 1 << 20;
     private static final String ID = "ID";
     private final long[] data = new long[SIZE];
-    private final Random random = new Random();
 
     private final Unsafe unsafe = JavaInternals.getUnsafe();
     private long unsafeAddress = unsafe.allocateMemory(SIZE * 8);
 
     private final MemorySegment memorySegment = MemorySegment.allocateNative(SIZE * 8);
     private final MemoryAddress foreignMemoryAddress = memorySegment.baseAddress();
-    private final MemoryLayout layout = MemoryLayout.ofSequence(SIZE, MemoryLayout.ofStruct(MemoryLayout.ofValueBits(64, ByteOrder.nativeOrder()).withName(ID)));
-    private final VarHandle handle = layout.varHandle(long.class, MemoryLayout.PathElement.sequenceElement(), MemoryLayout.PathElement.groupElement(ID));
+    private final MemoryLayout layout = MemoryLayout.ofSequence(SIZE, MemoryLayout.ofValueBits(64, ByteOrder.nativeOrder()));
+    private final MethodHandle handle = layout.varHandle(long.class, MemoryLayout.PathElement.sequenceElement()).toMethodHandle(VarHandle.AccessMode.SET);
 
     @Setup
     public void generate() {
@@ -68,13 +68,13 @@ public class ForeignMemoryBenchmark {
 
     @Benchmark
     public void putLongUnsafe(Blackhole blackhole) {
-        int index = random.nextInt(SIZE);
+        int index = ThreadLocalRandom.current().nextInt(SIZE);
         unsafe.putLong(unsafeAddress + index * 8, data[index]);
     }
 
     @Benchmark
-    public void putLongForeign(Blackhole blackhole) {
-        int index = random.nextInt(SIZE);
-        handle.set(foreignMemoryAddress, index, data[index]);
+    public void putLongForeign(Blackhole blackhole) throws Throwable {
+        int index = ThreadLocalRandom.current().nextInt(SIZE);
+        handle.invoke(foreignMemoryAddress, index, data[index]);
     }
 }
