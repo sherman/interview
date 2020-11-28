@@ -10,6 +10,7 @@ import org.sherman.interview.java.cache.Utils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
@@ -42,23 +43,23 @@ public class HashTableBenchmark {
         }
     }
 
-    //@Benchmark
+    @Benchmark
     public void putBaseLine(Blackhole blackhole) {
-        baseLine.put(values[random.nextInt(SIZE)], VALUE);
+        baseLine.put(values[ThreadLocalRandom.current().nextInt(SIZE)], VALUE);
     }
 
-    //@Benchmark
+    @Benchmark
     public void put(Blackhole blackhole) {
-        hashTable.put(values[random.nextInt(SIZE)], VALUE);
+        hashTable.put(values[ThreadLocalRandom.current().nextInt(SIZE)], VALUE);
     }
 
     @Benchmark
     public void putNoAlloc(Blackhole blackhole) {
-        hashTableNoAlloc.put(values[random.nextInt(SIZE)], VALUE);
+        hashTableNoAlloc.put(values[ThreadLocalRandom.current().nextInt(SIZE)], VALUE);
     }
 
     //@Benchmark
     public void getNoAlloc(Blackhole blackhole) {
-        blackhole.consume(hashTableFilledNoAlloc.get(random.nextInt(SIZE)));
+        blackhole.consume(hashTableFilledNoAlloc.get(ThreadLocalRandom.current().nextInt(SIZE)));
     }
 }
