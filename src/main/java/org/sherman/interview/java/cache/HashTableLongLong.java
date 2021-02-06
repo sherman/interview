@@ -1,8 +1,5 @@
 package org.sherman.interview.java.cache;
 
-import java.lang.invoke.VarHandle;
-import java.nio.ByteOrder;
-
 import com.google.common.base.Preconditions;
 import jdk.incubator.foreign.MemoryAddress;
 import jdk.incubator.foreign.MemoryLayout;
@@ -10,6 +7,9 @@ import jdk.incubator.foreign.MemorySegment;
 import jdk.incubator.foreign.SequenceLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.invoke.VarHandle;
+import java.nio.ByteOrder;
 
 public class HashTableLongLong {
     private static final Logger logger = LoggerFactory.getLogger(HashTableLongLong.class);
@@ -41,7 +41,7 @@ public class HashTableLongLong {
         size = (int) Utils.nextPowerOfTwo(size);
         long memorySize = size * keySize + size * valueSize;
         this.cacheMemory = MemorySegment.allocateNative(memorySize);
-        base = cacheMemory.baseAddress();
+        base = cacheMemory.address();
 
         Preconditions.checkArgument(memorySize >= keySize + valueSize, "Not enough cache memory for store at least one element!");
 

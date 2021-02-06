@@ -47,7 +47,7 @@ public class ForeignMemoryBenchmark {
     private final long unsafeAddress = unsafe.allocateMemory(SIZE * 8);
 
     private final MemorySegment memorySegment = MemorySegment.allocateNative(SIZE * 8);
-    private final MemoryAddress foreignMemoryAddress = memorySegment.baseAddress();
+    private final MemoryAddress foreignMemoryAddress = memorySegment.address();
     private final MemoryLayout layout = MemoryLayout.ofSequence(SIZE, MemoryLayout.ofValueBits(64, ByteOrder.nativeOrder()));
     private final VarHandle varHandle = layout.varHandle(long.class, MemoryLayout.PathElement.sequenceElement());
     private final MethodHandle methodHandle = varHandle.toMethodHandle(VarHandle.AccessMode.SET);
