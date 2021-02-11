@@ -31,5 +31,5 @@ public class CLinkerApp {
         var returnCode = (int) kill.invoke((int) pid, 2);
 
         logger.info("{}", returnCode);
-    }cd ..
+    }
 }
