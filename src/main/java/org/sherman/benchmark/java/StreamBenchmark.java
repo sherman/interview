@@ -25,12 +25,26 @@ public class StreamBenchmark {
         }
     }
 
+    /**
+     * avgt   10  2436.728 ±  55.429  MB/sec
+     * @param blackhole
+     */
     @Benchmark
-    public void mapToInt(Blackhole blackhole) {
+    public void mapToIntArray1(Blackhole blackhole) {
         int[] result = in.stream()
             .mapToInt(x -> x)
             .toArray();
 
+        blackhole.consume(result);
+    }
+
+    /**
+     * avgt   10  2969.175 ±  31.942  MB/sec
+     * @param blackhole
+     */
+    @Benchmark
+    public void mapToIntArray2(Blackhole blackhole) {
+        Integer[] result = in.toArray(Integer[]::new);
         blackhole.consume(result);
     }
 }
