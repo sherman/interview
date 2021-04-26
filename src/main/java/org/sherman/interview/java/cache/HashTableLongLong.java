@@ -41,7 +41,7 @@ public class HashTableLongLong {
         size = (int) Utils.nextPowerOfTwo(size);
         long memorySize = size * keySize + size * valueSize;
         this.cacheMemory = MemorySegment.allocateNative(memorySize);
-        base = cacheMemory.address();
+        base = cacheMemory.baseAddress();
 
         Preconditions.checkArgument(memorySize >= keySize + valueSize, "Not enough cache memory for store at least one element!");
 
