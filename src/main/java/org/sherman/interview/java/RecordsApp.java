@@ -7,11 +7,11 @@ public class RecordsApp {
     private static final Logger logger = LoggerFactory.getLogger(RecordsApp.class);
 
     public static void main(String[] args) {
-        Key key = new Key(10L);
+        /*Key key = new Key(10L);
 
-        logger.info("[{}]", key);
+        logger.info("[{}]", key);*/
     }
 
-    private static record Key(long id) {
-    }
+    /*private static record Key(long id) {
+    }*/
 }
