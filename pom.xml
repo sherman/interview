@@ -110,6 +110,8 @@
                         <arg>--add-modules=jdk.incubator.foreign</arg>
                         <arg>--add-modules=jdk.incubator.vector</arg>
                     </compilerArgs>
+                    <source>16</source>
+                    <target>16</target>
                 </configuration>
             </plugin>
 
