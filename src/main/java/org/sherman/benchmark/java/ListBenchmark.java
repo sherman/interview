@@ -5,6 +5,7 @@ import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Fork(2)
@@ -22,5 +23,10 @@ public class ListBenchmark {
     @Benchmark
     public void immutableArray(Blackhole blackhole) {
         blackhole.consume(ImmutableList.of(1));
+    }
+
+    @Benchmark
+    public void jdkImmutable(Blackhole blackhole) {
+        blackhole.consume(List.of(1));
     }
 }
