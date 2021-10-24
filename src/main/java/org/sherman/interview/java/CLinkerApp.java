@@ -2,7 +2,7 @@ package org.sherman.interview.java;
 
 import jdk.incubator.foreign.CLinker;
 import jdk.incubator.foreign.FunctionDescriptor;
-import jdk.incubator.foreign.LibraryLookup;
+import jdk.incubator.foreign.SymbolLookup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +13,7 @@ public class CLinkerApp {
 
     public static void main(String[] args) throws Throwable {
         var linker = CLinker.getInstance();
-        var lookup = LibraryLookup.ofDefault();
+        var lookup = SymbolLookup.loaderLookup();
 
         var getPid = linker.downcallHandle(
             lookup.lookup("getpid").get(),

@@ -46,9 +46,9 @@ public class ForeignMemoryBenchmark {
     private final Unsafe unsafe = JavaInternals.getUnsafe();
     private final long unsafeAddress = unsafe.allocateMemory(SIZE * 8);
 
-    private final MemorySegment memorySegment = MemorySegment.allocateNative(SIZE * 8);
+    private final MemorySegment memorySegment = MemorySegment.allocateNative(SIZE * 8, ResourceScope.globalScope());
     private final MemoryAddress foreignMemoryAddress = memorySegment.address();
-    private final MemoryLayout layout = MemoryLayout.ofSequence(SIZE, MemoryLayout.ofValueBits(64, ByteOrder.nativeOrder()));
+    private final MemoryLayout layout = MemoryLayout.sequenceLayout(SIZE, MemoryLayout.valueLayout(64, ByteOrder.nativeOrder()));
     private final VarHandle varHandle = layout.varHandle(long.class, MemoryLayout.PathElement.sequenceElement());
     private final MethodHandle methodHandle = varHandle.toMethodHandle(VarHandle.AccessMode.SET);
 
@@ -62,7 +62,7 @@ public class ForeignMemoryBenchmark {
     @TearDown
     public void free() {
         unsafe.freeMemory(unsafeAddress);
-        memorySegment.close();
+        // TODO: how to close() segment?
     }
 
     @Benchmark

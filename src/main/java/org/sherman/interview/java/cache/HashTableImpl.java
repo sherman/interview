@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import jdk.incubator.foreign.MemoryAddress;
 import jdk.incubator.foreign.MemoryLayout;
 import jdk.incubator.foreign.MemorySegment;
+import jdk.incubator.foreign.ResourceScope;
 import jdk.incubator.foreign.SequenceLayout;
 import org.apache.commons.math3.util.Pair;
 import org.slf4j.Logger;
@@ -39,19 +40,19 @@ public class HashTableImpl implements HashTable<Long, Long> {
 
         size = (int) Utils.nextPowerOfTwo(size);
         long memorySize = size * keySize + size * valueSize;
-        this.cacheMemory = MemorySegment.allocateNative(memorySize);
+        this.cacheMemory = MemorySegment.allocateNative(memorySize, ResourceScope.globalScope());
         base = cacheMemory.address();
 
         Preconditions.checkArgument(memorySize >= keySize + valueSize, "Not enough cache memory for store at least one element!");
 
         maxSize = size;
 
-        MemoryLayout entryLayout = MemoryLayout.ofStruct(
-                MemoryLayout.ofValueBits(keySize, ByteOrder.BIG_ENDIAN).withName(KEY_ID),
-                MemoryLayout.ofValueBits(valueSize, ByteOrder.BIG_ENDIAN).withName(VALUE_ID)
+        MemoryLayout entryLayout = MemoryLayout.structLayout(
+                MemoryLayout.valueLayout(keySize, ByteOrder.BIG_ENDIAN).withName(KEY_ID),
+                MemoryLayout.valueLayout(valueSize, ByteOrder.BIG_ENDIAN).withName(VALUE_ID)
         );
 
-        SequenceLayout hashMapLayout = MemoryLayout.ofSequence(maxSize, entryLayout);
+        SequenceLayout hashMapLayout = MemoryLayout.sequenceLayout(maxSize, entryLayout);
         keyHandle = hashMapLayout.varHandle(long.class, MemoryLayout.PathElement.sequenceElement(), MemoryLayout.PathElement.groupElement(KEY_ID));
         valueHandle = hashMapLayout.varHandle(long.class, MemoryLayout.PathElement.sequenceElement(), MemoryLayout.PathElement.groupElement(VALUE_ID));
 
@@ -164,6 +165,6 @@ public class HashTableImpl implements HashTable<Long, Long> {
 
     @Override
     public void close() {
-        cacheMemory.close();
+        // TODO: how to close resource
     }
 }
