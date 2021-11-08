@@ -39,7 +39,7 @@ public class ArrayBlockingQueueV2<T> {
 
             log.info("p: {}, t: {}, s:{}", putIndex, takeIndex, size);
 
-            notify();
+            notifyAll();
         }
     }
 
@@ -59,7 +59,7 @@ public class ArrayBlockingQueueV2<T> {
 
             log.info("p: {}, t: {}, s:{}", putIndex, takeIndex, size);
 
-            notify();
+            notifyAll();
 
             return elt;
         }
