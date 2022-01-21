@@ -39,7 +39,7 @@ public class LocalityArrayBenchmark {
         }
 
         Arrays.sort(data2);
-        shuffleArray(data3);
+        primitiveShuffle(data3);
     }
 
     @Benchmark
@@ -69,7 +69,7 @@ public class LocalityArrayBenchmark {
         blackhole.consume(sum);
     }
 
-    private static void shuffleArray(long[] array) {
+    private static void shuffle(long[] array) {
         int index;
         Random random = new Random();
         for (int i = array.length - 1; i > 0; i--) {
@@ -78,6 +78,19 @@ public class LocalityArrayBenchmark {
                 array[index] ^= array[i];
                 array[i] ^= array[index];
                 array[index] ^= array[i];
+            }
+        }
+    }
+
+    private static void primitiveShuffle(long[] array) {
+        int index;
+        Random random = new Random();
+        for (int i = array.length - 1; i > 0; i--) {
+            index = random.nextInt(i + 1);
+            if (index != i) {
+                var temp = array[i];
+                array[i] = array[index];
+                array[index] = temp;
             }
         }
     }

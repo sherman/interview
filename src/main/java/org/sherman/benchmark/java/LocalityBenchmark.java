@@ -34,16 +34,16 @@ public class LocalityBenchmark {
     @Setup
     public void setup() {
         for (long i = 0; i < 1_000_000L; i++) {
-            data1.add(i);
-            data2.add(i);
+            //data1.add(i);
+            //data2.add(i);
             data3.add(i);
         }
 
-        Collections.sort(data2);
+        //Collections.sort(data2);
         Collections.shuffle(data3);
     }
 
-    @Benchmark
+    //@Benchmark
     public void baseline(Blackhole blackhole) {
         var sum = 0L;
         for (var item : data1) {
@@ -52,7 +52,7 @@ public class LocalityBenchmark {
         blackhole.consume(sum);
     }
 
-    @Benchmark
+    //@Benchmark
     public void sort(Blackhole blackhole) {
         var sum = 0L;
         for (var item : data2) {
