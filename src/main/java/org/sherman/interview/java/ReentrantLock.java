@@ -32,14 +32,16 @@ public class ReentrantLock {
         }
 
         var id = Thread.currentThread().getId();
-        if (currentThreadId == id) {
-            var current = acquires.decrementAndGet();
-            if (current == 0) {
-                currentThreadId = NO_ID;
-            }
-            return true;
-        } else {
+        if (id != currentThreadId) {
             return false;
         }
+
+        // firstly, we should change an owner (in case of acquires = 0)  and then decrement value
+        var current = acquires.get() - 1;
+        if (current == 0) {
+            currentThreadId = NO_ID;
+        }
+        acquires.set(current);
+        return true;
     }
 }
