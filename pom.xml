@@ -85,6 +85,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.openjdk.jcstress</groupId>
+            <artifactId>jcstress-core</artifactId>
+            <version>0.15</version>
+        </dependency>
+
+        <dependency>
             <groupId>ru.odnoklassniki</groupId>
             <artifactId>one-nio</artifactId>
             <version>1.2.1</version>
@@ -96,6 +102,53 @@
             </exclusions>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>jcstress</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-shade-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>shade</goal>
+                                </goals>
+                                <configuration>
+                                    <finalName>JCStress-benchmarks</finalName>
+                                    <transformers>
+                                        <transformer
+                                                implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                            <mainClass>org.openjdk.jcstress.Main</mainClass>
+                                        </transformer>
+                                        <transformer
+                                                implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                            <resource>META-INF/TestList</resource>
+                                        </transformer>
+                                    </transformers>
+                                    <filters>
+                                        <filter>
+                                            <artifact>*:*</artifact>
+                                            <excludes>
+                                                <exclude>META-INF/services/javax.annotation.processing.Processor
+                                                </exclude>
+                                            </excludes>
+                                        </filter>
+                                    </filters>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>
@@ -144,6 +197,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -154,8 +208,8 @@
                         <phase>compile</phase>
                         <configuration>
                             <target name="compile-native">
-                                <property name="build.dir"      value="target"/>
-                                <property name="src.dir"        value="src"/>
+                                <property name="build.dir" value="target"/>
+                                <property name="src.dir" value="src"/>
                                 <property name="gcc.extra.args" value=""/>
 
                                 <echo message="Compiling native library..."/>
@@ -173,7 +227,8 @@
                                                ${src.native} -ldl -lrt"/>
                                 </exec>
 
-                                <move verbose="true" failonerror="false" file="${build.dir}/native/libinterview.so" todir="${build.dir}/classes"/>
+                                <move verbose="true" failonerror="false" file="${build.dir}/native/libinterview.so"
+                                      todir="${build.dir}/classes"/>
                             </target>
                         </configuration>
                         <goals>
