@@ -19,7 +19,7 @@ public class FindLowestStartingStair {
 
         logger.info("[{}]", min);
 
-        return min <= 0 ? Math.abs(min) + 1 : min;
+        return Math.max(0, -1 * min) + 1;
     }
 
     @Test
