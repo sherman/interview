@@ -1,8 +1,8 @@
 package com.leetcode;
 
-import org.testng.annotations.Test;
-
 import static org.testng.Assert.assertEquals;
+
+import org.testng.annotations.Test;
 
 public class ReverseBitsTest {
     @Test
