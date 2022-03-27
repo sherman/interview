@@ -19,6 +19,7 @@ package org.sherman.interview.misc;
  * limitations under the License.
  */
 
+import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,11 +39,12 @@ public class Permutations {
             characterList.add(chr);
         }
         List<String> result = new ArrayList<>();
-        collectPermutations(characterList, new ArrayList<>(), result);
+        collectPermutations(characterList, new ArrayList<>(), result, new AtomicInteger());
         return result;
     }
 
-    private static void collectPermutations(List<Character> str, List<Character> selected, List<String> result) {
+    private static void collectPermutations(List<Character> str, List<Character> selected, List<String> result, AtomicInteger count) {
+        log.info("{} {} {}", count.get(), str, selected);
         if (str.isEmpty()) {
             StringBuilder builder = new StringBuilder();
             selected.forEach(builder::append);
@@ -53,7 +55,8 @@ public class Permutations {
                 char c = str.remove(i);
                 selected.add(c);
 
-                collectPermutations(str, selected, result);
+                count.incrementAndGet();
+                collectPermutations(str, selected, result, count);
 
                 str.add(i, c);
                 selected.remove(selected.size() - 1);
