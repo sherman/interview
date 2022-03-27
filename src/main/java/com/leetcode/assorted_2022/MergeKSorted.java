@@ -18,21 +18,23 @@ public class MergeKSorted {
 
         for (int i = 0; i < lists.length; i++) {
             var node = lists[i];
-            while (node != null) {
+            if (node != null) {
                 queue.offer(node);
-                node = node.next;
             }
         }
 
         while (!queue.isEmpty()) {
             var node = queue.poll();
-            node.next = null;
             if (root == null) {
                 root = node;
             } else {
                 current.next = node;
             }
             current = node;
+
+            if (node.next != null) {
+                queue.offer(node.next);
+            }
         }
 
         while (root != null) {
