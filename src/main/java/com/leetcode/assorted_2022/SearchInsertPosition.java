@@ -21,7 +21,7 @@ public class SearchInsertPosition {
         }
 
         var mid = lo + (hi - lo) / 2;
-        while (lo <= hi) {
+        while (lo < hi) {
             // when the target is not in the list
             if (hi - lo == 1 && target > nums[lo]) {
                 return lo + 1;
