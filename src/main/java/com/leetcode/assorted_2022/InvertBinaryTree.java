@@ -16,15 +16,12 @@ public class InvertBinaryTree {
             return;
         }
 
-        var left = root.left;
-        var right = root.right;
+        var temp = root.left;
+        root.left = root.right;
+        root.right = temp;
 
-        var node = new TreeNode(root.val, right, left);
-        root.left = node.left;
-        root.right = node.right;
-
-        swapNodes(node.left);
-        swapNodes(node.right);
+        swapNodes(root.left);
+        swapNodes(root.right);
     }
 
     @Test
