@@ -1,20 +1,21 @@
 package org.sherman.interview.graph;
 
+import static com.google.common.collect.Lists.reverse;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
+
 import com.beust.jcommander.internal.Lists;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.testng.annotations.Test;
-import org.testng.internal.junit.ArrayAsserts;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.stream.Collectors;
-
-import static com.google.common.collect.Lists.reverse;
-import static org.testng.Assert.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.testng.annotations.Test;
+import org.testng.internal.junit.ArrayAsserts;
 
 /**
  * @author Denis Gabaydulin
@@ -52,6 +53,41 @@ public class DirectedGraphAlgorithmsTest {
 
         assertEquals(
             DirectedGraphAlgorithms.naiveDijkstra(graph, new Vertex(1), new Vertex(4)).stream()
+                .map(Vertex::getId)
+                .collect(Collectors.toList()),
+            Lists.newArrayList(1, 3, 4)
+        );
+    }
+
+    @Test
+    public void dijkstra() {
+        DirectedGraph graph = new DirectedGraph();
+        graph.addEdge(new DirectedEdge(new Vertex(1), new Vertex(2), 7));
+        graph.addEdge(new DirectedEdge(new Vertex(1), new Vertex(3), 9));
+        graph.addEdge(new DirectedEdge(new Vertex(1), new Vertex(6), 14));
+        graph.addEdge(new DirectedEdge(new Vertex(2), new Vertex(3), 10));
+        graph.addEdge(new DirectedEdge(new Vertex(2), new Vertex(4), 15));
+        graph.addEdge(new DirectedEdge(new Vertex(3), new Vertex(4), 11));
+        graph.addEdge(new DirectedEdge(new Vertex(3), new Vertex(6), 2));
+        graph.addEdge(new DirectedEdge(new Vertex(4), new Vertex(5), 6));
+        graph.addEdge(new DirectedEdge(new Vertex(5), new Vertex(6), 9));
+
+        assertEquals(
+            DirectedGraphAlgorithms.dijkstra(graph, new Vertex(1), new Vertex(5)).stream()
+                .map(Vertex::getId)
+                .collect(Collectors.toList()),
+            Lists.newArrayList(1, 3, 4, 5)
+        );
+
+        assertEquals(
+            DirectedGraphAlgorithms.dijkstra(graph, new Vertex(2), new Vertex(3)).stream()
+                .map(Vertex::getId)
+                .collect(Collectors.toList()),
+            Lists.newArrayList(2, 3)
+        );
+
+        assertEquals(
+            DirectedGraphAlgorithms.dijkstra(graph, new Vertex(1), new Vertex(4)).stream()
                 .map(Vertex::getId)
                 .collect(Collectors.toList()),
             Lists.newArrayList(1, 3, 4)

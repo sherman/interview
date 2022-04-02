@@ -1,17 +1,29 @@
 package org.sherman.interview.graph;
 
+import static java.util.Comparator.comparingInt;
+import static java.util.Optional.ofNullable;
+
 import com.google.common.primitives.Ints;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Set;
+import java.util.Stack;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import joptsimple.internal.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
-import static java.util.Comparator.comparingInt;
-import static java.util.Optional.ofNullable;
 
 /**
  * @author Denis Gabaydulin
@@ -21,6 +33,66 @@ public class DirectedGraphAlgorithms {
     private static final Logger log = LoggerFactory.getLogger(DirectedGraphAlgorithms.class);
 
     private DirectedGraphAlgorithms() {
+    }
+
+    public static List<Vertex> dijkstra(@NotNull DirectedGraph graph, @NotNull Vertex from, @NotNull Vertex to) {
+        // fill all vertexes with infinite distances;
+        var vertexDistances = new HashMap<Vertex, Integer>();
+        for (var vertex : graph.getVertices()) {
+            vertexDistances.put(vertex, Integer.MAX_VALUE);
+        }
+        vertexDistances.put(from, 0);
+
+        var visited = new HashSet<Vertex>();
+        var unvisited = new HashSet<Vertex>();
+        // add all vertexes to unvisited
+        unvisited.addAll(vertexDistances.keySet());
+
+        Stack<DirectedEdge> shortPaths = new Stack<>();
+
+        var priorityQueue = new PriorityQueue<WeightedVertex>();
+        priorityQueue.add(new WeightedVertex(from, 0));
+
+        while (!unvisited.isEmpty() && !priorityQueue.isEmpty()) {
+            // get a vertex with a minimum weight
+            var min = priorityQueue.poll();
+
+            var fromVertex = vertexDistances.get(min.v());
+            for (var edge : graph.getListOfEdgeNeighbours(min.v())) {
+                if (!visited.contains(edge.getTo())) {
+                    var newWeight = fromVertex + edge.getWeight();
+                    var currentWeight = vertexDistances.get(edge.getTo());
+                    // replace weight if a new path is smaller
+                    if (newWeight < currentWeight) {
+                        vertexDistances.put(edge.getTo(), newWeight);
+                        priorityQueue.add(new WeightedVertex(edge.getTo(), newWeight));
+                        shortPaths.add(edge);
+                        //log.info("{} -> {}", min, edge.getTo());
+                    }
+                }
+            }
+
+            visited.add(min.v());
+            unvisited.remove(min.v());
+        }
+
+        List<Vertex> shortPath = new ArrayList<>();
+
+        var current = to;
+        while (!shortPaths.isEmpty()) {
+            var next = shortPaths.pop();
+            if (next.getTo().equals(current)) {
+                //log.info("[{}]", current);
+                shortPath.add(current);
+                current = next.getFrom();
+            }
+        }
+        shortPath.add(current);
+
+        Collections.reverse(shortPath);
+        log.info("[{}]", shortPath);
+
+        return shortPath;
     }
 
     public static List<Vertex> naiveDijkstra(@NotNull DirectedGraph graph, @NotNull Vertex from, @NotNull Vertex to) {
@@ -36,6 +108,8 @@ public class DirectedGraphAlgorithms {
         while (!unvisited.isEmpty()) {
             Vertex min = getMinimum(vertexDistances, unvisited);
 
+            log.info("Min [{}] is [{}]", min, vertexDistances.get(min));
+
             visited.add(min);
             unvisited.remove(min);
 
@@ -46,7 +120,7 @@ public class DirectedGraphAlgorithms {
                         if (
                             getShortestDistance(vertexDistances, edge.getTo()) >
                                 getShortestDistance(vertexDistances, edge.getFrom()) + edge.getWeight()
-                            ) {
+                        ) {
                             vertexDistances.put(edge.getTo(), getShortestDistance(vertexDistances, edge.getFrom()) + edge.getWeight());
                             unvisited.add(edge.getTo());
                             shortPaths.add(edge);
@@ -271,7 +345,7 @@ public class DirectedGraphAlgorithms {
                         queue.offer(new WeightVertex(neighbour, weights.get(neighbour)));
                     }
                 }
-                
+
                 inDegrees.put(neighbour, --inDegree);
             }
         }
@@ -412,5 +486,13 @@ public class DirectedGraphAlgorithms {
         WHITE,
         GREY,
         BLACK
+    }
+
+    private record WeightedVertex(Vertex v, int weight) implements Comparable<WeightedVertex> {
+        @Override
+        public int compareTo(@NotNull WeightedVertex o) {
+            return Comparator.comparingInt(WeightedVertex::weight)
+                .compare(this, o);
+        }
     }
 }
