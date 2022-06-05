@@ -2,6 +2,7 @@ package org.sherman.interview.vector;
 
 import com.google.common.base.Preconditions;
 import jdk.incubator.vector.IntVector;
+import jdk.incubator.vector.VectorOperators;
 import jdk.incubator.vector.VectorSpecies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,5 +105,15 @@ public class ArrayUtils {
         }
 
         return false;
+    }
+
+    public static long sumVector(int[] data) {
+        IntVector sum = IntVector.zero(IntVector.SPECIES_128);
+        for (int i = 0; i < data.length - 4; i += 8) {
+            var a = IntVector.fromArray(IntVector.SPECIES_128, data, i);
+            var b = IntVector.fromArray(IntVector.SPECIES_128, data, i + 4);
+            sum = sum.add(a.add(b));
+        }
+        return sum.reduceLanes(VectorOperators.ADD);
     }
 }
