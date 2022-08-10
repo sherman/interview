@@ -14,7 +14,7 @@ public class CoinChange {
     public int coinChange(int[] coins, int amount) {
         cache.clear();
 
-        var res = dp(coins, amount);
+        var res = rec(coins, amount);
         if (res == 10000) {
             return -1;
         } else {
@@ -22,7 +22,7 @@ public class CoinChange {
         }
     }
 
-    public int dp(int[] coins, int amount) {
+    public int rec(int[] coins, int amount) {
         var result = cache.get(amount);
         if (result != null) {
             return result;
@@ -36,7 +36,7 @@ public class CoinChange {
         var current = 10000;
         for (var coin : coins) {
             if (amount - coin >= 0) {
-                var ans = dp(coins, amount - coin) + 1;
+                var ans = rec(coins, amount - coin) + 1;
                 if (current > ans) {
                     current = ans;
                 }
