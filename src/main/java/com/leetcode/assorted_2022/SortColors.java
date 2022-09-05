@@ -26,7 +26,7 @@ public class SortColors {
                 state.put(1, state.get(1) - 1);
             } else if (state.get(2) > 0) {
                 nums[i] = 2;
-                state.put(2, state.get() - 1);
+                state.put(2, state.get(2) - 1);
             }
         }
     }
