@@ -1,6 +1,8 @@
 package com.leetcode.assorted_2022;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -31,8 +33,17 @@ public class CoinChangeDP {
                 }
             }
         }
-
+        var result = new ArrayList<int[]>();
+        int[][] data = (int[][]) result.stream().map(new Function<int[], int[]>() {
+            @Override
+            public int[] apply(int[] ints) {
+                return ints;
+            }
+        }).toArray();
         return cache[amount] != Integer.MAX_VALUE ? cache[amount] : -1;
+
+
+
     }
 
     @Test
