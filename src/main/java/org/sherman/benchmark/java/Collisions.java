@@ -24,6 +24,9 @@ public class Collisions {
         for (var i = 0; i < 50_000_000; i++) {
             var value = r.nextInt();
             if (items.add(value)) {
+                /*for (var b : String.valueOf(value).getBytes()) {
+                    System.out.println(Integer.toBinaryString((b & 0xFF) + 0x100).substring(1));
+                }*/
                 var h1 = hf.newHasher().putBytes(String.valueOf(value).getBytes()).hash().asInt();
                 var h2 = hf.newHasher().putInt(String.valueOf(value).hashCode()).hash().asInt();
                 var h3 = hf.newHasher().putInt(value).hash().asInt();
