@@ -74,7 +74,7 @@ public class OffheapReadPrimitiveBenchmark {
 
     @Benchmark
     public void readUnsafe(Blackhole blackhole) {
-        int index = ThreadLocalRandom.current().nextInt(bytes);
+        var index = ThreadLocalRandom.current().nextLong(bytes);
         blackhole.consume(unsafe.getByte(base + index));
     }
 
