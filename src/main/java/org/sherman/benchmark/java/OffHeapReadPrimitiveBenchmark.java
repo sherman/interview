@@ -6,8 +6,9 @@ import java.io.IOException;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import jdk.incubator.foreign.MemoryAccess;
 import jdk.incubator.foreign.MemoryHandles;
@@ -34,12 +35,14 @@ import sun.misc.Unsafe;
 @Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.MICROSECONDS)
+@OutputTimeUnit(TimeUnit.SECONDS)
 @State(Scope.Benchmark)
-public class OffheapReadPrimitiveBenchmark {
+public class OffHeapReadPrimitiveBenchmark {
+    private final static ValueLayout.OfByte LAYOUT_BYTE = JAVA_BYTE;
     private static final int SIZE = 1 << 20;
     private static final VarHandle varHandle = MemoryHandles.varHandle(byte.class, ByteOrder.nativeOrder());
     private final byte[] data = new byte[SIZE];
+    private final long[] idx = new long[SIZE];
     private final Unsafe unsafe = JavaInternals.getUnsafe();
     private final Random random = new Random();
     private MemorySegment memorySegment;
@@ -51,10 +54,17 @@ public class OffheapReadPrimitiveBenchmark {
     public void generate() throws IOException {
         var file = new File("/tmp/bytes_file");
         file.delete();
+        var idx = new ArrayList<Long>();
         for (var i = 0; i < data.length; i++) {
             data[i] = (byte) random.nextInt(255);
             bytes++;
+            idx.add((long) i);
         }
+
+        Collections.shuffle(idx);
+        var tmp = idx.stream().mapToLong(v -> v).toArray();
+        System.arraycopy(tmp, 0, this.idx, 0, tmp.length);
+
         Files.write(data, file);
         this.file = new MappedFile(file.getAbsolutePath(), MappedFile.MAP_RO);
         this.memorySegment = MemorySegment.mapFile(
@@ -74,13 +84,15 @@ public class OffheapReadPrimitiveBenchmark {
 
     @Benchmark
     public void readUnsafe(Blackhole blackhole) {
-        var index = ThreadLocalRandom.current().nextLong(bytes);
-        blackhole.consume(unsafe.getByte(base + index));
+        for (var i = 0; i < idx.length; i++) {
+            blackhole.consume(unsafe.getByte(base + idx[i]));
+        }
     }
 
     @Benchmark
     public void readSegment(Blackhole blackhole) {
-        int index = ThreadLocalRandom.current().nextInt(bytes);
-        blackhole.consume(MemoryAccess.getByteAtOffset(memorySegment, index));
+        for (var i = 0; i < idx.length; i++) {
+            blackhole.consume(memorySegment.get(LAYOUT_BYTE, idx[i]));
+        }
     }
 }
