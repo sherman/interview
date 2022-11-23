@@ -52,19 +52,19 @@ public class ReadPrimitiveBenchmark {
 
     @Benchmark
     public void readArray(Blackhole blackhole) {
-        int index = ThreadLocalRandom.current().nextInt(ints);
+        var index = ThreadLocalRandom.current().nextInt(ints);
         blackhole.consume(fromBytes(data[index], data[index + 1], data[index + 2], data[index + 3]));
     }
 
     @Benchmark
     public void readByteBuffer(Blackhole blackhole) {
-        int index = ThreadLocalRandom.current().nextInt(ints);
+        var index = ThreadLocalRandom.current().nextInt(ints);
         blackhole.consume(byteBuffer.getInt(index));
     }
 
     @Benchmark
     public void readMethodHandle(Blackhole blackhole) {
-        int index = ThreadLocalRandom.current().nextInt(ints);
+        var index = ThreadLocalRandom.current().nextInt(ints);
         blackhole.consume((int) varHandle.get(data, index));
     }
 
