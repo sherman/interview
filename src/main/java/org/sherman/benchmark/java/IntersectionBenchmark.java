@@ -14,15 +14,11 @@ import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Benchmark                          Mode  Cnt    Score    Error   Units
- * IntersectionBenchmark.broadcast   thrpt   10  135.017 ± 13.191  ops/us
- * IntersectionBenchmark.rearrange1  thrpt   10  126.340 ±  0.834  ops/us
- * IntersectionBenchmark.shuffle     thrpt   10  109.979 ±  1.825  ops/us
- * IntersectionBenchmark.shuffleFromValue  thrpt   10   96.053 ± 1.408  ops/us
- * IntersectionBenchmark.slice             thrpt   10   86.517 ± 1.021  ops/us
- * <p>
- * IntersectionBenchmark.baseline               thrpt   10   17.514 ± 0.529  ops/us
- * IntersectionBenchmark.read                   thrpt   10  180.017 ± 3.231  ops/us
+ Benchmark                                       Mode  Cnt  Score   Error   Units
+ IntersectionBenchmark.hasIntersectionScalar    thrpt   10  2.591 ± 1.167  ops/us
+ IntersectionBenchmark.hasIntersectionVector    thrpt   10  4.698 ± 0.641  ops/us
+ IntersectionBenchmark.hasNoIntersectionScalar  thrpt   10  1.726 ± 0.266  ops/us
+ IntersectionBenchmark.hasNoIntersectionVector  thrpt   10  2.319 ± 0.211  ops/us
  */
 @Fork(2)
 @Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
