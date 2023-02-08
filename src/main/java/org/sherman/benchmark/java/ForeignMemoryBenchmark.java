@@ -20,17 +20,29 @@ package org.sherman.benchmark.java;
  */
 
 
-import jdk.incubator.foreign.*;
-import one.nio.util.JavaInternals;
-import org.openjdk.jmh.annotations.*;
-import org.openjdk.jmh.infra.Blackhole;
-import sun.misc.Unsafe;
-
+import java.lang.foreign.MemoryAddress;
+import java.lang.foreign.MemoryLayout;
+import java.lang.foreign.MemorySegment;
+import java.lang.foreign.MemorySession;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
+import one.nio.util.JavaInternals;
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.Fork;
+import org.openjdk.jmh.annotations.Measurement;
+import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.TearDown;
+import org.openjdk.jmh.annotations.Warmup;
+import org.openjdk.jmh.infra.Blackhole;
+import sun.misc.Unsafe;
 
 @Fork(2)
 @Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
@@ -46,10 +58,10 @@ public class ForeignMemoryBenchmark {
     private final Unsafe unsafe = JavaInternals.getUnsafe();
     private final long unsafeAddress = unsafe.allocateMemory(SIZE * 8);
 
-    private final MemorySegment memorySegment = MemorySegment.allocateNative(SIZE * 8, ResourceScope.globalScope());
+    private final MemorySegment memorySegment = MemorySegment.allocateNative(SIZE * 8, MemorySession.global());
     private final MemoryAddress foreignMemoryAddress = memorySegment.address();
-    private final MemoryLayout layout = MemoryLayout.sequenceLayout(SIZE, MemoryLayout.valueLayout(64, ByteOrder.nativeOrder()));
-    private final VarHandle varHandle = layout.varHandle(long.class, MemoryLayout.PathElement.sequenceElement());
+    private final MemoryLayout layout = MemoryLayout.sequenceLayout(SIZE, MemoryLayout.valueLayout(long.class, ByteOrder.nativeOrder()));
+    private final VarHandle varHandle = layout.varHandle(MemoryLayout.PathElement.sequenceElement());
     private final MethodHandle methodHandle = varHandle.toMethodHandle(VarHandle.AccessMode.SET);
 
     @Setup

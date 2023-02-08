@@ -155,15 +155,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.10.1</version>
                 <configuration>
                     <release>${java.version}</release>
                     <compilerArgs>
                         <arg>--enable-preview</arg>
-                        <arg>--add-modules=jdk.incubator.foreign</arg>
                         <arg>--add-modules=jdk.incubator.vector</arg>
                     </compilerArgs>
-                    <source>17</source>
-                    <target>17</target>
                 </configuration>
             </plugin>
 

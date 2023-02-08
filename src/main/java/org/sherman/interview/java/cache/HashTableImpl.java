@@ -1,18 +1,17 @@
 package org.sherman.interview.java.cache;
 
 import com.google.common.base.Preconditions;
-import jdk.incubator.foreign.MemoryAddress;
-import jdk.incubator.foreign.MemoryLayout;
-import jdk.incubator.foreign.MemorySegment;
-import jdk.incubator.foreign.ResourceScope;
-import jdk.incubator.foreign.SequenceLayout;
-import org.apache.commons.math3.util.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.lang.foreign.MemoryAddress;
+import java.lang.foreign.MemoryLayout;
+import java.lang.foreign.MemorySegment;
+import java.lang.foreign.MemorySession;
+import java.lang.foreign.SequenceLayout;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import java.util.function.Function;
+import org.apache.commons.math3.util.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HashTableImpl implements HashTable<Long, Long> {
     private static final Logger logger = LoggerFactory.getLogger(HashTableImpl.class);
@@ -40,7 +39,7 @@ public class HashTableImpl implements HashTable<Long, Long> {
 
         size = (int) Utils.nextPowerOfTwo(size);
         long memorySize = size * keySize + size * valueSize;
-        this.cacheMemory = MemorySegment.allocateNative(memorySize, ResourceScope.globalScope());
+        this.cacheMemory = MemorySegment.allocateNative(memorySize, MemorySession.global());
         base = cacheMemory.address();
 
         Preconditions.checkArgument(memorySize >= keySize + valueSize, "Not enough cache memory for store at least one element!");
@@ -48,13 +47,13 @@ public class HashTableImpl implements HashTable<Long, Long> {
         maxSize = size;
 
         MemoryLayout entryLayout = MemoryLayout.structLayout(
-                MemoryLayout.valueLayout(keySize, ByteOrder.BIG_ENDIAN).withName(KEY_ID),
-                MemoryLayout.valueLayout(valueSize, ByteOrder.BIG_ENDIAN).withName(VALUE_ID)
+            MemoryLayout.valueLayout(long.class, ByteOrder.BIG_ENDIAN).withName(KEY_ID),
+            MemoryLayout.valueLayout(long.class, ByteOrder.BIG_ENDIAN).withName(VALUE_ID)
         );
 
         SequenceLayout hashMapLayout = MemoryLayout.sequenceLayout(maxSize, entryLayout);
-        keyHandle = hashMapLayout.varHandle(long.class, MemoryLayout.PathElement.sequenceElement(), MemoryLayout.PathElement.groupElement(KEY_ID));
-        valueHandle = hashMapLayout.varHandle(long.class, MemoryLayout.PathElement.sequenceElement(), MemoryLayout.PathElement.groupElement(VALUE_ID));
+        keyHandle = hashMapLayout.varHandle(MemoryLayout.PathElement.sequenceElement(), MemoryLayout.PathElement.groupElement(KEY_ID));
+        valueHandle = hashMapLayout.varHandle(MemoryLayout.PathElement.sequenceElement(), MemoryLayout.PathElement.groupElement(VALUE_ID));
 
     }
 

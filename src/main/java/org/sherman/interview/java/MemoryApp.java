@@ -1,7 +1,8 @@
 package org.sherman.interview.java;
 
-import jdk.incubator.foreign.MemorySegment;
-import jdk.incubator.foreign.ResourceScope;
+import java.lang.foreign.MemorySegment;
+import java.lang.foreign.MemorySession;
+import java.lang.foreign.ValueLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,11 +12,11 @@ public class MemoryApp {
     private static final Logger logger = LoggerFactory.getLogger(MemoryApp.class);
 
     public static void main(String[] args) {
-        MemorySegment segment = MemorySegment.allocateNative(1024 * 1024, ResourceScope.globalScope());
+        MemorySegment segment = MemorySegment.allocateNative(1024 * 1024, MemorySession.global());
         ByteBuffer buf = segment.asByteBuffer();
         buf.put((byte) 1);
 
         logger.info("[{}]", segment.byteSize());
-        logger.info("[{}]", segment.toByteArray()[0]);
+        logger.info("[{}]", segment.toArray(ValueLayout.OfByte.JAVA_BYTE));
     }
 }
