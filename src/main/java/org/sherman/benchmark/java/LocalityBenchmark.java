@@ -1,5 +1,7 @@
 package org.sherman.benchmark.java;
 
+import it.unimi.dsi.fastutil.longs.LongArrayList;
+import it.unimi.dsi.fastutil.longs.LongList;
 import java.util.Random;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -28,9 +30,11 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Benchmark)
 public class LocalityBenchmark {
     private final Logger logger = LoggerFactory.getLogger(LocalityBenchmark.class);
-    private List<Long> data1 = new ArrayList<>();
-    private List<Long> data2 = new ArrayList<>();
-    private List<Long> data3 = new ArrayList<>();
+    private List<Long> data1 = new ArrayList<>(1_000_000);
+    private List<Long> data2 = new ArrayList<>(1_000_000);
+    private List<Long> data3 = new ArrayList<>(1_000_000);
+
+    private LongList data4 = new LongArrayList();
 
     private Random r = new Random();
 
@@ -41,9 +45,10 @@ public class LocalityBenchmark {
             data1.add(value);
             data2.add(value);
             data3.add(value);
+            data4.add(value);
         }
 
-        Collections.sort(data2);
+        Collections.sort(data4);
         Collections.shuffle(data3);
     }
 
@@ -59,7 +64,7 @@ public class LocalityBenchmark {
     @Benchmark
     public void sort(Blackhole blackhole) {
         var sum = 0L;
-        for (var item : data2) {
+        for (var item : data4) {
             sum += item;
         }
         blackhole.consume(sum);

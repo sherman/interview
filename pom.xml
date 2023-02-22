@@ -91,6 +91,12 @@
         </dependency>
 
         <dependency>
+            <groupId>it.unimi.dsi</groupId>
+            <artifactId>fastutil-core</artifactId>
+            <version>8.5.6</version>
+        </dependency>
+
+        <dependency>
             <groupId>ru.odnoklassniki</groupId>
             <artifactId>one-nio</artifactId>
             <version>1.2.1</version>
