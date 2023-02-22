@@ -1,5 +1,6 @@
 package org.sherman.benchmark.java;
 
+import java.util.Random;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -31,12 +32,15 @@ public class LocalityBenchmark {
     private List<Long> data2 = new ArrayList<>();
     private List<Long> data3 = new ArrayList<>();
 
+    private Random r = new Random();
+
     @Setup
     public void setup() {
         for (long i = 0; i < 1_000_000L; i++) {
-            data1.add(i);
-            data2.add(i);
-            data3.add(i);
+            var value = r.nextLong(Integer.MAX_VALUE);
+            data1.add(value);
+            data2.add(value);
+            data3.add(value);
         }
 
         Collections.sort(data2);
