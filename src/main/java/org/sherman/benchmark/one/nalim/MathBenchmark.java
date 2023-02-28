@@ -20,12 +20,16 @@ import org.openjdk.jmh.infra.Blackhole;
 @State(Scope.Benchmark)
 public class MathBenchmark {
     @Benchmark
-    public void javaPow(Blackhole blackhole) {
-        blackhole.consume(Math.pow(2, 4));
+    public void javaSquare(Blackhole blackhole) {
+        blackhole.consume(square(32));
     }
 
     @Benchmark
-    public void nalimPow(Blackhole blackhole) {
-        blackhole.consume(java.lang.Math.pow(2, 4));
+    public void nalimSquare(Blackhole blackhole) {
+        blackhole.consume(Math.square(32));
+    }
+
+    private static int square(int value) {
+        return value * value;
     }
 }

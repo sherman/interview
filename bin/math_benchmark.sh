@@ -2,6 +2,8 @@
 
 set -e -x
 
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/sherman/work/interview/src/main/resource/
+
 java -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCI \
 --add-exports jdk.internal.vm.ci/jdk.vm.ci.code=ALL-UNNAMED \
 --add-exports jdk.internal.vm.ci/jdk.vm.ci.code.site=ALL-UNNAMED \
