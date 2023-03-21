@@ -36,6 +36,7 @@ public class ReadPrimitiveBenchmark {
     private final Unsafe unsafe = JavaInternals.getUnsafe();
     private final ByteBuffer byteBuffer = ByteBuffer.wrap(data);
     private int ints = 0;
+    private long intsAsLong = 0L;
 
     @Setup
     public void generate() {
@@ -45,6 +46,7 @@ public class ReadPrimitiveBenchmark {
                 data[i] = b;
             }
             ints++;
+            intsAsLong++;
         }
     }
 
@@ -68,7 +70,7 @@ public class ReadPrimitiveBenchmark {
 
     @Benchmark
     public void readUnsafe(Blackhole blackhole) {
-        int index = ThreadLocalRandom.current().nextInt(ints);
+        long index = ThreadLocalRandom.current().nextLong(intsAsLong);
         blackhole.consume(unsafe.getInt(data, index));
     }
 }
