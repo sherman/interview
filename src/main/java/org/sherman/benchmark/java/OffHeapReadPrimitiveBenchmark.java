@@ -38,7 +38,7 @@ import sun.misc.Unsafe;
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
 public class OffHeapReadPrimitiveBenchmark {
-    private final static ValueLayout.OfByte LAYOUT_BYTE = JAVA_BYTE;
+    private static final ValueLayout.OfByte LAYOUT_BYTE = JAVA_BYTE;
     private static final int SIZE = 1 << 20;
     private final byte[] data = new byte[SIZE];
     private final long[] idx = new long[SIZE];
@@ -46,7 +46,6 @@ public class OffHeapReadPrimitiveBenchmark {
     private final Random random = new Random();
     private MemorySegment memorySegment;
     private MappedFile file;
-    private int bytes = 0;
     private long base;
 
     @Setup(Level.Trial)
@@ -56,7 +55,6 @@ public class OffHeapReadPrimitiveBenchmark {
         var idx = new ArrayList<Long>();
         for (var i = 0; i < data.length; i++) {
             data[i] = (byte) random.nextInt(255);
-            bytes++;
             idx.add((long) i);
         }
 
@@ -78,14 +76,14 @@ public class OffHeapReadPrimitiveBenchmark {
 
     @Benchmark
     public void readUnsafe(Blackhole blackhole) {
-        for (var i = 0; i < idx.length; i++) {
+        for (var i = 0; i < SIZE; i++) {
             blackhole.consume(unsafe.getByte(base + idx[i]));
         }
     }
 
     @Benchmark
     public void readSegment(Blackhole blackhole) {
-        for (var i = 0; i < idx.length; i++) {
+        for (var i = 0; i < SIZE; i++) {
             blackhole.consume(memorySegment.get(LAYOUT_BYTE, idx[i]));
         }
     }
