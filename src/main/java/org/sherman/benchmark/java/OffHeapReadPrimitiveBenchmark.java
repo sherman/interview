@@ -42,7 +42,7 @@ public class OffHeapReadPrimitiveBenchmark {
     private static final int SIZE = 1 << 20;
     private final byte[] data = new byte[SIZE];
     private final long[] idx = new long[SIZE];
-    private final Unsafe unsafe = JavaInternals.getUnsafe();
+    private static final Unsafe unsafe = JavaInternals.getUnsafe();
     private final Random random = new Random();
     private MemorySegment memorySegment;
     private MappedFile file;
