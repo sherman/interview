@@ -11,7 +11,7 @@ public class CLinkerApp {
     private static final Logger logger = LoggerFactory.getLogger(CLinkerApp.class);
 
     public static void main(String[] args) throws Throwable {
-        var linker = Linker.nativeLinker();
+        /*var linker = Linker.nativeLinker();
         var lookup = linker.defaultLookup();
 
         var getPid = linker.downcallHandle(
@@ -27,6 +27,6 @@ public class CLinkerApp {
 
         var returnCode = (int) kill.invoke((int) pid, 2);
 
-        logger.info("{}", returnCode);
+        logger.info("{}", returnCode);*/
     }
 }

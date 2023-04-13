@@ -20,10 +20,9 @@ package org.sherman.benchmark.java;
  */
 
 
-import java.lang.foreign.MemoryAddress;
 import java.lang.foreign.MemoryLayout;
 import java.lang.foreign.MemorySegment;
-import java.lang.foreign.MemorySession;
+import java.lang.foreign.SegmentScope;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
@@ -58,8 +57,8 @@ public class ForeignMemoryBenchmark {
     private final Unsafe unsafe = JavaInternals.getUnsafe();
     private final long unsafeAddress = unsafe.allocateMemory(SIZE * 8);
 
-    private final MemorySegment memorySegment = MemorySegment.allocateNative(SIZE * 8, MemorySession.global());
-    private final MemoryAddress foreignMemoryAddress = memorySegment.address();
+    private final MemorySegment memorySegment = MemorySegment.allocateNative(SIZE * 8, SegmentScope.global());
+    private final long foreignMemoryAddress = memorySegment.address();
     private final MemoryLayout layout = MemoryLayout.sequenceLayout(SIZE, MemoryLayout.valueLayout(long.class, ByteOrder.nativeOrder()));
     private final VarHandle varHandle = layout.varHandle(MemoryLayout.PathElement.sequenceElement());
     private final MethodHandle methodHandle = varHandle.toMethodHandle(VarHandle.AccessMode.SET);

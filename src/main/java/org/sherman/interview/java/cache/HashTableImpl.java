@@ -1,10 +1,9 @@
 package org.sherman.interview.java.cache;
 
 import com.google.common.base.Preconditions;
-import java.lang.foreign.MemoryAddress;
 import java.lang.foreign.MemoryLayout;
 import java.lang.foreign.MemorySegment;
-import java.lang.foreign.MemorySession;
+import java.lang.foreign.SegmentScope;
 import java.lang.foreign.SequenceLayout;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
@@ -23,7 +22,7 @@ public class HashTableImpl implements HashTable<Long, Long> {
 
     private final MemorySegment cacheMemory;
     private final int maxSize;
-    private final MemoryAddress base;
+    private final long base;
 
     private final VarHandle keyHandle;
     private final VarHandle valueHandle;
@@ -39,7 +38,7 @@ public class HashTableImpl implements HashTable<Long, Long> {
 
         size = (int) Utils.nextPowerOfTwo(size);
         long memorySize = size * keySize + size * valueSize;
-        this.cacheMemory = MemorySegment.allocateNative(memorySize, MemorySession.global());
+        this.cacheMemory = MemorySegment.allocateNative(memorySize, SegmentScope.global());
         base = cacheMemory.address();
 
         Preconditions.checkArgument(memorySize >= keySize + valueSize, "Not enough cache memory for store at least one element!");

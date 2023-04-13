@@ -6,7 +6,7 @@ import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
 import java.lang.foreign.MemorySegment;
-import java.lang.foreign.MemorySession;
+import java.lang.foreign.SegmentScope;
 import java.lang.foreign.ValueLayout;
 import java.nio.channels.FileChannel;
 import java.nio.file.StandardOpenOption;
@@ -67,7 +67,7 @@ public class OffHeapReadPrimitiveBenchmark {
         Files.write(data, file);
         this.file = new MappedFile(file.getAbsolutePath(), MappedFile.MAP_RO);
         var fc = FileChannel.open(file.toPath(), StandardOpenOption.READ);
-        this.memorySegment = fc.map(FileChannel.MapMode.READ_ONLY, 0, file.length(), MemorySession.global());
+        this.memorySegment = fc.map(FileChannel.MapMode.READ_ONLY, 0, file.length(), SegmentScope.global());
         this.base = this.file.getAddr();
     }
 
