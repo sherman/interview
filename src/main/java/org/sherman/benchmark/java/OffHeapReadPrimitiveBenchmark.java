@@ -1,19 +1,19 @@
 package org.sherman.benchmark.java;
 
+import static java.lang.foreign.ValueLayout.JAVA_BYTE;
+
 import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
-import java.lang.invoke.VarHandle;
-import java.nio.ByteOrder;
+import java.lang.foreign.MemorySegment;
+import java.lang.foreign.MemorySession;
+import java.lang.foreign.ValueLayout;
 import java.nio.channels.FileChannel;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
-import jdk.incubator.foreign.MemoryAccess;
-import jdk.incubator.foreign.MemoryHandles;
-import jdk.incubator.foreign.MemorySegment;
-import jdk.incubator.foreign.ResourceScope;
 import one.nio.mem.MappedFile;
 import one.nio.util.JavaInternals;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -35,12 +35,11 @@ import sun.misc.Unsafe;
 @Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.SECONDS)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
 public class OffHeapReadPrimitiveBenchmark {
     private final static ValueLayout.OfByte LAYOUT_BYTE = JAVA_BYTE;
     private static final int SIZE = 1 << 20;
-    private static final VarHandle varHandle = MemoryHandles.varHandle(byte.class, ByteOrder.nativeOrder());
     private final byte[] data = new byte[SIZE];
     private final long[] idx = new long[SIZE];
     private final Unsafe unsafe = JavaInternals.getUnsafe();
@@ -67,13 +66,8 @@ public class OffHeapReadPrimitiveBenchmark {
 
         Files.write(data, file);
         this.file = new MappedFile(file.getAbsolutePath(), MappedFile.MAP_RO);
-        this.memorySegment = MemorySegment.mapFile(
-            file.toPath(),
-            0,
-            file.length(),
-            FileChannel.MapMode.READ_ONLY,
-            ResourceScope.newSharedScope()
-        );
+        var fc = FileChannel.open(file.toPath(), StandardOpenOption.READ);
+        this.memorySegment = fc.map(FileChannel.MapMode.READ_ONLY, 0, file.length(), MemorySession.global());
         this.base = this.file.getAddr();
     }
 
