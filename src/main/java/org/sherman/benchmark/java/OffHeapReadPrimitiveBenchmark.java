@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.SegmentScope;
 import java.lang.foreign.ValueLayout;
+import java.lang.invoke.VarHandle;
 import java.nio.channels.FileChannel;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ import sun.misc.Unsafe;
 @Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.MILLISECONDS)
+@OutputTimeUnit(TimeUnit.NANOSECONDS)
 @State(Scope.Benchmark)
 public class OffHeapReadPrimitiveBenchmark {
     private static final ValueLayout.OfByte LAYOUT_BYTE = JAVA_BYTE;
@@ -74,17 +75,19 @@ public class OffHeapReadPrimitiveBenchmark {
         file.close();
     }
 
-    @Benchmark
+    //@Benchmark
     public void readUnsafe(Blackhole blackhole) {
-        for (var i = 0; i < SIZE; i++) {
-            blackhole.consume(unsafe.getByte(base + idx[i]));
-        }
+        /*for (var i = 0; i < SIZE; i++) {
+            blackhole.consume(unsafe.getByte(base + i));
+        }*/
+        blackhole.consume(unsafe.getByte(base + 0));
     }
 
     @Benchmark
     public void readSegment(Blackhole blackhole) {
-        for (var i = 0; i < SIZE; i++) {
-            blackhole.consume(memorySegment.get(LAYOUT_BYTE, idx[i]));
-        }
+        blackhole.consume(memorySegment.get(LAYOUT_BYTE, 0L));
+        /*for (var i = 0; i < SIZE; i++) {
+            blackhole.consume(memorySegment.get(LAYOUT_BYTE, i));
+        }*/
     }
 }
