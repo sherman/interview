@@ -10,21 +10,33 @@ public class MaximumAverageSubarrayI {
         }
 
         var max = Double.NEGATIVE_INFINITY;
+        var sum = 0L;
+        var windowCount = 0;
         for (var i = 0; i < nums.length; i++) {
-            if (i + k <= nums.length) {
-                var sum = 0L;
-                for (var j = i; j < i + k; j++) {
-                    sum += nums[j];
-                }
+            if (windowCount < k) {
+                sum += nums[i];
+                windowCount++;
+            }
+
+            if (windowCount == k) {
                 max = Math.max(max, (double) sum / k);
+                windowCount--;
+                if (i - windowCount >= 0) {
+                    sum = sum - nums[i - windowCount];
+                }
             }
         }
 
         return max;
     }
 
+    // 0, 1, 1, 3, 3
+    // count = 0
+
     @Test
     public void test() {
+        Assert.assertEquals(findMaxAverage(new int[] {0, 1, 1, 3, 3}, 4), 2.0);
+        Assert.assertEquals(findMaxAverage(new int[] {1, 12, -5, -6, 50, 3}, 4), 12.75);
         Assert.assertEquals(
             findMaxAverage(
                 new int[] {8860, -853, 6534, 4477, -4589, 8646, -6155, -5577, -1656, -5779, -2619, -8604, -1358, -8009, 4983, 7063, 3104,
@@ -39,8 +51,6 @@ public class MaximumAverageSubarrayI {
             ),
             -594.58064, 100
         );
-        Assert.assertEquals(findMaxAverage(new int[] {0, 1, 1, 3, 3}, 4), 2.0);
-        Assert.assertEquals(findMaxAverage(new int[] {1, 12, -5, -6, 50, 3}, 4), 12.75);
         Assert.assertEquals(findMaxAverage(new int[] {5}, 1), 5.0);
     }
 }
