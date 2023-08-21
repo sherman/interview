@@ -37,18 +37,20 @@ public class FourSum {
 
         for (var entry : pairs.entrySet()) {
             logger.info("[{}]: [{}]", entry.getKey(), entry.getValue());
-            var a = entry.getKey();
-            var b = pairs.get(targetSum - a);
+            var leftKey = entry.getKey();
+            var rightValue = pairs.get(targetSum - leftKey);
             var leftValue = entry.getValue();
-            if (b != null) {
+            if (rightValue != null) {
                 for (var e : leftValue) {
-                    for (var ee : b) {
+                    for (var ee : rightValue) {
+                        // create a quadruplet as a pair of pairs
                         var r = new int[4];
                         r[0] = e.a;
                         r[1] = e.b;
                         r[2] = ee.a;
                         r[3] = ee.b;
                         Arrays.sort(r);
+                        // drop invalid pairs (where a single number used multiple times)
                         Map<Integer, Integer> c = (Map<Integer, Integer>) counts.clone();
                         var invalid = false;
                         for (var element : r) {
@@ -108,11 +110,11 @@ public class FourSum {
 
     @Test
     public void test() {
-        /*var result = fourNumberSum(new int[]{1000000000, 1000000000, 1000000000, 1000000000}, -294967296);
+        var result = fourNumberSum(new int[]{1000000000, 1000000000, 1000000000, 1000000000}, -294967296);
         Assert.assertEquals(
             List.of(),
             result
-        );*/
+        );
 
         var result2 = fourNumberSum(new int[]{1, 0, -1, 0, -2, 2}, 0);
         Assert.assertEquals(
