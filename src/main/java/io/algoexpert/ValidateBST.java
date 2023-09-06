@@ -13,34 +13,19 @@ public class ValidateBST {
             return true;
         }
 
-        return print(tree, tree.value, null);
+        return isValid(tree, Integer.MIN_VALUE, Integer.MAX_VALUE);
     }
 
-    private static boolean print(BST tree, int root, Boolean leftSubTree) {
+    private static boolean isValid(BST tree, int min, int max) {
         if (tree != null) {
-            if (tree.left != null) {
-                logger.info("l:[{}]", tree.left.value);
-                if (tree.value <= tree.left.value) {
-                    return false;
-                }
-            }
+            logger.info("[{}] [{}] [{}]", tree.value, min, max);
 
-            if (tree.right != null) {
-                logger.info("r:[{}]", tree.right.value);
-                if (tree.value > tree.right.value) {
-                    return false;
-                }
-            }
-
-            if (leftSubTree == Boolean.TRUE && root <= tree.value) {
-                return false;
-            }
-            if (leftSubTree == Boolean.FALSE && root > tree.value) {
+            if (tree.value < min || tree.value >= max) {
                 return false;
             }
 
-            var left = print(tree.left, root, leftSubTree == null ? true : leftSubTree);
-            var right = print(tree.right, root, leftSubTree == null ? false : leftSubTree);
+            var left = isValid(tree.left, min, tree.value);
+            var right = isValid(tree.right, tree.value, max);
             return left & right;
         } else {
             return true;
@@ -97,6 +82,28 @@ public class ValidateBST {
         leftRight.right = leftRightRight;
         var rightRight = new BST(22);
         right.right = rightRight;
+        Assert.assertFalse(validateBst(root));
+    }
+
+    @Test
+    public void test3() {
+        var root = new BST(10);
+        var left = new BST(5);
+        var right = new BST(15);
+        root.left = left;
+        root.right = right;
+        var leftLeft = new BST(2);
+        var leftRight = new BST(5);
+        left.left = leftLeft;
+        left.right = leftRight;
+        var leftLeftLeft = new BST(1);
+        leftLeft.left = leftLeftLeft;
+        var rightLeft = new BST(13);
+        var rightRight = new BST(22);
+        right.left = rightLeft;
+        right.right = rightRight;
+        var rightLeftRight = new BST(16);
+        rightLeft.right = rightLeftRight;
         Assert.assertFalse(validateBst(root));
     }
 }
