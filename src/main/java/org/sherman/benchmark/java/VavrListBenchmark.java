@@ -1,19 +1,11 @@
 package org.sherman.benchmark.java;
 
+import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.infra.Blackhole;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.BenchmarkMode;
-import org.openjdk.jmh.annotations.Fork;
-import org.openjdk.jmh.annotations.Measurement;
-import org.openjdk.jmh.annotations.Mode;
-import org.openjdk.jmh.annotations.OutputTimeUnit;
-import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.Setup;
-import org.openjdk.jmh.annotations.State;
-import org.openjdk.jmh.annotations.Warmup;
-import org.openjdk.jmh.infra.Blackhole;
 
 @Fork(2)
 @Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
@@ -41,14 +33,16 @@ public class VavrListBenchmark {
         } else {
             vavrList = io.vavr.collection.Array.of();
         }
+        blackhole.consume(vavrList);
     }
 
     @Benchmark
-    public void addBaseline() {
+    public void addBaseline(Blackhole blackhole) {
         if (baseline.size() == 0) {
             baseline.addAll(data);
         } else {
             baseline = new ArrayList<>();
         }
+        blackhole.consume(baseline);
     }
 }
