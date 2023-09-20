@@ -1,14 +1,16 @@
 package org.sherman.interview.java.cache;
 
 import com.google.common.base.Preconditions;
-import java.lang.foreign.MemoryLayout;
-import java.lang.foreign.MemorySegment;
-import java.lang.foreign.SegmentScope;
-import java.lang.foreign.SequenceLayout;
-import java.lang.invoke.VarHandle;
-import java.nio.ByteOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.foreign.Arena;
+import java.lang.foreign.MemoryLayout;
+import java.lang.foreign.MemorySegment;
+import java.lang.foreign.SequenceLayout;
+import java.lang.invoke.VarHandle;
+
+import static java.lang.foreign.ValueLayout.JAVA_LONG;
 
 public class HashTableLongLong {
     private static final Logger logger = LoggerFactory.getLogger(HashTableLongLong.class);
@@ -18,7 +20,6 @@ public class HashTableLongLong {
     private static final long NO_KEY = 0;
     private static final long DELETED_KEY = -1;
     private static final long NO_VALUE = -1; // FIXME: what if the value is bellow 0?
-
     private final MemorySegment cacheMemory;
     private final int maxSize;
     private final long base;
@@ -39,7 +40,7 @@ public class HashTableLongLong {
 
         size = (int) Utils.nextPowerOfTwo(size);
         long memorySize = size * keySize + size * valueSize;
-        this.cacheMemory = MemorySegment.allocateNative(memorySize, SegmentScope.global());
+        this.cacheMemory = Arena.global().allocate(memorySize);
         base = cacheMemory.address();
 
         Preconditions.checkArgument(memorySize >= keySize + valueSize, "Not enough cache memory for store at least one element!");
@@ -47,8 +48,8 @@ public class HashTableLongLong {
         maxSize = size;
 
         MemoryLayout entryLayout = MemoryLayout.structLayout(
-            MemoryLayout.valueLayout(long.class, ByteOrder.BIG_ENDIAN).withName(KEY_ID),
-            MemoryLayout.valueLayout(long.class, ByteOrder.BIG_ENDIAN).withName(VALUE_ID)
+            JAVA_LONG.withName(KEY_ID),
+            JAVA_LONG.withName(VALUE_ID)
         );
 
         SequenceLayout hashMapLayout = MemoryLayout.sequenceLayout(maxSize, entryLayout);
