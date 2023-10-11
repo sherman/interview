@@ -132,6 +132,12 @@
             <artifactId>vavr</artifactId>
             <version>0.10.4</version>
         </dependency>
+
+        <dependency>
+            <groupId>it.unimi.dsi</groupId>
+            <artifactId>sux4j</artifactId>
+            <version>5.4.1</version>
+        </dependency>
     </dependencies>
 
     <profiles>
