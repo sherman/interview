@@ -1,7 +1,7 @@
-package org.sherman.interview.java.minperf;
+package org.sherman.java.minperf;
 
-import org.sherman.interview.java.minperf.rank.VerySimpleRank;
-import org.sherman.interview.java.minperf.universal.UniversalHash;
+import org.sherman.java.minperf.rank.VerySimpleRank;
+import org.sherman.java.minperf.universal.UniversalHash;
 
 import java.util.*;
 
@@ -57,7 +57,7 @@ public class BDZAlgorithm<T> {
             int h = getHash(x, hash, hashIndex, hi, arrayLength);
             if (rank.get(h)) {
                 int pos = (int) rank.rank(h);
-                sum += data.readNumber(startPos + pos * BITS_PER_ENTRY, BITS_PER_ENTRY);
+                sum += data.readNumber(startPos + (long) pos * BITS_PER_ENTRY, BITS_PER_ENTRY);
             }
         }
         int h = getHash(x, hash, hashIndex, sum % HASHES, arrayLength);
@@ -73,7 +73,7 @@ public class BDZAlgorithm<T> {
     public static <T> BitBuffer generate(UniversalHash<T> hash, Collection<T> set) {
         int size = set.size();
         int arrayLength = getArrayLength(size);
-        BitBuffer data = new BitBuffer(100 + arrayLength * (BITS_PER_ENTRY + 2));
+        BitBuffer data = new BitBuffer(100 + (long) arrayLength * (BITS_PER_ENTRY + 2));
         data.writeEliasDelta(size + 1);
 
         ArrayList<T> list = new ArrayList<T>(set);

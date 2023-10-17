@@ -1,4 +1,4 @@
-package org.sherman.interview.java.minperf;
+package org.sherman.java.minperf;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

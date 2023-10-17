@@ -1,8 +1,8 @@
 package org.sherman.interview.java;
 
 import com.google.common.collect.ImmutableSet;
-import org.sherman.interview.java.minperf.BDZAlgorithm;
-import org.sherman.interview.java.minperf.universal.LongHash;
+import org.sherman.java.minperf.BDZAlgorithm;
+import org.sherman.java.minperf.universal.LongHash;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -31,6 +31,8 @@ public class BZDMain {
             test.set(key);
             logger.info("[{}]", key);
         }
+        logger.info("Unknown key: [{}]: [{}]", bdz.evaluate(1026L), test.get(bdz.evaluate(1026L)));
+        logger.info("Unknown key: [{}]: [{}]", bdz.evaluate(1027L), test.get(bdz.evaluate(1027L)));
         int measureCount = 10;
         for (int i = 0; i < measureCount; i++) {
             for (Long x : values) {

@@ -1,4 +1,4 @@
-package org.sherman.interview.java.minperf.universal;
+package org.sherman.java.minperf.universal;
 
 /**
  * An interface that can calculate multiple hash values for an object. The

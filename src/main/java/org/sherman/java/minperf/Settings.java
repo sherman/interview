@@ -1,4 +1,4 @@
-package org.sherman.interview.java.minperf;
+package org.sherman.java.minperf;
 
 /**
  * The settings used to generate the hash function.

@@ -1,6 +1,6 @@
-package org.sherman.interview.java.minperf.rank;
+package org.sherman.java.minperf.rank;
 
-import org.sherman.interview.java.minperf.BitBuffer;
+import org.sherman.java.minperf.BitBuffer;
 
 import java.util.BitSet;
 

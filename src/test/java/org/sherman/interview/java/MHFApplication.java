@@ -2,6 +2,7 @@ package org.sherman.interview.java;
 
 import com.google.common.primitives.Ints;
 import it.unimi.dsi.bits.TransformationStrategies;
+import it.unimi.dsi.sux4j.mph.GOV4Function;
 import it.unimi.dsi.sux4j.mph.LcpMonotoneMinimalPerfectHashFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,5 +27,18 @@ public class MHFApplication {
 
         logger.info("[{}]", mhf.getLong(Ints.toByteArray(2056)));
         logger.info("[{}]", mhf.getLong(Ints.toByteArray(2057)));
+
+        var gov = new GOV4Function.Builder<byte[]>()
+            .keys(IntStream.range(1, 1025).boxed().map(Ints::toByteArray).toList())
+            .transform(TransformationStrategies.byteArray())
+            .signed(1024)
+            .build();
+
+        for (var i = 1; i <= 1024; i++) {
+            logger.info("[{}]", gov.getLong(Ints.toByteArray(i)));
+        }
+
+        logger.info("[{}]", gov.getLong(Ints.toByteArray(2056)));
+        logger.info("[{}]", gov.getLong(Ints.toByteArray(2057)));
     }
 }

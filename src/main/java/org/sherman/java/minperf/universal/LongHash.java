@@ -1,4 +1,4 @@
-package org.sherman.interview.java.minperf.universal;
+package org.sherman.java.minperf.universal;
 
 /**
  * A sample hash implementation for long keys.
