@@ -11,8 +11,6 @@ import org.apache.lucene.util.IntsRefBuilder;
 import org.apache.lucene.util.fst.*;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
-import org.sherman.java.minperf.BDZAlgorithm;
-import org.sherman.java.minperf.universal.LongHash;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,6 +39,7 @@ public class MinimalPerfectHashFuncBenchmark {
 
     private LcpMonotoneMinimalPerfectHashFunction<byte[]> lcpMonotoneMPHFunc;
     private GOVMinimalPerfectHashFunction<byte[]> gov4MPHFunc;
+    private GOVMinimalPerfectHashFunction<byte[]> gov4MPHFuncWithSignatures;
 
     @Setup(Level.Trial)
     public void generate() throws IOException {
@@ -102,6 +101,12 @@ public class MinimalPerfectHashFuncBenchmark {
             .transform(TransformationStrategies.byteArray())
             .build();
 
+        gov4MPHFuncWithSignatures = new GOVMinimalPerfectHashFunction.Builder<byte[]>()
+            .keys(keys)
+            .transform(TransformationStrategies.byteArray())
+            .signed(64)
+            .build();
+
         shuffle(termArray);
     }
 
@@ -131,5 +136,12 @@ public class MinimalPerfectHashFuncBenchmark {
         var index = random.nextInt(termArray.length);
         var term = termArray[index];
         blackhole.consume(gov4MPHFunc.getLong(term.bytes));
+    }
+
+    @Benchmark
+    public void gGov4MPHFuncWithSignatures(Blackhole blackhole) {
+        var index = random.nextInt(termArray.length);
+        var term = termArray[index];
+        blackhole.consume(gov4MPHFuncWithSignatures.getLong(term.bytes));
     }
 }

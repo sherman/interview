@@ -29,16 +29,16 @@ public class MHFApplication {
         logger.info("[{}]", mhf.getLong(Ints.toByteArray(2057)));
 
         var gov = new GOV4Function.Builder<byte[]>()
-            .keys(IntStream.range(1, 1025).boxed().map(Ints::toByteArray).toList())
+            .keys(IntStream.range(1, 1048577).boxed().map(Ints::toByteArray).toList())
             .transform(TransformationStrategies.byteArray())
-            .signed(1024)
+            .signed(64)
             .build();
 
-        for (var i = 1; i <= 1024; i++) {
+        for (var i = 1; i <= 1048576; i++) {
             logger.info("[{}]", gov.getLong(Ints.toByteArray(i)));
         }
 
-        logger.info("[{}]", gov.getLong(Ints.toByteArray(2056)));
-        logger.info("[{}]", gov.getLong(Ints.toByteArray(2057)));
+        logger.info("[{}]", gov.getLong(Ints.toByteArray(1048579)));
+        logger.info("[{}]", gov.getLong(Ints.toByteArray(1048580)));
     }
 }
