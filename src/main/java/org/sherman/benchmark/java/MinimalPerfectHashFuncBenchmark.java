@@ -28,13 +28,12 @@ import static org.apache.commons.lang3.ArrayUtils.shuffle;
 @State(Scope.Benchmark)
 public class MinimalPerfectHashFuncBenchmark {
     private static final int SIZE = 1 << 20;
-    private final BytesRef[] data = new BytesRef[SIZE];
     private final PositiveIntOutputs outputs = PositiveIntOutputs.getSingleton();
     private final IntsRefBuilder scratchIntsRef = new IntsRefBuilder();
     private final int[] ids = new int[SIZE];
     private final BytesRef[] termArray = new BytesRef[SIZE];
     private BytesRefFSTEnum<Long> termsFst;
-    private final Object2LongOpenHashMap<BytesRef> baseLine = new Object2LongOpenHashMap<BytesRef>(SIZE);
+    private final Object2LongOpenHashMap<BytesRef> baseLine = new Object2LongOpenHashMap<>(SIZE);
     private final Random random = new Random();
 
     private LcpMonotoneMinimalPerfectHashFunction<byte[]> lcpMonotoneMPHFunc;
