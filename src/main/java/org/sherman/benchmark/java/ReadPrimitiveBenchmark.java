@@ -25,6 +25,7 @@ public class ReadPrimitiveBenchmark {
     private static final int SIZE = 1 << 20;
     private static final VarHandle varHandle = MethodHandles.byteArrayViewVarHandle(int[].class, ByteOrder.nativeOrder());
     private final byte[] data = new byte[SIZE];
+    private final int[] baseline = new int[SIZE / 4];
     private final Unsafe unsafe = JavaInternals.getUnsafe();
     private final ByteBuffer byteBuffer = ByteBuffer.wrap(data);
     private int intIndex = 0;
@@ -37,11 +38,17 @@ public class ReadPrimitiveBenchmark {
             for (var b : value) {
                 data[i] = b;
             }
+            baseline[i] = i;
         }
 
         var index = ThreadLocalRandom.current().nextInt((SIZE / 4) - 32);
         intIndex = index;
         indexAsLongIndex = index;
+    }
+
+    @Benchmark
+    public void readBaseline(Blackhole blackhole) {
+        blackhole.consume(baseline[intIndex]);
     }
 
     @Benchmark
