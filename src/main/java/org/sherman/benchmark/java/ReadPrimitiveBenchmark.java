@@ -27,7 +27,7 @@ import static com.google.common.primitives.Ints.fromBytes;
 public class ReadPrimitiveBenchmark {
     private static final Logger logger = LoggerFactory.getLogger(ReadPrimitiveBenchmark.class);
 
-    private static final int SIZE = 1 << 8;
+    private static final int SIZE = 1 << 20;
     private static final VarHandle varHandle = MethodHandles.byteArrayViewVarHandle(int[].class, ByteOrder.BIG_ENDIAN);
 
     private final byte[] data = new byte[SIZE];
@@ -36,6 +36,8 @@ public class ReadPrimitiveBenchmark {
     private final ByteBuffer byteBuffer = ByteBuffer.wrap(data);
     private int intIndex = 0;
     private long indexAsLongIndex = 0L;
+
+    private int baseLineIndex = 0;
 
     private final int[] indexes = new int[SIZE / 4];
 
@@ -70,11 +72,12 @@ public class ReadPrimitiveBenchmark {
         var index = ThreadLocalRandom.current().nextInt(indexes.length);
         intIndex = indexes[index];
         indexAsLongIndex = indexes[index];
+        baseLineIndex = index;
     }
 
     @Benchmark
     public void readBaseline(Blackhole blackhole) {
-        blackhole.consume(baseline[intIndex]);
+        blackhole.consume(baseline[baseLineIndex]);
     }
 
     @Benchmark
