@@ -9,9 +9,9 @@ public class BinSearchTest {
     public void test() {
         assertEquals(BinSearch.binSearch(new int[]{}, 1), -1);
         assertEquals(BinSearch.binSearch(new int[]{1}, 1), 0);
-        assertEquals(BinSearch.binSearch(new int[]{1,2,3}, 1), 0);
-        assertEquals(BinSearch.binSearch(new int[]{1,2,3,9}, 2), 1);
-        assertEquals(BinSearch.binSearch(new int[]{1,2,3,9}, 3), 2);
-        assertEquals(BinSearch.binSearch(new int[]{1,2,3,9}, 9), 3);
+        assertEquals(BinSearch.binSearch(new int[]{1, 2, 3}, 1), 0);
+        assertEquals(BinSearch.binSearch(new int[]{1, 2, 3, 9}, 2), 1);
+        assertEquals(BinSearch.binSearch(new int[]{1, 2, 3, 9}, 3), 2);
+        assertEquals(BinSearch.binSearch(new int[]{1, 2, 3, 9}, 9), 3);
     }
 }
