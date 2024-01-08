@@ -12,10 +12,6 @@ public class CountingBits {
         return result;
     }
 
-    public int[] countBitsOptimal(int n) {
-        
-    }
-
     private int countOneBits(int v) {
         var counter = 0;
         for (var i = 0; i < 32; i++) {
