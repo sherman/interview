@@ -1,11 +1,12 @@
 package com.leetcode.assorted_2022;
 
-import java.util.HashSet;
-import java.util.LinkedList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.HashSet;
+import java.util.LinkedList;
 
 public class LongestSubstringWithoutRepeatingCharacters {
     private static final Logger logger = LoggerFactory.getLogger(LongestSubstringWithoutRepeatingCharacters.class);
