@@ -21,6 +21,12 @@ public class LongestRepeatingCharacterReplacement {
                 var remainingChars = k;
                 var completed = false;
                 for (var j = i; j < s.length(); j++) {
+                    // we already have a better case
+                    if (max >= s.length() - i) {
+                        completed = true;
+                        remainingChars = 0;
+                        break;
+                    }
                     var current = s.charAt(j);
                     if (current != c) {
                         if (remainingChars > 0) {
