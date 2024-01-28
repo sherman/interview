@@ -63,5 +63,5 @@ public class NumberOfProvinces {
     public void cases() {
         Assert.assertEquals(findCircleNum(new int[][]{new int[]{1}}), 1);
         Assert.assertEquals(findCircleNum(new int[][]{new int[]{1, 1, 0}, new int[]{1, 1, 0}, new int[]{0, 0, 1}}), 2);
-}
+    }
 }
