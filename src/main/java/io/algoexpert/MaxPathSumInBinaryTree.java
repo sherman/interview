@@ -5,37 +5,30 @@ import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.List;
-
 public class MaxPathSumInBinaryTree {
     private static final Logger logger = LoggerFactory.getLogger(SymmetricTree.class);
+    private static final Holder holder = new Holder();
 
     public static int maxPathSum(BinaryTree tree) {
-        var maxSumArray = findMaxSum(tree);
-        return maxSumArray.get(1);
+        holder.value = tree.value;
+        dfs(tree);
+        return holder.value;
     }
 
-    private static List<Integer> findMaxSum(BinaryTree node) {
+    private static int dfs(BinaryTree node) {
         if (node == null) {
-            return List.of(0, Integer.MIN_VALUE);
+            return 0;
         }
 
-        var leftMaxSumArray = findMaxSum(node.left);
-        var leftMaxSumAsBranch = leftMaxSumArray.get(0);
-        var leftMaxPathSum = leftMaxSumArray.get(1);
+        var left = dfs(node.left);
+        var right = dfs(node.right);
 
-        var rightMaxSumArray = findMaxSum(node.right);
-        var rightMaxSumAsBranch = rightMaxSumArray.get(0);
-        var rightMaxPathSum = rightMaxSumArray.get(1);
+        left = Math.max(left, 0);
+        right = Math.max(right, 0);
 
-        var maxChildSumAsBranch = Math.max(leftMaxSumAsBranch, rightMaxSumAsBranch);
-        var maxSumAsBranch = Math.max(maxChildSumAsBranch + node.value, node.value);
-        var maxSumAsRootNode = Math.max(leftMaxSumAsBranch + node.value + rightMaxSumAsBranch, maxSumAsBranch);
+        holder.value = Math.max(holder.value, left + right + node.value);
 
-        var maxPathSum = Math.max(leftMaxPathSum, Math.max(rightMaxPathSum, maxSumAsRootNode));
-
-        logger.info("[{}] [{}] [{}]", node.value, maxSumAsBranch, maxPathSum);
-        return List.of(maxSumAsBranch, maxPathSum);
+        return node.value + Math.max(left, right);
     }
 
     static class BinaryTree {
@@ -48,9 +41,8 @@ public class MaxPathSumInBinaryTree {
         }
     }
 
-    static class Holder {
-        int sum = 0;
-        BinaryTree last = new BinaryTree(-1);
+    private static class Holder {
+        int value;
     }
 
     @Test
