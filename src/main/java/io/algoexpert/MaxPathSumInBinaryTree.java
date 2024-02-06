@@ -5,41 +5,37 @@ import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.util.List;
+
 public class MaxPathSumInBinaryTree {
     private static final Logger logger = LoggerFactory.getLogger(SymmetricTree.class);
 
     public static int maxPathSum(BinaryTree tree) {
-        var holder1 = new Holder();
-        var holder2 = new Holder();
-        getSubtreeSum(tree.left, holder1);
-        getSubtreeSum(tree.right, holder2);
-
-        if (holder1.sum < 0) {
-            holder1.sum = 0;
-        }
-
-        if (holder2.sum < 0) {
-            holder2.sum = 0;
-        }
-
-        return holder1.sum + tree.value + holder2.sum;
+        var maxSumArray = findMaxSum(tree);
+        return maxSumArray.get(1);
     }
 
-    static int getSubtreeSum(BinaryTree node, Holder holder) {
+    private static List<Integer> findMaxSum(BinaryTree node) {
         if (node == null) {
-            return 0;
+            return List.of(0, Integer.MIN_VALUE);
         }
 
-        var left = getSubtreeSum(node.left, holder);
-        logger.info("[{}] [{}]", left, holder.last.value);
-        var right = getSubtreeSum(node.right, holder);
-        logger.info("[{}] [{}]", right, holder.last.value);
-        var result = Math.max(left, right) + node.value;
-        if (holder.sum < result) {
-            holder.sum = result;
-            holder.last = node;
-        }
-        return result;
+        var leftMaxSumArray = findMaxSum(node.left);
+        var leftMaxSumAsBranch = leftMaxSumArray.get(0);
+        var leftMaxPathSum = leftMaxSumArray.get(1);
+
+        var rightMaxSumArray = findMaxSum(node.right);
+        var rightMaxSumAsBranch = rightMaxSumArray.get(0);
+        var rightMaxPathSum = rightMaxSumArray.get(1);
+
+        var maxChildSumAsBranch = Math.max(leftMaxSumAsBranch, rightMaxSumAsBranch);
+        var maxSumAsBranch = Math.max(maxChildSumAsBranch + node.value, node.value);
+        var maxSumAsRootNode = Math.max(leftMaxSumAsBranch + node.value + rightMaxSumAsBranch, maxSumAsBranch);
+
+        var maxPathSum = Math.max(leftMaxPathSum, Math.max(rightMaxPathSum, maxSumAsRootNode));
+
+        logger.info("[{}] [{}] [{}]", node.value, maxSumAsBranch, maxPathSum);
+        return List.of(maxSumAsBranch, maxPathSum);
     }
 
     static class BinaryTree {
