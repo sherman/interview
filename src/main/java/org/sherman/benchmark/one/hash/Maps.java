@@ -1,16 +1,25 @@
 package org.sherman.benchmark.one.hash;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import one.nio.mem.LongHashSet;
-import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.Fork;
+import org.openjdk.jmh.annotations.Level;
+import org.openjdk.jmh.annotations.Measurement;
+import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.annotations.Param;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.infra.Blackhole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 
 @Fork(2)
 @Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
@@ -27,9 +36,9 @@ public class Maps {
 
     @Setup(Level.Trial)
     public void generateData(Context context) {
-        oneHashSet = new LongHashSet((int) (context.size * 1.2));
+        oneHashSet = new LongHashSet(context.size);
         concurrentHashMap = new ConcurrentHashMap<>(context.size);
-        arraySet = new ArraySet((int) (context.size * 1.2));
+        arraySet = new ArraySet(context.size);
 
         for (Long elt : context.generated) {
             oneHashSet.putKey(elt);
@@ -76,7 +85,8 @@ public class Maps {
 
         @Setup(Level.Trial)
         public void init() {
-            generated = Generators.generate(size);
+            var loadFactor = 0.75;
+            generated = Generators.generate((int) (size * loadFactor));
             iter = new CyclicIterator(generated);
             iter2 = new CyclicIteratorV2(generated);
         }

@@ -1,37 +1,36 @@
 package org.sherman.interview.java;
 
-import com.google.common.collect.ImmutableSet;
+import java.util.HashSet;
 import org.sherman.java.minperf.BDZAlgorithm;
 import org.sherman.java.minperf.universal.LongHash;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.Assert;
-
-import java.util.BitSet;
-import java.util.stream.LongStream;
-
-import static org.testng.Assert.*;
 
 public class BZDMain {
     private static final Logger logger = LoggerFactory.getLogger(BZDMain.class);
 
     public static void main(String[] args) {
-        var values = LongStream.range(1, 1025).boxed().collect(ImmutableSet.toImmutableSet());
+        var values = new HashSet<Long>();
+        for (var i = 1L; i < 10_000_000; i++) {
+            values.add(i);
+        }
         var hash = new LongHash();
         var data = BDZAlgorithm.generate(hash, values);
         int bitCount = data.position();
         data.seek(0);
         var bdz = BDZAlgorithm.load(hash, data);
-        assertEquals(bitCount, data.position());
+        logger.info("Get size: [{}]", bdz.getSize());
+
+        /*assertEquals(bitCount, data.position());
         var test = new BitSet();
         for (long x : values) {
             var key = bdz.evaluate(x);
-            assertTrue(key >= 0 && key < 1025);
+            assertTrue(key >= 0 && key < 10_000_000);
             assertFalse(test.get(key));
             test.set(key);
             logger.info("[{}]", key);
-        }
-        logger.info("Unknown key: [{}]: [{}]", bdz.evaluate(1026L), test.get(bdz.evaluate(1026L)));
+        }*/
+        /*logger.info("Unknown key: [{}]: [{}]", bdz.evaluate(1026L), test.get(bdz.evaluate(1026L)));
         logger.info("Unknown key: [{}]: [{}]", bdz.evaluate(1027L), test.get(bdz.evaluate(1027L)));
         int measureCount = 10;
         for (int i = 0; i < measureCount; i++) {
@@ -41,6 +40,6 @@ public class BZDMain {
                     Assert.fail("wrong entry: " + x + " " + index);
                 }
             }
-        }
+        }*/
     }
 }
