@@ -143,9 +143,9 @@ public class ReadPrimitiveBenchmark {
     @OperationsPerInvocation(31)
     @Benchmark
     public void readUnsafe(Blackhole blackhole) {
-        var sum = 0L;
-        var start = indexAsLongIndex;
-        var end = start + 31L;
+        var sum = 0;
+        var start = intIndex;
+        var end = start + 31;
         for (var i = start; i < end; i++) {
             sum += unsafe.getInt(data, i);
         }
