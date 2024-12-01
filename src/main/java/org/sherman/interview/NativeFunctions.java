@@ -11,4 +11,6 @@ public class NativeFunctions {
     public static native long fibonacci(int n);
 
     public static native long fibonacciFast(int n);
+
+    public static native int posixRead(int fd, byte[] buffer);
 }
