@@ -7,11 +7,11 @@ import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 import com.google.common.io.FileWriteMode;
 import com.google.common.io.Files;
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.time.Duration;
 import org.sherman.interview.NativeFunctions;
 import org.slf4j.Logger;
@@ -34,9 +34,9 @@ public class IoBenchmark {
         long size3 = 256 << 20; // 256 mb, crc 1557498981
 
         // calc crc (might be slow)
-        boolean crc = false;
+        boolean crc = true;
         // use posix read (JNI version)
-        boolean useJni = true;
+        boolean useJni = false;
 
         // write a data to file
         long size = size3;
@@ -63,7 +63,7 @@ public class IoBenchmark {
             if (useJni) {
                 logger.info("Total read: {}", readDataFilePosixRead(file, crc));
             } else {
-                logger.info("Total read: {}", readDataFileNio(file, crc));
+                logger.info("Total read: {}", readDataFileNioOffheap(file, crc));
             }
         }
 
@@ -74,7 +74,7 @@ public class IoBenchmark {
             if (useJni) {
                 crcOrLength = readDataFilePosixRead(file, crc);
             } else {
-                crcOrLength = readDataFileNio(file, crc);
+                crcOrLength = readDataFileNioOffheap(file, crc);
             }
             if (crc) {
                 Preconditions.checkArgument(crcOrLength == 1557498981);
@@ -99,12 +99,34 @@ public class IoBenchmark {
             while ((bytes = raf.read(buffer)) != -1) {
                 readTotal += bytes;
                 if (crc) {
-                    // do not use putBytes because JVM has intrinsic for it
-                    //hasher.putBytes(buffer);
-                    for (int i = 0; i < bytes; i++) {
-                        hasher.putByte(buffer[i]);
-                    }
+                    // use putBytes because JVM has intrinsic for it
+                    hasher.putBytes(buffer);
                 }
+            }
+        }
+        if (crc) {
+            return hasher.hash().asInt();
+        } else {
+            return readTotal;
+        }
+    }
+
+    private static long readDataFileNioOffheap(File file, boolean crc) throws IOException {
+        ByteBuffer buffer = ByteBuffer.allocateDirect(BUFFER_SIZE);
+        long readTotal = 0;
+        HashFunction hashFunction = Hashing.crc32();
+        Hasher hasher = hashFunction.newHasher();
+        try (RandomAccessFile raf = new RandomAccessFile(file, "r")) {
+            FileChannel channel = raf.getChannel();
+            int bytes = 0;
+            while ((bytes = channel.read(buffer)) != -1) {
+                readTotal += bytes;
+                if (crc) {
+                    // no intrinsic for bytebuffer ?
+                    buffer.flip();
+                    hasher.putBytes(buffer);
+                }
+                buffer.clear();
             }
         }
         if (crc) {
@@ -125,11 +147,8 @@ public class IoBenchmark {
             while ((bytes = NativeFunctions.posixRead(fd, buffer)) != 0) {
                 readTotal += bytes;
                 if (crc) {
-                    // do not use putBytes because JVM has intrinsic for it
-                    //hasher.putBytes(buffer);
-                    for (int i = 0; i < bytes; i++) {
-                        hasher.putByte(buffer[i]);
-                    }
+                    // use putBytes because JVM has intrinsic for it
+                    hasher.putBytes(buffer);
                 }
             }
         }
