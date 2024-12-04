@@ -8,8 +8,12 @@ import com.google.common.hash.Hashing;
 import com.google.common.io.FileWriteMode;
 import com.google.common.io.Files;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.lang.foreign.Arena;
+import java.lang.foreign.ValueLayout;
+import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteBuffer;
@@ -24,6 +28,10 @@ public class IoBenchmark {
     private static final Logger logger = LoggerFactory.getLogger(IoBenchmark.class);
     private static final int BUFFER_SIZE = 8192 * 8;
     private static final VarHandle LONG_BYTE_ARRAY_VIEW = MethodHandles.byteArrayViewVarHandle(long[].class, ByteOrder.LITTLE_ENDIAN);
+    private static final Arena GLOBAL = Arena.global();
+    private static final ValueLayout.OfLong LAYOUT_LE_LONG =
+        ValueLayout.JAVA_LONG.withOrder(ByteOrder.LITTLE_ENDIAN);
+    private static final VarHandle VAR_HANDLE = LAYOUT_LE_LONG.arrayElementVarHandle();
 
     public static void main(String[] args) throws IOException, InterruptedException {
         // warm up
@@ -36,6 +44,7 @@ public class IoBenchmark {
         long size1 = 1 << 20; // 1 mb
         long size2 = 10 << 20; // 64 mb
         long size3 = 256 << 20; // 256 mb, crc 1557498981 (crc32c 1905533883)
+        long size4 = 1024 << 20;
 
         // calc max
         boolean calcMax = true;
@@ -43,7 +52,7 @@ public class IoBenchmark {
         boolean useJni = true;
 
         // write a data to file
-        long size = size3;
+        long size = size4;
         int k = 0;
         int writes = 0;
         char[] data = new char[BUFFER_SIZE];
@@ -66,7 +75,7 @@ public class IoBenchmark {
             if (useJni) {
                 logger.info("Total read: {}", readDataFilePosixRead(file, calcMax));
             } else {
-                logger.info("Total read: {}", readDataFileNioOffheap(file, calcMax));
+                logger.info("Total read: {}", readDataFileMapped(file, calcMax));
             }
         }
 
@@ -77,7 +86,7 @@ public class IoBenchmark {
             if (useJni) {
                 max = readDataFilePosixRead(file, calcMax);
             } else {
-                max = readDataFileNioOffheap(file, calcMax);
+                max = readDataFileMapped(file, calcMax);
             }
             if (calcMax) {
                 Preconditions.checkArgument(max == 3544386989794013488L);
@@ -93,7 +102,7 @@ public class IoBenchmark {
     }
 
     private static long readDataFileNio(File file, boolean crc) throws IOException {
-        byte[] buffer = new byte[BUFFER_SIZE];
+            byte[] buffer = new byte[BUFFER_SIZE];
         long readTotal = 0;
         HashFunction hashFunction = Hashing.crc32c();
         Hasher hasher = hashFunction.newHasher();
@@ -109,6 +118,27 @@ public class IoBenchmark {
         }
         if (crc) {
             return hasher.hash().asInt();
+        } else {
+            return readTotal;
+        }
+    }
+
+    private static long readDataFileMapped(File file, boolean calcMax) throws IOException {
+        var max = 0L;
+        var readTotal = 0;
+        try (var raf = new RandomAccessFile(file, "r")) {
+            var channel = raf.getChannel();
+            var segment = channel.map(FileChannel.MapMode.READ_ONLY, 0, file.length(), GLOBAL);
+            var totalLength = file.length() / Long.BYTES;
+            for (var i = 0L; i < totalLength; i++) {
+                var value = (long) VAR_HANDLE.get(segment, i);
+                max = Math.max(max, value);
+                readTotal += Long.BYTES;
+            }
+        }
+
+        if (calcMax) {
+            return max;
         } else {
             return readTotal;
         }
