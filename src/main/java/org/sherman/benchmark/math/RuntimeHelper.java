@@ -26,13 +26,13 @@ final class RuntimeHelper {
     private static final MethodHandles.Lookup MH_LOOKUP = MethodHandles.lookup();
     private static final SymbolLookup SYMBOL_LOOKUP;
     private static final SegmentAllocator THROWING_ALLOCATOR = (x, y) -> { throw new AssertionError("should not reach here"); };
-    static final AddressLayout POINTER = ValueLayout.ADDRESS.withTargetLayout(MemoryLayout.sequenceLayout(JAVA_BYTE));
+    static final AddressLayout POINTER = ValueLayout.ADDRESS.withTargetLayout(MemoryLayout.sequenceLayout(1, JAVA_BYTE));
 
     final static SegmentAllocator CONSTANT_ALLOCATOR =
             (size, align) -> Arena.ofAuto().allocate(size, align);
 
     static {
-        //System.loadLibrary("util");
+        //System.loadLibrary("libutil");
         SymbolLookup loaderLookup = SymbolLookup.loaderLookup();
         SYMBOL_LOOKUP = name -> loaderLookup.find(name).or(() -> LINKER.defaultLookup().find(name));
     }

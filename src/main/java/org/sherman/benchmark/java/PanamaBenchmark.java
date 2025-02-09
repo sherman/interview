@@ -4,6 +4,7 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.CompilerControl;
 import org.openjdk.jmh.annotations.Fork;
 import org.openjdk.jmh.annotations.Measurement;
 import org.openjdk.jmh.annotations.Mode;
@@ -48,6 +49,7 @@ public class PanamaBenchmark {
 
     @Benchmark
     @OperationsPerInvocation(SIZE)
+    @CompilerControl(CompilerControl.Mode.DONT_INLINE)
     public void panamaSquare(Blackhole blackhole) {
         for (var i = 0; i < data.length; i++) {
             blackhole.consume(util_h.square(data[i]));
