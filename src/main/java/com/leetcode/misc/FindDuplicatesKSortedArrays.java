@@ -46,7 +46,7 @@ public class FindDuplicatesKSortedArrays {
             min.put(curr.array, curr.value);
             completed.put(curr.array, curr.index);
 
-            // remove array tracking values when the particular array is done
+            // remove array tracking values when the particular array is done   
             if (completed.get(curr.array) == nums[curr.array].length - 1) {
                 min.remove(curr.array);
                 totalNonEmptyArrays--;
