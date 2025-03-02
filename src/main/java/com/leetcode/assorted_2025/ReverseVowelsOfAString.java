@@ -21,10 +21,7 @@ public class ReverseVowelsOfAString {
             } else {
                 if (!leftIsVowel) {
                     l++;
-                } else if (!rightIsVowel) {
-                    r--;
                 } else {
-                    l++;
                     r--;
                 }
             }
