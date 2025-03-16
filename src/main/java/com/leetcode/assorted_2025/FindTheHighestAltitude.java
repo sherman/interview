@@ -7,8 +7,8 @@ public class FindTheHighestAltitude {
     public int largestAltitude(int[] gain) {
         var prev = 0;
         var max = 0;
-        for (var i = 0; i < gain.length; i++) {
-            var candidate = prev + gain[i];
+        for (int value : gain) {
+            var candidate = prev + value;
             max = Math.max(max, candidate);
             prev = candidate;
         }
