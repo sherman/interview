@@ -5,15 +5,12 @@ import org.testng.annotations.Test;
 
 public class FindTheHighestAltitude {
     public int largestAltitude(int[] gain) {
-        var sums = new int[gain.length];
-
         var prev = 0;
         var max = 0;
-        for (var i = 0; i < sums.length; i++) {
-            var current = gain[i];
-            sums[i] = prev + current;
-            max = Math.max(max, sums[i]);
-            prev = sums[i];
+        for (var i = 0; i < gain.length; i++) {
+            var candidate = prev + gain[i];
+            max = Math.max(max, candidate);
+            prev = candidate;
         }
 
         return max;
