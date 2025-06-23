@@ -1,6 +1,22 @@
-package com.leetcode.assorted_2023;
+package com.leetcode.assorted_2025;
 
-public class IsPalindrome {
+public class IsPalindromeII {
+    public boolean validPalindrome(String s) {
+        if (isPalindrome(s)) {
+            return true;
+        }
+
+        for (var i = 0; i < s.length(); i++) {
+            var s1 = s.substring(0, i);
+            var s2 = s.substring(i + 1);
+            if (isPalindrome(s1 + s2)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private boolean isPalindrome(String s) {
         var chars = s.toCharArray();
         var l = 0;
