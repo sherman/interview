@@ -2,25 +2,22 @@ package com.leetcode.assorted_2025;
 
 public class IsPalindromeII {
     public boolean validPalindrome(String s) {
-        if (isPalindrome(s)) {
-            return true;
-        }
+        var l = 0;
+        var r = s.length() - 1;
 
-        for (var i = 0; i < s.length(); i++) {
-            var s1 = s.substring(0, i);
-            var s2 = s.substring(i + 1);
-            if (isPalindrome(s1 + s2)) {
-                return true;
+        while (l < r) {
+            if (s.charAt(l) != s.charAt(r)) {
+                return isPalindrome(s, l, r - 1) || isPalindrome(s, l + 1, r);
             }
+            l++;
+            r--;
         }
 
-        return false;
+        return true;
     }
 
-    private boolean isPalindrome(String s) {
+    private boolean isPalindrome(String s, int l, int r) {
         var chars = s.toCharArray();
-        var l = 0;
-        var r = chars.length - 1;
 
         while (l < r) {
             var leftChar = Character.toLowerCase(chars[l]);
