@@ -1,7 +1,6 @@
 package org.sherman.interview.misc;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import org.slf4j.Logger;
@@ -12,23 +11,24 @@ public class RandomPickerV2<T> {
     private static final Logger logger = LoggerFactory.getLogger(RandomPickerV2.class);
 
     private final Random random = new Random();
-    private final List<T> modified;
+    private final List<T> items;
+    private int size;
 
     public RandomPickerV2(List<T> items) {
-        modified = new ArrayList<>(items);
-        Collections.shuffle(modified);
+        this.items = new ArrayList<>(items);
+        size = items.size();
     }
 
     public T nextRandom() {
-        if (modified.isEmpty()) {
+        if (size == 0) {
             return null;
         }
 
-        var index = random.nextInt(0, modified.size());
-        var element = modified.get(index);
-        modified.remove(index);
-
-        return element;
+        int i = random.nextInt(size);
+        T result = items.get(i);
+        size--;
+        items.set(i, items.get(size));
+        return result;
     }
 
     @Test
