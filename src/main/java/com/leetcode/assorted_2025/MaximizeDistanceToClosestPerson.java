@@ -5,43 +5,26 @@ import org.testng.annotations.Test;
 
 public class MaximizeDistanceToClosestPerson {
     public int maxDistToClosest(int[] seats) {
-        var current = 0;
-        var bestDist = 0;
-        var startedHandled = false;
+        var maxDist = 0;
+        var lastOccupied = -1;
 
         for (var i = 0; i < seats.length; i++) {
-            var state = seats[i];
-            if (state == 1) {
-                if (current > 0) {
-                    var candidate = 0;
-                    if (!startedHandled && seats[0] == 0) {
-                        candidate = current;
-                        startedHandled = true;
-                    } else {
-                        candidate = current % 2 == 0 ? current / 2 : (current / 2) + 1;
-                    }
-                    if (candidate > bestDist) {
-                        bestDist = candidate;
-                    }
-                    current = 0;
+            if (seats[i] == 1) {
+                if (lastOccupied == -1) {
+                    // leading empty seats
+                    maxDist = i;
+                } else {
+                    maxDist = Math.max(maxDist, (i - lastOccupied)  /2);
                 }
-            } else {
-                current++;
+                lastOccupied = i;
             }
         }
 
-        if (current > 0) {
-            var candidate = 0;
-            if (seats[seats.length - 1] == 0) {
-                candidate = current;
-            } else {
-                candidate = current % 2 == 0 ? current / 2 : (current / 2) + 1;
-            }
-            if (candidate > bestDist) {
-                bestDist = candidate;
-            }
+        // trailing empty seats
+        if (seats[seats.length - 1] == 0) {
+            maxDist = Math.max(maxDist, seats.length - 1 - lastOccupied);
         }
-        return bestDist;
+        return maxDist;
     }
 
     @Test
