@@ -10,37 +10,28 @@ public class LongestStrictlyIncreasingOrStrictlyDecreasingSubarray {
             return 1;
         }
 
-        var maxLength = 1;
-        var length = 1;
-        for (var i = 1; i < nums.length; i++) {
-            var prev = nums[i - 1];
-            var current = nums[i];
-
-            if (prev < current) {
-                length++;
-            } else {
-                maxLength = Math.max(maxLength, length);
-                length = 1;
-            }
-        }
-
-        maxLength = Math.max(maxLength, length);
-
-        length = 1;
-        for (var i = 1; i < nums.length; i++) {
-            var prev = nums[i - 1];
-            var current = nums[i];
-
-            if (prev > current) {
-                length++;
-            } else {
-                maxLength = Math.max(maxLength, length);
-                length = 1;
-            }
-        }
-
-        maxLength = Math.max(maxLength, length);
+        int maxLength = 1;
+        maxLength = Math.max(maxLength, getMaxLength(true, nums, maxLength));
+        maxLength = Math.max(maxLength, getMaxLength(false, nums, maxLength));
         return maxLength;
+    }
+
+    private int getMaxLength(boolean less, int[] nums, int maxLength) {
+        var length = 1;
+
+        for (var i = 1; i < nums.length; i++) {
+            var prev = nums[i - 1];
+            var current = nums[i];
+
+            if (less ? prev < current : prev > current) {
+                length++;
+            } else {
+                maxLength = Math.max(maxLength, length);
+                length = 1;
+            }
+        }
+
+        return Math.max(maxLength, length);
     }
 
     @Test
