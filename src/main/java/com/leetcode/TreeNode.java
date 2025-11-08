@@ -43,4 +43,8 @@ public class TreeNode {
             .add("val", val)
             .toString();
     }
+
+    public String getId() {
+        return hashCode() + ":" + this.val;
+    }
 }
