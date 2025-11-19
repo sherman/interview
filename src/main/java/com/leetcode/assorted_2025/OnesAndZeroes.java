@@ -12,8 +12,6 @@ public class OnesAndZeroes {
             int zeroes = (int) strs[k].chars().filter(c -> ((char) c) == '0').count();
             int ones = (int) strs[k].chars().filter(c -> ((char) c) == '1').count();
 
-            var x = 1;
-
             for (int i = m; i >= zeroes; i--) {
                 for (int j = n; j >= ones; j--) {
                     // reduce a number of available "resources":
