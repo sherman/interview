@@ -10,8 +10,7 @@ public class LongestSubarrayOf1sAfterDeletingOneElementV2 {
         var queue = new LinkedList<Integer>();
         var maxLength = 0;
         var hasZero = false;
-        for (var i = 0; i < nums.length; i++) {
-            var current = nums[i];
+        for (var current : nums) {
             if (current == 0) {
                 if (queue.isEmpty()) {
                     queue.add(current);
