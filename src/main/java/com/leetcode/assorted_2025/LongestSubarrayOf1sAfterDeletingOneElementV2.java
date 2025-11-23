@@ -1,59 +1,25 @@
 package com.leetcode.assorted_2025;
 
-import java.util.LinkedList;
-import java.util.Queue;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class LongestSubarrayOf1sAfterDeletingOneElementV2 {
     public int longestSubarray(int[] nums) {
-        var queue = new LinkedList<Integer>();
         var maxLength = 0;
-        var hasZero = false;
-        for (var current : nums) {
-            if (current == 0) {
-                if (!queue.isEmpty()) {
-                    // check if top is zero
-                    if (isTopZero(queue)) {
-                        queue.poll();
-                        maxLength = Math.max(queue.size(), maxLength);
-                    } else {
-                        if (hasZero) {
-                            maxLength = Math.max(queue.size() - 1, maxLength);
-                            dropUntilZeroInclusive(queue);
-                        }
-                    }
-                }
-                queue.add(current);
-                hasZero = true;
-            } else {
-                queue.add(current);
+        var zeroCount = 0;
+        var start = 0;
+
+        for (int i = 0; i < nums.length; i++) {
+            zeroCount += (nums[i] == 0 ? 1 : 0);
+
+            if (zeroCount > 1) {
+                zeroCount -= (nums[start] == 0 ? 1 : 0);
+                start++;
             }
-        }
-        if (isTopZero(queue)) {
-            queue.poll();
-            hasZero = false;
-        }
-        if (hasZero) {
-            maxLength = Math.max(queue.size() - 1, maxLength);
-        } else {
-            maxLength = Math.max(maxLength, queue.size() == nums.length ? queue.size() - 1 : queue.size());
+
+            maxLength = Math.max(i - start, maxLength);
         }
         return maxLength;
-    }
-
-    private static boolean isTopZero(Queue<Integer> queue) {
-        var top = queue.peek();
-        return top != null && top == 0;
-    }
-
-    private static void dropUntilZeroInclusive(Queue<Integer> queue) {
-        while (!queue.isEmpty()) {
-            var current = queue.poll();
-            if (current == 0) {
-                break;
-            }
-        }
     }
 
     @Test
