@@ -12,10 +12,7 @@ public class LongestSubarrayOf1sAfterDeletingOneElementV2 {
         var hasZero = false;
         for (var current : nums) {
             if (current == 0) {
-                if (queue.isEmpty()) {
-                    queue.add(current);
-                    hasZero = true;
-                } else {
+                if (!queue.isEmpty()) {
                     // check if top is zero
                     if (isTopZero(queue)) {
                         queue.poll();
@@ -26,9 +23,9 @@ public class LongestSubarrayOf1sAfterDeletingOneElementV2 {
                             dropUntilZeroInclusive(queue);
                         }
                     }
-                    queue.add(current);
-                    hasZero = true;
                 }
+                queue.add(current);
+                hasZero = true;
             } else {
                 queue.add(current);
             }
