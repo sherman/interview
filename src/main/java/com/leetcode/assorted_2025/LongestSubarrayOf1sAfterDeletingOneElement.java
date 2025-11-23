@@ -16,7 +16,6 @@ public class LongestSubarrayOf1sAfterDeletingOneElement {
                 hasZero  = true;
                 continue;
             }
-            var x = 1;
             for (var j = i; j < nums.length; j++) {
                 var value = nums[j];
                 if (value == 0) {
