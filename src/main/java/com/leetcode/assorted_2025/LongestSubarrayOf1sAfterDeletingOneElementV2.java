@@ -32,7 +32,6 @@ public class LongestSubarrayOf1sAfterDeletingOneElementV2 {
             } else {
                 queue.add(current);
             }
-            var x = 1;
         }
         if (isTopZero(queue)) {
             queue.poll();
