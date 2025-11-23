@@ -9,23 +9,26 @@ public class LongestSubarrayOf1sAfterDeletingOneElementV2 {
     public int longestSubarray(int[] nums) {
         var queue = new LinkedList<Integer>();
         var maxLength = 0;
+        var hasZero = false;
         for (var i = 0; i < nums.length; i++) {
             var current = nums[i];
             if (current == 0) {
                 if (queue.isEmpty()) {
                     queue.add(current);
+                    hasZero = true;
                 } else {
                     // check if top is zero
                     if (isTopZero(queue)) {
                         queue.poll();
                         maxLength = Math.max(queue.size(), maxLength);
                     } else {
-                        if (queue.contains(0)) {
+                        if (hasZero) {
                             maxLength = Math.max(queue.size() - 1, maxLength);
                             dropUntilZeroInclusive(queue);
                         }
                     }
                     queue.add(current);
+                    hasZero = true;
                 }
             } else {
                 queue.add(current);
@@ -34,8 +37,9 @@ public class LongestSubarrayOf1sAfterDeletingOneElementV2 {
         }
         if (isTopZero(queue)) {
             queue.poll();
+            hasZero = false;
         }
-        if (queue.contains(0)) {
+        if (hasZero) {
             maxLength = Math.max(queue.size() - 1, maxLength);
         } else {
             maxLength = Math.max(maxLength, queue.size() == nums.length ? queue.size() - 1 : queue.size());
