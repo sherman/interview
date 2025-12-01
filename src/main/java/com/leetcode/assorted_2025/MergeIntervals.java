@@ -19,8 +19,13 @@ public class MergeIntervals {
             } else {
                 var last = result.getLast();
                 if (interval[0] <= last[1]) {
-                    last = new int[] {Math.min(interval[0], last[0]), Math.max(interval[1], last[1])};
-                    result.set(result.size() - 1, last);
+                    last = result.getLast();
+                    if (interval[0] <= last[1]) {
+                        last[0] = Math.min(interval[0], last[0]);
+                        last[1] = Math.max(interval[1], last[1]);
+                    } else {
+                        result.add(interval);
+                    }
                 } else {
                     result.add(interval);
                 }
