@@ -13,17 +13,17 @@ import org.junit.jupiter.api.Test;
 public class GroupAnagrams {
 
     public List<List<String>> groupAnagrams(String[] strs) {
-        Map<Key, Value> bitsToCounts = new HashMap<>();
+        Map<Key, Value> keysToValues = new HashMap<>();
         for (var i = 0; i < strs.length; i++) {
             var str = strs[i];
             var bits = toKey(str);
-            var index = bitsToCounts.getOrDefault(bits, new Value());
+            var index = keysToValues.getOrDefault(bits, new Value());
             index.indices.add(i);
-            bitsToCounts.put(bits, index);
+            keysToValues.put(bits, index);
         }
 
         var result = new ArrayList<List<String>>();
-        for (var entry : bitsToCounts.entrySet()) {
+        for (var entry : keysToValues.entrySet()) {
             var strings = new ArrayList<String>();
             for (var i : entry.getValue().indices) {
                 strings.add(strs[i]);
@@ -62,7 +62,7 @@ public class GroupAnagrams {
     }
 
     private static class Value {
-        private Set<Integer> indices = new HashSet<>();
+        private final Set<Integer> indices = new HashSet<>();
     }
 
     @Test
